@@ -420,4 +420,25 @@ class TreeTensorNetworkState(TreeTensorNetwork):
     #         return norm
     #     return float("NaN")
 
+    def to_complex(self, precision: int = 128) -> 'TreeTensorNetworkState':
+        """
+        Converts all tensors in the TTNS to a complex dtype.
+
+        Args:
+            precision (int): The precision for complex numbers. Must be either 64 or 128.
+                Defaults to 128.
+
+        Returns:
+            TreeTensorNetworkState: Self, with all tensors converted to the specified complex dtype.
+        """
+        if precision == 128:
+            dtype = np.complex128
+        elif precision == 64:
+            dtype = np.complex64
+        else:
+            raise ValueError("Precision must be either 64 or 128!")
+        for node_id in self.tensors.keys():
+            self.tensors[node_id] = self.tensors[node_id].astype(dtype)
+        return self
+
 TTNS = TreeTensorNetworkState
