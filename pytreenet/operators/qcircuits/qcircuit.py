@@ -1285,7 +1285,8 @@ class CompiledQuantumCircuit(AbstractQCircuit):
     def to_time_dep_ttno(self,
                          ref_tree: TreeTensorNetwork,
                          dt: float = 1.0,
-                         method: TTNOFinder = TTNOFinder.SGE
+                         method: TTNOFinder = TTNOFinder.SGE,
+                         level_duration: float | None = None
                          ) -> DiscreetTimeTTNO:
         """
         Convert the compiled quantum circuit to a time-dependent TTNO.
@@ -1298,11 +1299,16 @@ class CompiledQuantumCircuit(AbstractQCircuit):
             method (TTNOFinder): The method to use for finding the
                 tree tensor network operators in the state diagrams.
                 Defaults to `TTNOFinder.SGE`.
+            level_duration (Union[float, None]): Alias for ``dt`` with an
+                unambiguous name: the simulated duration of one circuit
+                level. If given, it overrides ``dt``. Defaults to None.
 
         Returns:
             DiscreetTimeTTNO: A time-dependent TTNO representing the
                 compiled quantum circuit.
         """
+        if level_duration is not None:
+            dt = level_duration
         found_ttnos = self.to_ttnos(ref_tree, method=method)
         length = len(found_ttnos)
         ttnos: list[TreeTensorNetworkOperator] = []
