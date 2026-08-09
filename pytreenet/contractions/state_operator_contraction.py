@@ -672,7 +672,7 @@ def contract_subtrees_using_dictionary(ignored_node_id: str,
                                                                 bra_node,
                                                                 tensor,
                                                                 op_node,
-                                                                ignored_node_id,
+                                                                id_trafo_op(ignored_node_id),
                                                                 id_trafo=id_trafo_bra)
     else:
         tensor = contract_all_but_one_neighbour_block_to_ket(ket_tensor,
