@@ -170,7 +170,14 @@ class Measurement:
         if self.renormalize != other.renormalize:
             errstr = "Cannot combine Measurements with different renormalization settings!"
             raise ValueError(errstr)
-        new = self.__class__(self.node_ids + other.node_ids, renormalize=self.renormalize)
+        if self.num_thresholds != other.num_thresholds:
+            errstr = "Cannot combine Measurements with different numerical thresholds!"
+            raise ValueError(errstr)
+        # num_thresholds is carried over: dropping it would silently reset a caller's
+        # threshold to the default on every combine.
+        new = self.__class__(self.node_ids + other.node_ids,
+                             renormalize=self.renormalize,
+                             num_thresholds=self.num_thresholds)
         return new
 
     def system_size(self) -> int:
@@ -219,7 +226,10 @@ class Measurement:
                 tp.add_operator(node_id, projections[node_id][outcome_i])
             prob = state.tensor_product_expectation_value(tp)
             # This is a complex number, so we need to check its validity.
-            if prob.imag > self.num_thresholds:
+            # abs(): a projector expectation is real and non-negative, and numerical
+            # error carries no preferred sign, so a one-sided test lets half the
+            # corrupted cases through to prob.real and the sqrt(prob) renormalisation.
+            if abs(prob.imag) > self.num_thresholds:
                 errstr = f"Measurement probability has a significant imaginary part: {prob}!"
                 raise ValueError(errstr)
             prob = prob.real
