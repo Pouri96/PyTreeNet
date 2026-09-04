@@ -17,7 +17,6 @@ from .node import Node
 from ..util.tensor_splitting import SplitMode
 from ..util.tensor_splitting import SVDParameters
 from typing import TYPE_CHECKING
-from copy import deepcopy
 
 if TYPE_CHECKING:
     from ..ttns import TreeTensorNetwork
@@ -102,8 +101,10 @@ def split_qr_contract_r_to_neighbour(ttn: TreeTensorNetwork,
                                     such that the order of neighbours are preserved after beinng called.
     """
     if preserve_legs_order:
-        children_dict = {node_id      : deepcopy(ttn.nodes[node_id].children)}
-        children_dict[neighbour_id] = deepcopy(ttn.nodes[neighbour_id].children)
+        # A list of identifiers: the entries are immutable, so a shallow copy already
+        # isolates the record from the splitting below.
+        children_dict = {node_id      : list(ttn.nodes[node_id].children)}
+        children_dict[neighbour_id] = list(ttn.nodes[neighbour_id].children)
 
     node = ttn.nodes[node_id]
     q_legs, r_legs = _build_leg_specs(node, neighbour_id)
@@ -137,8 +138,10 @@ def split_svd_contract_sv_to_neighbour(ttn: TreeTensorNetwork,
     """           
 
     if preserve_legs_order:
-        children_dict = {node_id      : deepcopy(ttn.nodes[node_id].children)}
-        children_dict[neighbour_id] = deepcopy(ttn.nodes[neighbour_id].children)
+        # A list of identifiers: the entries are immutable, so a shallow copy already
+        # isolates the record from the splitting below.
+        children_dict = {node_id      : list(ttn.nodes[node_id].children)}
+        children_dict[neighbour_id] = list(ttn.nodes[neighbour_id].children)
 
     node = ttn.nodes[node_id]
     u_legs, v_legs = _build_leg_specs(node, neighbour_id)
