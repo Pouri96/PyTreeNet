@@ -61,7 +61,6 @@ def run_circuit(qc: QCircuit) -> np.ndarray:
     mps = zero_state(num_qb)
     comp_qc = qc.compile()
     ttno = comp_qc.to_time_dep_ttno(mps)
-    ttno.measurement_renorm_threshold = 1e-10
     ops = local_magnetisation_from_topology(Topology.CHAIN, num_qb,
                                             site_prefix="qubit")
     final_time = qc.gate_depth() * 1
