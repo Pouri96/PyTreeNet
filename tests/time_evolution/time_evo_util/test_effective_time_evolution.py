@@ -18,8 +18,20 @@ from pytreenet.time_evolution.time_evo_util.effective_time_evolution import (eff
                                                                              effective_single_site_evolution,
                                                                              effective_two_site_evolution)
 
+def _action_options(mode, rtol, atol):
+    """Solver options for an action-based mode over these random (non-Hermitian) fixtures.
+
+    The scipy solvers take tolerances; KRYLOV takes its own, plus hermitian=False -- the
+    effective operator built from ``crandn`` blocks is not Hermitian, and the default
+    symmetrised Arnoldi projection would propagate the wrong generator.
+    """
+    if mode is TimeEvoMode.KRYLOV:
+        return {"krylov_tol": 0.0, "hermitian": False}
+    return {"rtol": rtol, "atol": atol}
+
+
 ## Tests for effective bond evolution
-@pytest.mark.parametrize("mode", TimeEvoMode.scipy_modes())
+@pytest.mark.parametrize("mode", TimeEvoMode.scipy_modes() + [TimeEvoMode.KRYLOV])
 def test_action_based_bond_evolution(mode):
     """
     Test the bond evolution using action-based method.
@@ -52,12 +64,11 @@ def test_action_based_bond_evolution(mode):
                                              time_step_size,
                                              cache,
                                              mode=mode,
-                                             rtol=rtol,
-                                             atol=atol)
+                                             **_action_options(mode, rtol, atol))
     # Check if the evolution is correct
     np.testing.assert_allclose(found_updated, ref_updated)
 
-@pytest.mark.parametrize("mode", [mode for mode in TimeEvoMode if not mode.is_scipy()])
+@pytest.mark.parametrize("mode", [mode for mode in TimeEvoMode if not mode.action_evolvable()])
 def test_matrix_based_bond_evolution(mode):
     """
     Test the bond evolution using action-based method.
@@ -92,7 +103,7 @@ def test_matrix_based_bond_evolution(mode):
     np.testing.assert_allclose(found_updated, ref_updated)
 
 ## Tests for effective single site evolution
-@pytest.mark.parametrize("mode", TimeEvoMode.scipy_modes())
+@pytest.mark.parametrize("mode", TimeEvoMode.scipy_modes() + [TimeEvoMode.KRYLOV])
 def test_action_based_single_site_evolution(mode):
     """
     Test the single site evolution using action-based method.
@@ -140,8 +151,7 @@ def test_action_based_single_site_evolution(mode):
                                                     time_step_size,
                                                     cache,
                                                     mode=mode,
-                                                    rtol=rtol,
-                                                    atol=atol)
+                                                    **_action_options(mode, rtol, atol))
     # Check if the evolution is correct
     np.testing.assert_allclose(found_updated, ref_updated,
                                rtol=rtol*100, atol=atol*100)
