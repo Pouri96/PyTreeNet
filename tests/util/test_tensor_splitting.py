@@ -5,8 +5,9 @@ from copy import deepcopy
 from numpy import (transpose, reshape,
                    allclose, array, sum as sum_np,
                    sort, tensordot, diag,
-                   einsum, eye, sqrt, pad)
-from numpy.linalg import (qr, svd)
+                   einsum, eye, sqrt, pad,
+                   concatenate, full)
+from numpy.linalg import (qr, svd, norm)
 from numpy.random import rand
 
 from pytreenet.util.tensor_util import (tensor_matricization,
@@ -238,15 +239,32 @@ class TestSingularValueTruncation(unittest.TestCase):
         """
         Test the renormalisation of a random tensor of positive values which
          represent singular values against a truncated vector.
+
+        The 2-norm is restored, not the 1-norm: at a bond of a canonical network the
+        state norm is the 2-norm of the singular values.
         """
         s = rand(10)
         s = array(list(reversed(sort(s))))
         s_new = s[:5]
-        norm_old = sum_np(s)
-        norm_new = sum_np(s_new)
+        norm_old = norm(s)
+        norm_new = norm(s_new)
         normed_s = s_new * (norm_old / norm_new)
         found_s = renormalise_singular_values(s,s_new)
         self.assertTrue(allclose(normed_s,found_s))
+        self.assertAlmostEqual(norm(found_s), norm(s), places=12)
+
+    def test_renorm_singular_values_restores_the_state_norm(self):
+        """
+        The 1-norm ratio always over-corrects, and by more the flatter the discarded
+        tail. Pinned on a spectrum whose tail is many comparable values, where the two
+        readings differ by a factor of ~sqrt(k).
+        """
+        s = concatenate([array([1.0]), full(200, 1e-4)])
+        s_new = s[:1]
+        found_s = renormalise_singular_values(s, s_new)
+        self.assertAlmostEqual(norm(found_s), norm(s), places=12)
+        one_norm_s = s_new * (sum_np(s) / sum_np(s_new))
+        self.assertGreater(norm(one_norm_s), norm(s))
 
     def test_renorm_singular_value_equal_size(self):
         """

@@ -9,6 +9,7 @@ bond dimension, by discarding sufficiently small singular values.
 """
 from typing import Tuple, Union
 from enum import Enum
+from numbers import Integral
 from warnings import warn
 from dataclasses import dataclass
 
@@ -245,7 +246,7 @@ def _determine_tensor_shape(old_shape: Tuple[int,...],
 
 @dataclass
 class SVDParameters:
-    """
+    r"""
     Holds all the parameters required for a truncated singular value
     decomposition.
     
@@ -298,8 +299,16 @@ class SVDParameters:
         The maximum bond dimension has to be a positive integer or infinity.
         The relative tolerance has to be positive or -infinity.
         The total tolerance has to be positive or -infinity.
+
+        ``max_bond_dim`` is checked rather than coerced. ``int()`` would raise
+        OverflowError on the documented ``inf`` and would silently truncate a
+        non-integral float to a valid-looking dimension. ``Integral`` covers numpy
+        integer types as well as ``int``.
         """
-        max_bond_dim = int(self.max_bond_dim)
+        max_bond_dim = self.max_bond_dim
+        if not isinstance(max_bond_dim, Integral) and max_bond_dim != float("inf"):
+            raise TypeError("'max_bond_dim' has to be an integer or inf, not "
+                            f"{type(max_bond_dim)}!")
         positivity_check(max_bond_dim, "max_bond_dim")
         rel_tol = self.rel_tol
         if (rel_tol < 0) and (rel_tol != float("-inf")):
@@ -317,7 +326,12 @@ def renormalise_singular_values(s: np.ndarray,
     """
     Renormalises a truncated singular value vector.
 
-    The vector is scaled to have the same norm as the original vector.
+    The vector is scaled to have the same 2-norm as the original vector. At a bond of a
+    canonical network the state norm is the 2-norm of the singular values, so this
+    restores ``||Psi||`` exactly. Scaling by the 1-norm ratio ``sum(s)/sum(new_s)``
+    instead always over-corrects -- the discarded tail enters that ratio at first order
+    while the true 2-norm deficit is second order -- and the excess compounds once per
+    bond per sweep.
 
     Args:
         s (np.ndarray): The original vector of singular values.
@@ -326,15 +340,15 @@ def renormalise_singular_values(s: np.ndarray,
     Returns:
         np.ndarray: The renormalised vector new_s.
     """
-    norm_old = np.sum(s)
-    norm_new = np.sum(new_s)
+    norm_old = np.linalg.norm(s)
+    norm_new = np.linalg.norm(new_s)
     new_s = new_s * norm_old / norm_new
     return new_s
 
 def _sum_truncation_index(s: np.ndarray,
                           total_tol: float,
                           norming: bool = True) -> int:
-    """
+    r"""
     Determines the index for truncation of the singular values.
 
     The index is determined by the condition
@@ -378,7 +392,7 @@ def sum_truncation(s: np.ndarray,
                    total_tol: float,
                    norming: bool = True
                    ) -> np.ndarray:
-    """
+    r"""
     Truncates the singular values of a tensor given as a vector by according to
 
     .. math::
@@ -404,7 +418,7 @@ def sum_truncation(s: np.ndarray,
 def value_truncation(s: np.ndarray,
                      total_tol: float,
                      rel_tol: float) -> np.ndarray:
-    """
+    r"""
     Truncates a vector of by removing all singular values that are smaller than
 
     .. math::
@@ -442,8 +456,12 @@ def truncate_singular_values(s: np.ndarray,
     """
     if len(s) == 0:
         raise ValueError("No singular values to truncate!")
-    if svd_params.sum_trunc:
-        s_temp = sum_truncation(s, svd_params.total_tol, svd_params.sum_renorm)
+    # ``svd_params`` is any object carrying the truncation parameters, and callers outside
+    # this module subclass it; the sum-truncation knobs are read with a default so such a
+    # class need not declare knobs it never enables.
+    if getattr(svd_params, "sum_trunc", False):
+        s_temp = sum_truncation(s, svd_params.total_tol,
+                                getattr(svd_params, "sum_renorm", False))
     else:
         s_temp = value_truncation(s, svd_params.total_tol, svd_params.rel_tol)
     max_bond_dim = svd_params.max_bond_dim
@@ -457,7 +475,7 @@ def truncate_singular_values(s: np.ndarray,
     else:
         new_s = s_temp
         s_trunc = s[len(s_temp):]
-    if svd_params.renorm:
+    if getattr(svd_params, "renorm", False):
         new_s = renormalise_singular_values(s, new_s)
     return new_s, s_trunc
 
