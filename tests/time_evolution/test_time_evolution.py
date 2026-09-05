@@ -5,7 +5,8 @@ from scipy.linalg import expm
 import pytest
 
 import pytreenet as ptn
-from pytreenet.time_evolution.time_evolution import EvoDirection, TimeEvoMode
+from pytreenet.time_evolution.time_evolution import (EvoDirection, TimeEvoMode,
+                                                     time_evolve)
 from pytreenet.time_evolution.results import Results
 from pytreenet.random import crandn
 from pytreenet.random.random_matrices import random_hermitian_matrix
@@ -242,6 +243,51 @@ def test_time_evolve(mode):
     # Check if the results are close
     assert shape == found.shape
     np.testing.assert_allclose(found.flatten(), reference)
+
+@pytest.mark.parametrize("mode", [
+    TimeEvoMode.RK45,
+    TimeEvoMode.RK23,
+    TimeEvoMode.DOP853,
+    TimeEvoMode.BDF
+])
+def test_module_time_evolve_applies_the_mode_defaults(mode):
+    """
+    Test that the module-level time_evolve resolves the mode's own solver options
+    when the caller supplies none.
+
+    Without them a scipy mode runs at solve_ivp's default rtol=1e-3, which returns
+    a plausible trajectory rather than an error, so only the accuracy shows it.
+
+    The step is a full unit of time because a short one hides the difference: at
+    dt=0.1 the higher-order pairs are already near 1e-7 even at rtol=1e-3, so the
+    assertion would not separate the two. At dt=1.0 every scipy mode lands at 5e-4
+    or worse on the defaults and at 2e-8 or better on the mode's own options.
+    """
+    shape = (2, 3, 4)
+    psi_init = crandn(shape)
+    dt = 1.0
+    exponent_mat = random_hermitian_matrix(np.prod(shape).item())
+    found = time_evolve(psi_init, exponent_mat, dt, mode=mode)
+    reference = expm(-1j * exponent_mat * dt) @ psi_init.flatten()
+    assert shape == found.shape
+    np.testing.assert_allclose(found.flatten(), reference, atol=1e-6)
+
+@pytest.mark.parametrize("mode", [TimeEvoMode.RK45, TimeEvoMode.KRYLOV])
+def test_module_time_evolve_honours_explicit_options(mode):
+    """
+    Test that options passed to the module-level time_evolve reach the solver,
+    overlaid on the mode's defaults rather than replacing them.
+    """
+    shape = (2, 3, 4)
+    psi_init = crandn(shape)
+    dt = 0.1
+    exponent_mat = random_hermitian_matrix(np.prod(shape).item())
+    opts = ({"krylov_tol": 1e-12} if mode is TimeEvoMode.KRYLOV
+            else {"atol": 1e-12})
+    found = time_evolve(psi_init, exponent_mat, dt, mode=mode, **opts)
+    reference = expm(-1j * exponent_mat * dt) @ psi_init.flatten()
+    assert shape == found.shape
+    np.testing.assert_allclose(found.flatten(), reference, atol=1e-8)
 
 if __name__ == "__main__":
     unittest.main()

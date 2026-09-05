@@ -657,7 +657,8 @@ class TimeEvoMode(Enum):
 def time_evolve(psi: np.ndarray, hamiltonian: np.ndarray,
                 time_difference: float,
                 forward: EvoDirection| bool = EvoDirection.FORWARD,
-                mode: TimeEvoMode = TimeEvoMode.FASTEST) -> np.ndarray:
+                mode: TimeEvoMode = TimeEvoMode.FASTEST,
+                **options: Any) -> np.ndarray:
     """
     Time evolves a state psi via a Hamiltonian.
      
@@ -674,30 +675,22 @@ def time_evolve(psi: np.ndarray, hamiltonian: np.ndarray,
         forward (EvoDirection|bool, optional): The direction of the time evolution.
                 Defaults to EvoDirection.FORWARD.
         mode (TimeEvoMode, optional): The mode to use for the time evolution.
+        **options (Any): Additional options for the solver underlying the time
+            evolution. Keys given here are overlaid on the mode's own defaults, so
+            a partial dict cannot leave the rest at the solver's much looser values.
+            See ``TimeEvoMode.default_solver_options``.
 
     Returns:
         np.ndarray: The time evolved state
     """
-    if isinstance(forward, bool):
-        forward = EvoDirection.from_bool(forward)
-    sign = forward.exp_sign()
-    rhs_matrix = sign * 1.0j * hamiltonian
-    if mode is TimeEvoMode.KRYLOV:
-        return mode.time_evolve(psi, hamiltonian, time_difference, forward=forward)
-    if mode.is_scipy():
-        def ode_rhs(_, y_vec):
-            return rhs_matrix @ y_vec
-        t_span = (0, time_difference)
-        solution = solve_ivp(ode_rhs, t_span, psi.flatten(),
-                                method=mode.value,
-                                t_eval=[time_difference])
-        result_vector = solution.y[:,0]
-    else:
-        exponent = rhs_matrix * time_difference
-        result_vector = fast_exp_action(exponent, psi.flatten(),
-                                        mode=mode.value)
-    return result_vector.reshape(
-                      psi.shape)
+    # Delegates to the enum's own method rather than repeating its dispatch. The
+    # duplicate previously here called ``solve_ivp`` with no options at all, so a
+    # scipy mode ran at that solver's default ``rtol=1e-3`` -- far looser than any
+    # use here, and silent: it returns a plausible trajectory rather than an error.
+    options_ = TimeEvoMode.default_solver_options(mode)
+    options_.update(options)
+    return mode.time_evolve(psi, hamiltonian, time_difference,
+                            forward=forward, **options_)
 
 
 def _krylov_small_propagator(t_mat: np.ndarray,
