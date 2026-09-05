@@ -157,7 +157,13 @@ def tensor_svd(tensor: np.ndarray,
     matrix = tensor_matricization(tensor, u_legs, v_legs,
                                   correctly_ordered=correctly_ordered)
     if decomp is DecompositionType.SVD:
-        u, s, vh = np.linalg.svd(matrix, full_matrices=full_matrices)
+        try:
+            u, s, vh = np.linalg.svd(matrix, full_matrices=full_matrices)
+        except np.linalg.LinAlgError:
+            # gesdd can fail to converge on a rank-deficient block; gesvd is slower but
+            # converges, and agrees wherever gesdd succeeds.
+            u, s, vh = splinalg.svd(matrix, full_matrices=full_matrices,
+                                    lapack_driver="gesvd")
     elif decomp is DecompositionType.EIGEN:
         s, u, vh = splinalg.eig(matrix, left=True, right=True)
     else:
