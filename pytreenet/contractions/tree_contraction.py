@@ -77,33 +77,33 @@ def _completely_contract_tree_rec(work_ttn: TreeTensorNetwork,
     
 def final_transpose(final_tensor: ndarray,
                     nodes: dict[str, Node],
-                    actual_order: List[str],
-                    contraction_order: List[str]
+                    target_order: List[str],
+                    leg_order: List[str]
                     ) -> ndarray:
     """
-    Transposes the final tensor according to the given order.
+    Transposes the final tensor so its open legs follow ``target_order``.
 
     Args:
         final_tensor (ndarray): The final tensor after contraction.
         nodes (Dict[str, Node]): The nodes of the original tree. Needed to
-            determine the original order of the legs.
-        actual_order (List[str]): The order of the legs in the final tensor.
-        contraction_order (List[str]): The order in which the nodes were
-            contracted. This is the order of the legs in the final tensor.
+            determine how many open legs each node contributes.
+        target_order (List[str]): The node order the caller asked for. This is
+            the order the returned tensor's open legs will follow.
+        leg_order (List[str]): The order in which the nodes were contracted,
+            which is the order of the legs in ``final_tensor`` as given.
 
     Returns:
-        ndarray: The final tensor with the legs in the order of the original
-            tree.
+        ndarray: The final tensor with the legs in ``target_order``.
     """
     indices: dict[str, list[int]] = {}
     current = 0
-    for node_id in actual_order:
+    for node_id in leg_order:
         node = nodes[node_id]
         num_open = node.nopen_legs()
         indices[node_id] = list(range(current, current + num_open))
         current += num_open
     # Now we can determine the permutation.
     perm = []
-    for node_id in contraction_order:
+    for node_id in target_order:
         perm.extend(indices[node_id])
     return final_tensor.transpose(perm)

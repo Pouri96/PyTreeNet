@@ -29,7 +29,7 @@ class TruncationParams(SimulationParameters):
     sys_size: int = 10
     phys_dim: int = 2
     bond_dim: int = 10
-    trunc_method: TruncationMethod = TruncationMethod.RECURSIVE
+    trunc_method: TruncationMethod = TruncationMethod.SVD
     random_trunc: bool = False
     max_target_bond_dim: int = 10
     min_target_bond_dim: int = 1

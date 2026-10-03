@@ -26,7 +26,6 @@ def generate_parameter_set() -> list[TruncationParams]:
                   TTNStructure.FTPS, TTNStructure.TSTAR)
     methods = (TruncationMethod.SVD,
                TruncationMethod.SVD2SITE,
-               TruncationMethod.RECURSIVE,
                TruncationMethod.DENSITYMATRIX)
     seeds = (1234, 4321, 43954, 3923, 49384)
     bond_dims = (50, )

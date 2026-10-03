@@ -68,14 +68,10 @@ def method_colour(params: TruncationParams | tuple[TruncationMethod, bool]) -> s
     if random_trunc:
         if trunc_method is TruncationMethod.SVD:
             return "tab:orange"
-        if trunc_method is TruncationMethod.RECURSIVE:
-            return "tab:red"
         if trunc_method is TruncationMethod.SVD2SITE:
             return "tab:cyan"
     if trunc_method is TruncationMethod.SVD:
         return "tab:blue"
-    if trunc_method is TruncationMethod.RECURSIVE:
-        return "tab:purple"
     if trunc_method is TruncationMethod.SVD2SITE:
         return "tab:brown"
     raise ValueError(f"Unknown truncation method: {trunc_method}")
@@ -288,7 +284,6 @@ if __name__ == "__main__":
         md_filter.add_to_criterium("sys_size", sys_size)
         md_filter.add_to_criterium("bond_dim", 50)
         md_filter.add_to_criterium("trunc_method", [TruncationMethod.SVD.value,
-                                                    TruncationMethod.RECURSIVE.value,
                                                     TruncationMethod.SVD2SITE.value,
                                                     TruncationMethod.DENSITYMATRIX.value])
         save_path = os.path.join(data_dir, "plots")

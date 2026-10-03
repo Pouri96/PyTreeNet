@@ -1,0 +1,61 @@
+{
+ "n": 16,
+ "dt": 0.02,
+ "t_final": 1.0,
+ "warmup": 4,
+ "system": "neel start, H = -sum_i (X_i X_i+1 + Z_i), binary tree, virtual interiors",
+ "gauge": "root-canonical form restored after every vendored cut",
+ "rows": {
+  "8": {
+   "ceruti": {
+    "err": 0.7546705203762176,
+    "params": 1792,
+    "wall": 4.428729100036435
+   },
+   "grasedyck": {
+    "err": 0.05939661259359719,
+    "params": 1792,
+    "wall": 4.901419900008477
+   },
+   "centre_moved": {
+    "err": 0.05929859023317319,
+    "params": 1792,
+    "wall": 4.7146604000008665
+   }
+  },
+  "12": {
+   "ceruti": {
+    "err": 0.611398942017089,
+    "params": 4560,
+    "wall": 5.1490305999759585
+   },
+   "grasedyck": {
+    "err": 0.003158812814929024,
+    "params": 4560,
+    "wall": 5.23224039998604
+   },
+   "centre_moved": {
+    "err": 0.0031587073754069106,
+    "params": 4560,
+    "wall": 5.4117791000171565
+   }
+  },
+  "16": {
+   "ceruti": {
+    "err": 1.3546409916020963e-07,
+    "params": 9664,
+    "wall": 6.466652200033423
+   },
+   "grasedyck": {
+    "err": 1.3667441933762348e-07,
+    "params": 9664,
+    "wall": 6.462963700003456
+   },
+   "centre_moved": {
+    "err": 1.3663905518157549e-07,
+    "params": 9664,
+    "wall": 6.4466394999763
+   }
+  }
+ }
+}
