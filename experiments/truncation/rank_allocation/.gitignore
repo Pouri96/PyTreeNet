@@ -1,0 +1,6 @@
+_refcache/
+out_*.txt
+__pycache__/
+logs/
+figures/*.png
+!figures/budget_frontiers.pdf
