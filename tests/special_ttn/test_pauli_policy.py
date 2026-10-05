@@ -1,12 +1,13 @@
 from dataclasses import FrozenInstanceError
 from unittest import TestCase, main
 
-from pytreenet.special_ttn.pauli import DMT, PLAIN, RTEBD, PlainSVD, TruncationPolicy
+from pytreenet.special_ttn.pauli import (DMT, PLAIN, ReweightedSVD, PlainSVD,
+                                         TruncationPolicy)
 
 
 class TestPolicies(TestCase):
     def test_all_policies_share_a_base(self):
-        for policy in (PLAIN, DMT(), RTEBD(gamma=2.0)):
+        for policy in (PLAIN, DMT(), ReweightedSVD(gamma=2.0)):
             self.assertIsInstance(policy, TruncationPolicy)
 
     def test_plain_is_the_default_singleton_and_compares_equal(self):
@@ -24,12 +25,12 @@ class TestPolicies(TestCase):
         with self.assertRaises(FrozenInstanceError):
             DMT().radius = 2
         with self.assertRaises(FrozenInstanceError):
-            RTEBD(gamma=2.0).gamma = 3.0
+            ReweightedSVD(gamma=2.0).gamma = 3.0
 
     def test_policies_with_equal_fields_are_equal(self):
         self.assertEqual(DMT(radius=0), DMT(radius=0))
         self.assertNotEqual(DMT(radius=0), DMT(radius=1))
-        self.assertEqual(RTEBD(gamma=2.2), RTEBD(gamma=2.2))
+        self.assertEqual(ReweightedSVD(gamma=2.2), ReweightedSVD(gamma=2.2))
 
     def test_dmt_radius_validation(self):
         for bad in (-1, 1.5, True, "1", None):
@@ -53,23 +54,23 @@ class TestPolicies(TestCase):
                 with self.assertRaisesRegex(ValueError, "conserved_terms"):
                     DMT(conserved_terms=bad)
 
-    def test_rtebd_requires_gamma(self):
+    def test_reweighted_svd_requires_gamma(self):
         with self.assertRaises(TypeError):
-            RTEBD()
+            ReweightedSVD()
 
-    def test_rtebd_gamma_validation(self):
+    def test_reweighted_svd_gamma_validation(self):
         for bad in (0.5, 0.0, -2.0, float("nan"), float("inf")):
             with self.subTest(gamma=bad):
                 with self.assertRaises(ValueError):
-                    RTEBD(gamma=bad)
+                    ReweightedSVD(gamma=bad)
         for bad in (True, "2", None):
             with self.subTest(gamma=bad):
                 with self.assertRaisesRegex(ValueError, "number"):
-                    RTEBD(gamma=bad)
+                    ReweightedSVD(gamma=bad)
 
-    def test_rtebd_accepts_gamma_one_and_integers(self):
-        self.assertEqual(1, RTEBD(gamma=1).gamma)
-        self.assertEqual(3, RTEBD(gamma=3).gamma)
+    def test_reweighted_svd_accepts_gamma_one_and_integers(self):
+        self.assertEqual(1, ReweightedSVD(gamma=1).gamma)
+        self.assertEqual(3, ReweightedSVD(gamma=3).gamma)
 
 
 if __name__ == "__main__":

@@ -1,5 +1,7 @@
 """
-The rTEBD reweighting gauge on the fused Pauli frame (Guha Roy and Slagle, arXiv:2412.08730).
+The ReweightedSVD gauge on the fused Pauli frame.
+
+Guha Roy and Slagle, arXiv:2412.08730.
 
 ``G = diag(1, 1/gamma, 1/gamma, 1/gamma)`` acts on every Pauli leg, so a coefficient of weight
 ``n`` is stored divided by ``gamma**n``. The gauge is real, diagonal and a product over sites,

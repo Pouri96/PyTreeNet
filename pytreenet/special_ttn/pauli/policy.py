@@ -2,9 +2,10 @@
 Truncation policies of the fused Pauli frame.
 
 A policy decides which directions a fixed bond budget keeps. Plain SVD keeps the largest
-Frobenius weight. :class:`DMT` reserves the trace and the local Pauli strings so that they
-survive every truncation exactly. :class:`RTEBD` biases the SVD against high-weight strings.
-The two are alternatives, so an integrator takes one policy object and never both.
+Frobenius weight. :class:`DMT` reserves the trace and the local Pauli strings so that
+they survive every truncation exactly. :class:`ReweightedSVD` biases the SVD against
+high-weight strings. The two are alternatives, so an integrator takes one policy object
+and never both.
 
 The classes hold data only, and the integrators in RAGE and GCG read them.
 """
@@ -14,7 +15,7 @@ import math
 from dataclasses import dataclass
 from typing import Optional
 
-__all__ = ["TruncationPolicy", "PlainSVD", "DMT", "RTEBD", "PLAIN"]
+__all__ = ["TruncationPolicy", "PlainSVD", "DMT", "ReweightedSVD", "PLAIN"]
 
 
 class TruncationPolicy:
@@ -80,7 +81,7 @@ class DMT(TruncationPolicy):
 
 
 @dataclass(frozen=True)
-class RTEBD(TruncationPolicy):
+class ReweightedSVD(TruncationPolicy):
     """Reweighted truncation (Guha Roy and Slagle, arXiv:2412.08730).
 
     Every Pauli coefficient of weight ``n`` is stored divided by ``gamma**n``, so the SVD
@@ -98,13 +99,17 @@ class RTEBD(TruncationPolicy):
 
     def __post_init__(self):
         if isinstance(self.gamma, bool) or not isinstance(self.gamma, (int, float)):
-            raise ValueError(f"RTEBD gamma must be a number, got {self.gamma!r}.")
+            raise ValueError(
+                f"ReweightedSVD gamma must be a number, got {self.gamma!r}."
+            )
         if not math.isfinite(self.gamma) or self.gamma <= 0.0:
-            raise ValueError(f"RTEBD gamma must be positive and finite, got {self.gamma}.")
+            raise ValueError(
+                f"ReweightedSVD gamma must be positive and finite, got {self.gamma}."
+            )
         if self.gamma < 1.0:
             raise ValueError(
-                f"RTEBD gamma must be >= 1, got {self.gamma}: a smaller value prioritises "
-                "high-weight strings."
+                f"ReweightedSVD gamma must be >= 1, got {self.gamma}: a smaller value "
+                "prioritises high-weight strings."
             )
 
 

@@ -2,11 +2,11 @@
 Fused Pauli frame: density operators ``rho`` of ``N`` qubits as a network with one site of
 dimension 4 per qubit, holding the coefficients of ``rho`` in the normalised Pauli basis.
 
-``frame`` holds the representation (trace, purity, readout), ``observables`` the expectation
-values of chains, ``states`` the builders, ``channels``
-the Pauli-transfer matrices of gates and noise, and ``lindbladian`` the Lindbladian TTNO with its
-dense reference. ``policy`` holds the truncation policies and ``reweight`` the rTEBD gauge.
-Import from this package, it is not star-imported by ``special_ttn``.
+``frame`` holds the representation (trace, purity, readout), ``observables`` the
+expectation values of chains, ``states`` the builders, ``channels`` the Pauli-transfer
+matrices of gates and noise, and ``lindbladian`` the Lindbladian TTNO with its dense
+reference. ``policy`` holds the truncation policies and ``reweight`` the ReweightedSVD
+gauge. Import from this package, it is not star-imported by ``special_ttn``.
 """
 from .channels import (dissipator_generator, pauli_channel_ptm, pauli_dissipator_channel_ptm,
                        pauli_gate_channels, pauli_gate_ptm)
@@ -20,7 +20,7 @@ from .frame import (PAULIS, U_PAULI, assert_fused_pauli, network_is_real, pauli_
                     pauli_to_dense, pauli_trace, pauli_trace_cap, realify_network)
 from .lindbladian import pauli_dense_lindbladian, pauli_lindbladian_ttno
 from .observables import pauli_expectation, pauli_local_expectation_sweep
-from .policy import DMT, PLAIN, RTEBD, PlainSVD, TruncationPolicy
+from .policy import DMT, PLAIN, ReweightedSVD, PlainSVD, TruncationPolicy
 from .reweight import (pauli_reweight_channels, pauli_reweight_matrix, pauli_reweight_mpo,
                        pauli_reweight_network, pauli_reweight_ptm)
 from .states import (pauli_from_dense, pauli_product_mps, pauli_product_tree_allphys,
@@ -39,7 +39,7 @@ __all__ = [
     "PAULIS",
     "PLAIN",
     "PlainSVD",
-    "RTEBD",
+    "ReweightedSVD",
     "TruncationPolicy",
     "U_PAULI",
     "assert_fused_pauli",
