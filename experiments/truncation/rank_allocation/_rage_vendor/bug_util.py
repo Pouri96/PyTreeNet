@@ -205,7 +205,7 @@ class WarmupConfig:
 
     Attributes:
         warmup_sweeps: Passes before the step's own update, each doubling every bond where
-            the neighbouring legs allow. Defaults to 0 (off); the RAGE integrators default to 1.
+            the neighbouring legs allow. Defaults to 0 (off) on every integrator.
         warmup_every_step: ``None`` (the default) warms every step if ``time_dep``, else only
             the first. ``True``/``False`` force it.
     """
@@ -245,11 +245,9 @@ class ResidualSelectionConfig(WarmupConfig):
         residual_krylov_tol: Cutoff on the Krylov residual estimate, setting the two-site
             recurrence depth. ``0`` runs to the noise floor (long-range generators need it).
             Defaults to 1e-10.
-        warmup_sweeps: Defaults to 1 here, so the first step has room to select from.
     """
     max_aug_bond_dim: Union[int, float] = float("inf")
     residual_krylov_tol: float = 1e-10
-    warmup_sweeps: int = 1
 
 
 @dataclass
