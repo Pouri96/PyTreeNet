@@ -1,4 +1,5 @@
-# Experiment for the truncation paper's budget figure
+# Sec. III. Benchmark of paper : A Lagrangian approach to rank allocation in Higher-Order SVD (HOSVD) truncation
+of Tree Tensor Networks (TTN) :
 
 The data and the code that draw `figures/budget_frontiers.pdf`: infidelity at the final time
 against stored parameters, for the maximum bond dimension `chi` and the bound `P_max`, on six
@@ -26,12 +27,7 @@ so `python dp_figure.py` alone redraws it.
 | `_rage_vendor/` | the BUG integrator, copied from RAGE so this folder runs without it |
 | `_pytreenet_root.py` | puts this repository's `pytreenet` ahead of any other installed copy |
 
-## How runs are compared
-
-A run is two numbers: its stored parameters and its infidelity at the final time. The parameter
-target is never used to pair runs, since a run does not land on its target exactly.
-
-## Settings shared by every arm
+## Settings shared by all runs
 
 - Each start is widened by warm-up passes (BUG's basis update without the Galerkin step).
 - `rel_tol = 1e-12` and `total_tol = 1e-14`. A cut keeps `s > max(rel_tol * s_max, total_tol)`,
