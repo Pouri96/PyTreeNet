@@ -1,0 +1,5 @@
+isingdw N=12 T=4.0 dt=0.1: compress every step, fidelity_weight=0.03, maxiter=250, fit windows up to k=3, pair weight=0.0, lookahead=1 set=[0, 1]
+ chi  params    arm     infid    1-site    2-site    3-site    4-site pair d<=2 pair d>=4         E     secs
+   8     936    svd  6.63e-02  8.06e-03  1.38e-02  2.42e-02  4.12e-02  1.52e-02  1.53e-02  7.91e-02        1s
+   8     936    fit  6.79e-02  1.77e-03  4.16e-03  1.26e-02  3.29e-02  6.98e-03  1.28e-02  8.31e-03      204s
+                 fit/svd      1.02      0.22      0.30      0.52      0.80      0.46      0.84      0.11

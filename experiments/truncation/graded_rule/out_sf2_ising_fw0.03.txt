@@ -1,0 +1,5 @@
+ising N=10 T=3.0 dt=0.1: compress every step, fidelity_weight=0.03, maxiter=300
+ chi  params    arm     infid    1-site    2-site    3-site         E     secs
+   6     424    svd  2.32e-02  8.55e-03  1.72e-02  2.55e-02  3.59e-02        0s
+   6     424    fit  2.26e-02  2.96e-03  6.05e-03  1.43e-02  9.01e-03       38s
+                 fit/svd      0.98      0.35      0.35      0.56      0.25

@@ -1,0 +1,14 @@
+ising N=12 T=4.0 dt=0.1: compress every step, fidelity_weight=0.03, maxiter=250, fit windows up to k=3, pair weight=0.0, lookahead=0 set=[0]
+ chi  params    arm     infid    1-site    2-site    3-site    4-site pair d<=2 pair d>=4         E     secs
+E1006 09:46:15.725199   27328 slow_operation_alarm.cc:73] 
+********************************
+[Compiling module jit_f for CPU] Very slow compile? If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+E1006 09:47:16.027527   36376 slow_operation_alarm.cc:140] The operation took 3m0.3459942s
+
+********************************
+[Compiling module jit_f for CPU] Very slow compile? If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+   8     936    svd  6.05e-02  2.29e-02  3.78e-02  4.92e-02  6.12e-02  3.67e-02  3.15e-02  6.66e-02        1s
+   8     936    fit  6.19e-02  6.16e-03  1.13e-02  2.14e-02  3.67e-02  1.32e-02  1.58e-02  8.33e-03     2028s
+                 fit/svd      1.02      0.27      0.30      0.43      0.60      0.36      0.50      0.13

@@ -1,0 +1,3 @@
+1/5 chi=8              svd infid=6.724e-02 rdm2=4.15e-02 nn=2.14e-02 E=3.75e-02 peak=8 0s [7s]
+2/5 chi=8           dsvd:2 infid=6.052e-02 rdm2=3.78e-02 nn=1.95e-02 E=6.66e-02 peak=16 1s [8s]
+3/5 chi=8 mfc:2:0.03:3:250 infid=5.838e-02 rdm2=1.31e-02 nn=6.96e-03 E=1.52e-02 peak=16 153s [159s]

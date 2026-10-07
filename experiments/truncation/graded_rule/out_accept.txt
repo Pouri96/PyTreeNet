@@ -1,0 +1,2 @@
+1/2 chi=6 lib P=712 infid=4.415e-02 nn=1.22e-02 E=3.74e-02 fired=0/0 40s
+2/2 chi=6 svd P=712 infid=4.415e-02 nn=1.22e-02 E=3.74e-02 fired=0/780 40s

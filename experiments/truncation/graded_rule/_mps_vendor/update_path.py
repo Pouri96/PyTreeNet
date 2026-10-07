@@ -1,0 +1,388 @@
+"""Update paths: the order in which a sweeping integrator visits the nodes of a tree."""
+from __future__ import annotations
+from typing import List, Tuple
+from pytreenet.core.tree_structure import TreeStructure
+from enum import Enum
+
+
+__all__ = [
+    "PathFinderMode", "SweepingUpdatePathFinder",
+    "SweepingUpdatePathFinder_LeafToRoot",
+    "SweepingUpdatePathFinder_LeafToLeaf"
+]
+
+
+class PathFinderMode(Enum):
+    """
+    Enumeration for different pathfinding modes in a tree structure.
+
+    All three start from the two leaves of maximal distance, ``L_A`` and ``L_B``.
+
+    Attributes:
+        LeafToLeaf_Forward: Walk the main path ``L_A -> L_B``, visiting each off-path
+                  subtree before the main-path node it hangs from.
+        LeafToLeaf_Backward: The same traversal with the main path taken as
+                  ``L_B -> L_A``. On a chain this is the exact reverse of the forward
+                  path; on a branching tree it is not, though it starts and ends at the
+                  same two leaves, exchanged.
+        LeafToRoot: Walk from the leaf furthest from the root up to the root.
+    """
+    LeafToLeaf_Forward = "LeafToLeaf_Forward"
+    LeafToLeaf_Backward = "LeafToLeaf_Backward"
+    LeafToRoot = "LeafToRoot"
+
+class SweepingUpdatePathFinder():
+    """
+    Base class to construct the update path of a sweeping integrator.
+
+    Attributes:
+        state: The tree structure used for path finding.
+        mode: The update path strategy mode.
+                               Can be either `LeafToLeaf` or `LeafToRoot`.
+    """
+    def __init__(self, state: TreeStructure, mode: PathFinderMode = PathFinderMode.LeafToRoot) -> None:
+        self.state = state
+        self.mode = mode
+
+        if self.mode == PathFinderMode.LeafToRoot:
+            self._finder = SweepingUpdatePathFinder_LeafToRoot(self.state)
+        elif self.mode == PathFinderMode.LeafToLeaf_Forward:
+            self._finder = SweepingUpdatePathFinder_LeafToLeaf(self.state, forward = True)
+        elif self.mode == PathFinderMode.LeafToLeaf_Backward:
+            self._finder = SweepingUpdatePathFinder_LeafToLeaf(self.state, forward = False)
+        else:
+            raise ValueError(f"Unsupported mode: {self.mode}")
+
+
+    def find_path(self) -> List[str]:
+        """
+        Finds the complete update path using the selected path finding strategy.
+
+        Returns:
+            List[str]: The ordered list of node identifiers constituting the update path.
+        """
+        return self._finder.find_path()
+
+class SweepingUpdatePathFinder_LeafToRoot():
+    """
+    Constructs the update path of a sweeping integrator.
+
+    The start and end nodes are the two leaves of maximal distance, which is the choice
+    that reduces the number of orthogonalisations, i.e. QR decompositions, the sweep
+    performs.
+
+    Attributes:
+        state: The tree topology to find the update path on.
+        start: The node to start the update path at.
+        main_path: The main path, i.e. the longest path in the
+            tree along which to run. For an MPS this would be the only path.
+    """
+
+    def __init__(self, state: TreeStructure) -> None:
+        self.state = state
+        self.start = self.find_start_node_id()
+        self.main_path = self.state.find_path_to_root(self.start)
+
+    def find_start_node_id(self) -> str:
+        """
+        Finds the node id at which to start the sweep.
+
+        This would be the initial orthogonalisation center of the state that
+        is to be time-evolved. Currently, we assume this site is the leaf
+        furthest away from the root.
+
+        Returns:
+            str: The node_id at which to start the update.
+        """
+        distances_from_root = self.state.distance_to_node(self.state.root_id)
+        return max(distances_from_root,
+                   key=distances_from_root.get)
+
+    def path_for_branch(self, branch_origin: str) -> List[str]:
+        """
+        Finds the node_ids that need to be visited after the last main path
+        node and before branch_origin.
+
+        Args:
+            branch_origin: The identifier of the node in the main path
+                which has the branch as a subtree.
+
+        Returns:
+            List[str]: The desired path. The children appear before their
+                parent.
+        """
+        node = self.state.nodes[branch_origin]
+        children_ids = [child_id for child_id in node.children
+                        if child_id not in self.main_path]
+        branch_path = []
+        for child_id in children_ids:
+            branch_path.extend(self._path_for_branch_rec(child_id))
+        branch_path.append(branch_origin)
+        return branch_path
+
+    def _path_for_branch_rec(self, node_id: str) -> List[str]:
+        node = self.state.nodes[node_id]
+        if node.is_leaf():
+            return [node_id]
+        path = []
+        for child_id in node.children:
+            path.extend(self._path_for_branch_rec(child_id))
+        path.append(node_id)
+        return path
+
+    def find_furthest_non_visited_leaf(self, path: List[str]) -> str:
+        """
+        Finds the leaf that is furthest from the origin once and was not yet
+        visited.
+
+        Args:
+            path: A list of all node_ids already visited.
+
+        Returns:
+            str: The identifier of the leaf which is furthest away from the
+                main path and has not been visited yet.
+        """
+        all_leaves = self.state.get_leaves()
+        non_visited_leaves = [leaf for leaf in all_leaves
+                              if leaf not in path]
+        distances_from_root = self.state.distance_to_node(self.state.root_id)
+        leaf_distances = {leaf_id: distance
+                          for leaf_id, distance in distances_from_root.items()
+                          if leaf_id in non_visited_leaves}
+        return max(leaf_distances, key=leaf_distances.get)
+
+    def find_main_path_down_from_root(self, path: List[str]) -> List[str]:
+        """
+        Finds the main path which to traverse from the root to the last
+        leaf.
+
+        Args:
+            path: The path already traversed.
+
+        Returns:
+            List[str]: Main path from the root to the last leaf.
+                `[root, node, node, ... , leaf]`
+        """
+        final_node_id = self.find_furthest_non_visited_leaf(path)
+        main_path_down = self.state.find_path_to_root(final_node_id)
+        main_path_down.reverse()
+        return main_path_down
+
+    def _branch_downwards_origin_is_root(self,
+                                         main_path_down: List[str]) -> List[str]:
+        """
+        Finds the path going through the branches starting at the origin.
+
+        This specifically excludes the branch already traversed and the
+        branch used to go back down the tree.
+
+        Args:
+            main_path_down: The main path down the tree.
+
+        Returns:
+            List[str]: The path through the branch ending with the root.
+        """
+        children_ids = [child_id
+                        for child_id in self.state.nodes[self.state.root_id].children
+                        if child_id not in (self.main_path[-2],main_path_down[1])]
+        branch_path = []
+        for child_id in children_ids:
+            branch_path.extend(self._path_for_branch_rec(child_id))
+        branch_path.append(self.state.root_id)
+        return branch_path
+
+    def _branch_path_downwards(self, branch_origin: str,
+                               main_path_down: List[str]) -> List[str]:
+        """
+        Finds the path through a branch while going down from the origin.
+
+        Args:
+            branch_origin: current node identifier
+            main_path_down: The main path down the tree.
+
+        Returns:
+            List[str]: The path through the branch ending with the
+                branch_origin.
+        """
+        children_ids = [child_id
+                        for child_id in self.state.nodes[branch_origin].children
+                        if child_id not in main_path_down]
+        branch_path = []
+        for child_id in children_ids:
+            branch_path.extend(self._path_for_branch_rec(child_id))
+        branch_path.append(branch_origin)
+        return branch_path
+
+    def path_down_from_root(self, path: List[str]) -> List[str]:
+        """
+        Finds the complete path from the root to the last leaf.
+
+        Args:
+            path: The path that was already traversed.
+
+        Returns:
+            List[str]: The complete path from the root to the last leaf.
+                `[root, node, node, ... , leaf]`
+        """
+        root_id = self.state.root_id
+        if self.state.nodes[root_id].has_x_children(1):
+            return [root_id]
+        main_path_down = self.find_main_path_down_from_root(path)
+        down_path = []
+        for branch_origin in main_path_down:
+            if branch_origin == self.state.root_id:
+                branch_path = self._branch_downwards_origin_is_root(main_path_down)
+            else:
+                branch_path = self._branch_path_downwards(branch_origin, main_path_down)
+            down_path.extend(branch_path)
+        return down_path
+
+    def find_path(self) -> List[str]:
+        """
+        Finds the complete update path along a main path.
+
+        All nodes in branches are added before the branch origin in the main
+        path.
+        """
+        path = []
+        for branch_origin in self.main_path:
+            if branch_origin != self.state.root_id:
+                path.extend(self.path_for_branch(branch_origin))
+            else:
+                path.extend(self.path_down_from_root(path))
+        return path
+
+class SweepingUpdatePathFinder_LeafToLeaf():
+    """
+    Constructs a leaf-to-leaf update path:
+
+      1) Identifies two leaves L_A, L_B that are farthest apart.
+      2) main_path = path_from_to(L_A, L_B).
+      3) Visits *all* off-path subtrees (including possibly the root, if it's not
+         on main_path), so that every node is visited exactly once.
+
+    Attributes:
+        state: A copy of the original tree, used for path finding.
+        start: One diameter leaf (L_A).
+        end:   The other diameter leaf (L_B).
+        main_path: The direct path from L_A to L_B.
+    """
+
+    def __init__(self, state, forward: bool = True) -> None:
+        self.state = state
+        self.start, self.end = self._find_two_diameter_leaves()
+        if forward:
+            self.main_path = self.state.path_from_to(self.start, self.end)
+        else:
+            self.main_path = self.state.path_from_to(self.end, self.start)
+
+    def _find_two_diameter_leaves(self) -> Tuple[str, str]:
+        """
+        Finds two leaves L_A, L_B that maximize distance by explicitly
+        checking all pairs of leaves.
+
+        Returns:
+            (L_A, L_B): Identifiers of the diameter leaves.
+        """
+        leaves = self.state.get_leaves(include_root = True)
+
+        best_dist = -1
+        best_pair = (leaves[0], leaves[0])
+
+        for i in range(len(leaves)):
+            dist_i = self.state.distance_to_node(leaves[i])
+            for j in range(i + 1, len(leaves)):
+                d = dist_i[leaves[j]]
+                if d > best_dist:
+                    best_dist = d
+                    best_pair = (leaves[i], leaves[j])
+
+        return best_pair
+
+    def find_path(self) -> List[str]:
+        """
+        Returns the full traversal order (covering all nodes in the tree),
+        starting at L_A, ending at L_B, and visiting any branch subtrees that
+        are not on the main path.
+        - For each 'branch_origin' in self.main_path (in order from start to end):
+              1) Include its parent subtree if off-path
+              2) Include child subtrees if off-path
+              3) Finally include branch_origin itself
+        """
+        visited = set()
+        full_path = []
+
+        for branch_origin in self.main_path:
+            parent_subtree = self._visit_offpath_subtree_parents(branch_origin, visited)
+            children_subtree = self._visit_offpath_subtree_children(branch_origin, visited)
+
+            full_path.extend(parent_subtree)
+            full_path.extend(children_subtree)
+
+            if branch_origin not in visited:
+                visited.add(branch_origin)
+                full_path.append(branch_origin)
+
+        return full_path
+
+    def _visit_offpath_subtree_parents(self, branch_origin: str, visited: set) -> List[str]:
+        """The subtree of ``branch_origin``'s parent, when that parent is off the main
+        path and unvisited; empty otherwise."""
+        node = self.state.nodes[branch_origin]
+        if (not node.is_root()
+                and node.parent not in self.main_path
+                and node.parent not in visited):
+            # The parent's subtree, post-order; the recursion climbs further if needed.
+            return self._subtree_path_rec(node.parent, visited)
+        return []
+
+    def _visit_offpath_subtree_children(self, branch_origin: str, visited: set) -> List[str]:
+        """
+        For the main-path node `branch_origin`, gather all child subtrees that
+        are not on the main path.
+        """
+        node = self.state.nodes[branch_origin]
+        offpath_kids = [c for c in node.children if c not in self.main_path]
+        sub_path = []
+
+        for child_id in offpath_kids:
+            sub_path.extend(self._subtree_path_rec(child_id, visited))
+
+        return sub_path
+
+    def _subtree_path_rec(self, node_id: str, visited: set) -> List[str]:
+        """
+        Recursively collects all nodes in the subtree rooted at node_id,
+        in post-order DFS: first incorporate child subtrees, then the
+        node itself.
+
+        We skip nodes that are already visited or on the main_path to
+        prevent revisits or collisions. If this node has a parent off the
+        main path and unvisited, we also gather that as part of the upward chain.
+
+        Args:
+            node_id: The id of the current subtree root.
+            visited: A set of nodes already included in the path.
+
+        Returns:
+            path: The list of node_ids in the gathered subtree.
+        """
+        if node_id in visited or node_id in self.main_path:
+            return []
+
+        visited.add(node_id)
+        node = self.state.nodes[node_id]
+        path = []
+
+        if (not node.is_root()
+                and node.parent not in self.main_path
+                and node.parent not in visited):
+            path.extend(self._subtree_path_rec(node.parent, visited))
+
+        for c_id in node.children:
+            if c_id not in self.main_path and c_id not in visited:
+                path.extend(self._subtree_path_rec(c_id, visited))
+
+        path.append(node_id)
+
+        return path

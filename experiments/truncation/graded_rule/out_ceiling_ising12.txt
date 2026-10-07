@@ -1,0 +1,4 @@
+ising N=12 T=4.0: best rank-chi MPS for ALL 1-,2-,3-site marginals (rms Frobenius over windows)
+ chi  params |     svd 1    opt 1 |     svd 2    opt 2 |     svd 3    opt 3 |    F svd    F opt   gain 2-site
+   8     936 |  7.26e-03 8.44e-06 |  1.35e-02 1.92e-05 |  1.85e-02 8.46e-05 |   0.9704   0.9343   703.5x  (1500 it)
+  10    1288 |  3.89e-03 1.17e-06 |  7.31e-03 2.88e-06 |  1.00e-02 1.10e-05 |   0.9860   0.9751   2542.9x  (1500 it)

@@ -1,0 +1,8 @@
+1/8 chi=16              svd infid=5.764e-01 rdm2=4.54e-02 nn=2.29e-02 E=4.19e-01 peak=16 4s [23s]
+2/8 chi=16           dsvd:2 infid=5.297e-01 rdm2=4.64e-02 nn=2.20e-02 E=7.10e-01 peak=32 10s [29s]
+3/8 chi=24              svd infid=3.397e-01 rdm2=3.09e-02 nn=1.49e-02 E=2.75e-01 peak=24 5s [42s]
+4/8 chi=24           dsvd:2 infid=3.003e-01 rdm2=3.03e-02 nn=1.39e-02 E=4.60e-01 peak=48 16s [59s]
+5/8 chi=16       mfc:2:0.01 infid=5.703e-01 rdm2=2.72e-02 nn=1.41e-02 E=3.86e-02 peak=32 1018s [1044s]
+6/8 chi=16       mfc:2:0.03 infid=5.559e-01 rdm2=2.68e-02 nn=1.36e-02 E=1.41e-01 peak=32 1061s [1079s]
+7/8 chi=24       mfc:2:0.03 infid=3.167e-01 rdm2=1.23e-02 nn=6.29e-03 E=9.73e-02 peak=48 1293s [1357s]
+8/8 chi=24       mfc:2:0.01 infid=3.261e-01 rdm2=1.18e-02 nn=6.17e-03 E=3.16e-02 peak=48 1330s [1374s]

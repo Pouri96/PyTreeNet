@@ -1,0 +1,6 @@
+ising N=14 T=6.0: errors against the CONTINUOUS-time exact state (Trotter floor at dt=0.1: single 6e-4, nn 9e-4 for Ising N=14 T=6)
+ chi  params    arm     infid    single        nn       nnn      rdm2      rdm3    secs
+  24    6824    svd  2.40e-02  3.56e-03  3.89e-03  2.91e-03  7.37e-03  9.43e-03       0
+  24    6824   tdvp  2.76e-02  3.53e-03  4.31e-03  3.23e-03  7.86e-03  1.02e-02      19
+  24    6824   dsvd  2.13e-02  3.33e-03  3.41e-03  2.60e-03  6.62e-03  8.48e-03       2
+  24    6824    mfc  2.17e-02  1.26e-03  1.66e-03  1.64e-03  2.94e-03  4.68e-03     289

@@ -1,0 +1,59 @@
+1/3 chi=8           dsvd:2 infid=6.633e-02 rdm2=1.38e-02 nn=7.28e-03 E=7.91e-02 peak=16 0s [4s]
+2/3 chi=8 mfc:2:0.03:3:250 infid=6.819e-02 rdm2=7.91e-03 nn=4.71e-03 E=1.34e-02 peak=16 109s [113s]
+multiprocessing.pool.RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "C:\Users\edpou\AppData\Local\Python\pythoncore-3.14-64\Lib\multiprocessing\pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\edpou\Desktop\BUG\PTN trunc_research\experiments\truncation\graded_rule\mfc_bench.py", line 50, in one
+    Tm, info = lookahead.run_mfcl(model, N, chi, nsteps, dt, chi_w_factor=f, ks=tuple(range(1, kmax + 1)), fw=fw,
+               ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                  maxiter=iters, ms=ms, kla=kla, eps=eps, lam=lam, coarse=coarse)
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\edpou\Desktop\BUG\PTN trunc_research\experiments\truncation\graded_rule\rule\lookahead.py", line 249, in run_mfcl
+    T = fc(Tw, chi, init)
+  File "C:\Users\edpou\Desktop\BUG\PTN trunc_research\experiments\truncation\graded_rule\rule\lookahead.py", line 226, in __call__
+    res = minimize(fun, x0, jac=True, method='L-BFGS-B',
+                   options=dict(maxiter=self.maxiter, maxfun=2 * self.maxiter, ftol=1e-15, gtol=1e-11))
+  File "C:\Users\edpou\Desktop\BUG\.venv\Lib\site-packages\scipy\optimize\_minimize.py", line 784, in minimize
+    res = _minimize_lbfgsb(fun, x0, args, jac, bounds,
+                           callback=callback, **options)
+  File "C:\Users\edpou\Desktop\BUG\.venv\Lib\site-packages\scipy\optimize\_lbfgsb_py.py", line 420, in _minimize_lbfgsb
+    f, g = func_and_grad(x)
+           ~~~~~~~~~~~~~^^^
+  File "C:\Users\edpou\Desktop\BUG\.venv\Lib\site-packages\scipy\optimize\_differentiable_functions.py", line 412, in fun_and_grad
+    self._update_fun()
+    ~~~~~~~~~~~~~~~~^^
+  File "C:\Users\edpou\Desktop\BUG\.venv\Lib\site-packages\scipy\optimize\_differentiable_functions.py", line 362, in _update_fun
+    fx = self._wrapped_fun(self.x)
+  File "C:\Users\edpou\Desktop\BUG\.venv\Lib\site-packages\scipy\_lib\_util.py", line 545, in __call__
+    fx = self.f(np.copy(x), *self.args)
+  File "C:\Users\edpou\Desktop\BUG\.venv\Lib\site-packages\scipy\optimize\_optimize.py", line 80, in __call__
+    self._compute_if_needed(x, *args)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\edpou\Desktop\BUG\.venv\Lib\site-packages\scipy\optimize\_optimize.py", line 74, in _compute_if_needed
+    fg = self.fun(x, *args)
+  File "C:\Users\edpou\Desktop\BUG\PTN trunc_research\experiments\truncation\graded_rule\rule\lookahead.py", line 223, in fun
+    return float(val), np.asarray(g)
+           ~~~~~^^^^^
+  File "C:\Users/edpou/AppData/Local/Temp/claude/c--Users-edpou-Desktop-BUG/0e79467a-dca4-46a6-9ecf-ad2c2f175ea5/scratchpad/pylibs\jax\_src\array.py", line 295, in __float__
+    return self._value.__float__()
+           ^^^^^^^^^^^
+  File "C:\Users/edpou/AppData/Local/Temp/claude/c--Users-edpou-Desktop-BUG/0e79467a-dca4-46a6-9ecf-ad2c2f175ea5/scratchpad/pylibs\jax\_src\profiler.py", line 420, in wrapper
+    return func(*args, **kwargs)
+  File "C:\Users/edpou/AppData/Local/Temp/claude/c--Users-edpou-Desktop-BUG/0e79467a-dca4-46a6-9ecf-ad2c2f175ea5/scratchpad/pylibs\jax\_src\array.py", line 637, in _value
+    npy_value, did_copy = self._single_device_array_to_np_array_did_copy()
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+jax.errors.JaxRuntimeError: RESOURCE_EXHAUSTED: Out of memory allocating 14881440 bytes.
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\edpou\Desktop\BUG\PTN trunc_research\experiments\truncation\graded_rule\mfc_bench.py", line 77, in <module>
+    for r in pool.imap_unordered(one, jobs):
+             ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\edpou\AppData\Local\Python\pythoncore-3.14-64\Lib\multiprocessing\pool.py", line 873, in next
+    raise value
+jax.errors.JaxRuntimeError: RESOURCE_EXHAUSTED: Out of memory allocating 14881440 bytes.

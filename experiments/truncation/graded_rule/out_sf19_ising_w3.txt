@@ -1,0 +1,2 @@
+ising N=12 T=4.0 dt=0.1: compress every step, fidelity_weight=0.03, maxiter=100, fit windows up to k=3, pair weight=0.0, lookahead=0 set=[0]
+ chi  params    arm     infid    1-site    2-site    3-site    4-site pair d<=2 pair d>=4         E     secs

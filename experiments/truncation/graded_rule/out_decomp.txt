@@ -1,0 +1,12 @@
+1/12 chi=32 svd infid=2.038e-01 rdm2=2.28e-02 nn=1.13e-02 E=1.70e-01 9s
+2/12 chi=32 pinstep infid=2.093e-01 rdm2=2.84e-02 nn=1.37e-02 E=3.89e-02 13s
+3/12 chi=32 enh:0.1:4:0:0:1:0 infid=2.113e-01 rdm2=1.35e-02 nn=6.77e-03 E=4.01e-02 16s
+4/12 chi=32 enh:0.1:4:100:0:2:0 infid=2.066e-01 rdm2=1.16e-02 nn=6.28e-03 E=9.66e-02 19s
+5/12 chi=32 enhG:0.1:1 infid=2.142e-01 rdm2=2.23e-02 nn=1.17e-02 E=5.73e-02 20s
+6/12 chi=48 svd infid=7.585e-02 rdm2=1.15e-02 nn=5.79e-03 E=7.25e-02 21s
+7/12 chi=32 enhg:0.1:10000 infid=2.137e-01 rdm2=1.14e-02 nn=5.80e-03 E=2.50e-02 25s
+8/12 chi=48 enh:0.1:4:0:0:1:0 infid=7.700e-02 rdm2=5.28e-03 nn=2.74e-03 E=2.10e-02 35s
+9/12 chi=48 pinstep infid=7.683e-02 rdm2=1.35e-02 nn=6.65e-03 E=3.89e-02 37s
+10/12 chi=48 enh:0.1:4:100:0:2:0 infid=7.602e-02 rdm2=5.69e-03 nn=3.03e-03 E=4.63e-02 42s
+11/12 chi=48 enhG:0.1:1 infid=7.771e-02 rdm2=1.11e-02 nn=5.88e-03 E=1.80e-02 45s
+12/12 chi=48 enhg:0.1:10000 infid=7.755e-02 rdm2=4.95e-03 nn=2.64e-03 E=7.97e-03 50s

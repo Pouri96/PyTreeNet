@@ -1,0 +1,3 @@
+1/3 chi=12              svd infid=4.599e-01 rdm2=6.79e-02 nn=4.49e-02 E=3.16e-01 peak=12 0s [3s]
+2/3 chi=12           dsvd:2 infid=3.557e-01 rdm2=5.84e-02 nn=3.63e-02 E=5.40e-01 peak=24 0s [3s]
+3/3 chi=12 lcut:2:0.1:40:0.5-1.0-1.5-2.0:1-2-3 infid=4.164e-01 rdm2=5.42e-02 nn=3.54e-02 E=4.39e-01 peak=12 84s [87s]

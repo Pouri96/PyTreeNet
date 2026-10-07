@@ -1,0 +1,8 @@
+heis N=10 T=2.0 dt=0.1: compress every step, fidelity_weight=0.0, maxiter=300
+ chi  params    arm     infid    1-site    2-site    3-site         E     secs
+   4     232    svd  9.33e-01  3.78e-01  4.68e-01  5.59e-01  2.15e-01        0s
+   4     232    fit  8.63e-01  1.76e-01  2.69e-01  3.49e-01  3.16e-01       17s
+                 fit/svd      0.93      0.47      0.57      0.62      1.47
+   6     424    svd  6.44e-01  6.91e-02  2.05e-01  2.40e-01  9.33e-01        0s
+   6     424    fit  9.78e-01  1.74e-01  2.55e-01  3.37e-01  1.54e-01       18s
+                 fit/svd      1.52      2.52      1.24      1.41      0.17
