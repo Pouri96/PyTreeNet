@@ -92,7 +92,7 @@ Sentences at t = 1, 2, 3, 4 for each cell, spcf against SVD (better of the two a
 
 ![staggered mu=0.5](../../rank2/figures/eqerr_stag_mu0.5.png)
 
-Per-cell figures `rank2/figures/eqerr_<family>_mu<mu>.png`: parameter ratio and time ratio against time, against SVD and against DMT, one line per chi_s, log y-axis, dashed line at 1, open triangles mark ladder-edge bounds (there are only 4, listed below).
+Per-cell figures `rank2/figures/eqerr_<family>_mu<mu>.png`: parameter ratio and time ratio against time, against SVD and against DMT, one line per chi_s, log y-axis, dashed line at 1, open triangles mark ladder-edge bounds (only 4 records, listed under Caveats).
 
 #### staggered, mu = 1 (spcf in the plain gauge)
 
