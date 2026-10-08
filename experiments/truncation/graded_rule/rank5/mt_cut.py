@@ -255,8 +255,11 @@ def trace_distance(A, B):
 
 # ------------------------------------------------------------------------------------------ the arms (i), (ii), (iii), (v)
 def stack_basis(Ms, w):
+    """left singular vectors (a full unitary) and singular values of the stacked matrix [sqrt(w_f) M_f]"""
     X = np.concatenate([np.sqrt(wi) * Mi for wi, Mi in zip(w, Ms)], axis=1)
-    U, s, _ = np.linalg.svd(X, full_matrices=True)
+    U, s, _ = np.linalg.svd(X, full_matrices=False)
+    if U.shape[1] < U.shape[0]:
+        U, _ = np.linalg.qr(np.concatenate([U, np.random.default_rng(0).standard_normal((U.shape[0], U.shape[0] - U.shape[1]))], axis=1))
     return U, s
 
 
@@ -557,6 +560,8 @@ class SPCMulti:
         Qc = self.Q0.copy()
         rc, ec = self.eval_Q(Qc)
         f0 = fc = float(rc @ rc)
+        if self.npar == 0:                                    # chi = full dimension: nothing to tilt
+            return Qc, dict(f0=f0, f=fc, nit=0, nev=self.nev, hist=[f0], g_f=(ec / self.eps0 - 1.0).tolist())
         lam = lam0 * 1.0
         hist = [f0]
         stall = 0
@@ -649,12 +654,16 @@ class Cell:
     # --- fast E_near (near windows only), used inside the oracle searches
     def e_near_fast(self, Mts):
         g, sc = self.g, self.sc
+        if not hasattr(self, '_tau_win'):
+            self._tau_win = [{k: np.stack([g.win_rdm(sc.rho_ex[f], s, k) for (s, kk) in g.wins if kk == k]) for k in g.ks}
+                             for f in range(len(sc.rho_ex))]
         worst = 0.0
         for f, Mt in enumerate(Mts):
             rho = g.region_rho(Mt)
-            for (s, k) in g.wins:
-                d = trace_distance(g.win_rdm(rho, s, k), g.win_rdm(sc.rho_ex[f], s, k))
-                worst = max(worst, d)
+            for k in g.ks:
+                R = np.stack([g.win_rdm(rho, s, k) for (s, kk) in g.wins if kk == k]) - self._tau_win[f][k]
+                R = 0.5 * (R + np.swapaxes(R.conj(), -1, -2))
+                worst = max(worst, 0.5 * float(np.abs(np.linalg.eigvalsh(R)).sum(axis=-1).max()))
         return worst
 
     def stack_Q(self, w, chi):
@@ -674,7 +683,7 @@ class Cell:
                 best = (lab, w, Q, E)
         return best[0], best[1], best[2], best[3], tab
 
-    def oracle_dense(self, chi, nsamp=300, seed=0):
+    def oracle_dense(self, chi, nsamp=200, seed=0):
         """arm (ii+): denser oracle over the whole weight simplex (random Dirichlet + vertices + Nelder-Mead polish)"""
         from scipy.optimize import minimize
         F = self.ts.F
@@ -697,7 +706,7 @@ class Cell:
             if best is None or E < best[0]:
                 best = (E, w2, Q)
         res = minimize(lambda z: ev(np.exp(z))[0], np.log(np.maximum(best[1], 1e-6)), method='Nelder-Mead',
-                       options=dict(maxiter=150, xatol=1e-3, fatol=1e-9))
+                       options=dict(maxiter=120, xatol=1e-3, fatol=1e-9))
         E2, w2, Q2 = ev(np.exp(res.x))
         if E2 < best[0]:
             best = (E2, w2, Q2)

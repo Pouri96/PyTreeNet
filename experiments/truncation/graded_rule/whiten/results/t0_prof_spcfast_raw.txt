@@ -1,0 +1,96 @@
+=== prof_spcfast ising 16 5 24 2 0 4 0-1.0
+svd run 0.95s   spcf run 6.25s (profiled)   fired 202/1500 skipped 0  tm {'svd': 0.95, 'setup': 0.72, 'solve': 3.62, 'line': 0.52, 'other': 0.0}
+         386440 function calls (386384 primitive calls) in 6.251 seconds
+
+   Ordered by: internal time
+   List reduced from 159 to 14 due to restriction <14>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+     1010    1.625    0.002    2.141    0.002 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:338(vjp)
+     1500    0.833    0.001    0.888    0.001 /usr/local/lib/python3.13/dist-packages/numpy/linalg/_linalg.py:1666(svd)
+      808    0.783    0.001    1.113    0.001 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:318(jvp)
+     1616    0.343    0.000    0.454    0.000 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:238(Wof)
+      404    0.314    0.001    0.391    0.001 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:251(Fapply)
+     1500    0.299    0.000    5.975    0.004 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:193(__call__)
+    27196    0.213    0.000    0.213    0.000 {method 'reshape' of 'numpy.ndarray' objects}
+      404    0.196    0.000    0.363    0.001 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:246(hnorm)
+     1500    0.112    0.000    0.112    0.000 {built-in method numpy._core._multiarray_umath.c_einsum}
+      202    0.111    0.001    0.248    0.001 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:286(make_chart)
+     1616    0.107    0.000    0.107    0.000 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:243(hvec)
+     1904    0.088    0.000    0.143    0.000 /usr/local/lib/python3.13/dist-packages/numpy/_core/numeric.py:997(tensordot)
+    13389    0.077    0.000    0.077    0.000 {method 'astype' of 'numpy.ndarray' objects}
+     6672    0.064    0.000    0.064    0.000 {method 'conj' of 'numpy.ndarray' objects}
+
+
+=== prof_spcfast ising 16 5 48 2 0 4 0-1.0
+svd run 1.94s   spcf run 3.42s (profiled)   fired 39/1500 skipped 0  tm {'svd': 1.64, 'setup': 0.24, 'solve': 0.97, 'line': 0.16, 'other': 0.0}
+         194913 function calls (194857 primitive calls) in 3.423 seconds
+
+   Ordered by: internal time
+   List reduced from 159 to 14 due to restriction <14>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+     1500    1.487    0.001    1.532    0.001 /usr/local/lib/python3.13/dist-packages/numpy/linalg/_linalg.py:1666(svd)
+      195    0.406    0.002    0.486    0.002 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:338(vjp)
+      156    0.218    0.001    0.348    0.002 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:318(jvp)
+      312    0.205    0.001    0.246    0.001 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:238(Wof)
+     1500    0.130    0.000    0.130    0.000 {built-in method numpy._core._multiarray_umath.c_einsum}
+     1500    0.107    0.000    3.126    0.002 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:193(__call__)
+     1578    0.105    0.000    0.137    0.000 /usr/local/lib/python3.13/dist-packages/numpy/_core/numeric.py:997(tensordot)
+    12526    0.076    0.000    0.076    0.000 {method 'reshape' of 'numpy.ndarray' objects}
+       78    0.059    0.001    0.152    0.002 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:246(hnorm)
+       39    0.048    0.001    0.117    0.003 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:286(make_chart)
+       78    0.046    0.001    0.073    0.001 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:251(Fapply)
+     1461    0.045    0.000    0.075    0.000 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/mpsenh.py:297(_plain)
+        1    0.034    0.034    3.423    3.423 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/mpsenh.py:479(run_tebd)
+     1500    0.032    0.000    0.078    0.000 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/mpsenh.py:199(_rank)
+
+
+=== prof_spcfast ising 16 5 24 2 0 4 1.0
+svd run 0.78s   spcf run 4.19s (profiled)   fired 202/1500 skipped 0  tm {'svd': 0.65, 'setup': 0.51, 'solve': 2.34, 'line': 0.35, 'other': 0.0}
+         386440 function calls (386384 primitive calls) in 4.186 seconds
+
+   Ordered by: internal time
+   List reduced from 159 to 14 due to restriction <14>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+     1010    0.883    0.001    1.311    0.001 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:338(vjp)
+     1500    0.565    0.000    0.591    0.000 /usr/local/lib/python3.13/dist-packages/numpy/linalg/_linalg.py:1666(svd)
+      808    0.443    0.001    0.686    0.001 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:318(jvp)
+     1616    0.267    0.000    0.334    0.000 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:238(Wof)
+     1500    0.256    0.000    3.968    0.003 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:193(__call__)
+    27196    0.138    0.000    0.138    0.000 {method 'reshape' of 'numpy.ndarray' objects}
+      404    0.131    0.000    0.293    0.001 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:246(hnorm)
+     1616    0.124    0.000    0.125    0.000 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:243(hvec)
+      404    0.112    0.000    0.166    0.000 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:251(Fapply)
+     1904    0.103    0.000    0.147    0.000 /usr/local/lib/python3.13/dist-packages/numpy/_core/numeric.py:997(tensordot)
+      202    0.081    0.000    0.253    0.001 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:286(make_chart)
+    13389    0.071    0.000    0.071    0.000 {method 'astype' of 'numpy.ndarray' objects}
+     1500    0.070    0.000    0.070    0.000 {built-in method numpy._core._multiarray_umath.c_einsum}
+     6672    0.060    0.000    0.060    0.000 {method 'conj' of 'numpy.ndarray' objects}
+
+
+=== prof_spcfast ising 16 5 48 2 0 4 1.0
+svd run 1.81s   spcf run 3.72s (profiled)   fired 39/1500 skipped 0  tm {'svd': 1.87, 'setup': 0.23, 'solve': 0.92, 'line': 0.16, 'other': 0.0}
+         194913 function calls (194857 primitive calls) in 3.715 seconds
+
+   Ordered by: internal time
+   List reduced from 159 to 14 due to restriction <14>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+     1500    1.704    0.001    1.765    0.001 /usr/local/lib/python3.13/dist-packages/numpy/linalg/_linalg.py:1666(svd)
+      195    0.320    0.002    0.458    0.002 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:338(vjp)
+      312    0.243    0.001    0.271    0.001 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:238(Wof)
+      156    0.191    0.001    0.320    0.002 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:318(jvp)
+     1500    0.132    0.000    0.132    0.000 {built-in method numpy._core._multiarray_umath.c_einsum}
+     1578    0.129    0.000    0.185    0.000 /usr/local/lib/python3.13/dist-packages/numpy/_core/numeric.py:997(tensordot)
+     1500    0.126    0.000    3.319    0.002 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:193(__call__)
+    12526    0.079    0.000    0.079    0.000 {method 'reshape' of 'numpy.ndarray' objects}
+       78    0.074    0.001    0.151    0.002 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:246(hnorm)
+        1    0.070    0.070    3.715    3.715 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/mpsenh.py:479(run_tebd)
+       39    0.044    0.001    0.114    0.003 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:286(make_chart)
+     4108    0.039    0.000    0.039    0.000 {method 'reduce' of 'numpy.ufunc' objects}
+     1461    0.037    0.000    0.069    0.000 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/mpsenh.py:297(_plain)
+       39    0.032    0.001    0.063    0.002 /home/user/PyTreeNet/experiments/truncation/graded_rule/rule/spcfast.py:369(retract)
+
+

@@ -1,0 +1,358 @@
+{
+ "objective hvec vs brute force RDMs, b=5 S2 (rel diff)": {
+  "value": 2.0692380328662658e-15,
+  "tol": 1e-09,
+  "ok": true
+ },
+ "objective hvec vs brute force RDMs, b=5 S4t2 (rel diff)": {
+  "value": 2.840286627281594e-16,
+  "tol": 1e-09,
+  "ok": true
+ },
+ "objective hvec vs brute force RDMs, b=3 S2 (rel diff)": {
+  "value": 6.317293262017847e-15,
+  "tol": 1e-09,
+  "ok": true
+ },
+ "objective hvec vs brute force RDMs, b=3 S4t2 (rel diff)": {
+  "value": 2.7007781875770006e-16,
+  "tol": 1e-09,
+  "ok": true
+ },
+ "chi=full (64) reproduces exact RDMs, b=5 S1 (max E_near over arms)": {
+  "value": 7.297207523165627e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full (64) reproduces exact RDMs, b=5 S1 (max E_out over arms)": {
+  "value": 4.306011835322823e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full, S1: discarded weight": {
+  "value": -1.7763568394002505e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full (64) reproduces exact RDMs, b=5 S2 (max E_near over arms)": {
+  "value": 7.297207523165627e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full (64) reproduces exact RDMs, b=5 S2 (max E_out over arms)": {
+  "value": 4.990772581908832e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full (64) reproduces exact RDMs, b=5 S3p (max E_near over arms)": {
+  "value": 7.297207523165627e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full (64) reproduces exact RDMs, b=5 S3p (max E_out over arms)": {
+  "value": 5.896877076329595e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full (64) reproduces exact RDMs, b=5 S3h (max E_near over arms)": {
+  "value": 8.965552961526364e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full (64) reproduces exact RDMs, b=5 S3h (max E_out over arms)": {
+  "value": 9.2308802840996e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full (64) reproduces exact RDMs, b=5 S4t1 (max E_near over arms)": {
+  "value": 6.521204346675732e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full (64) reproduces exact RDMs, b=5 S4t1 (max E_out over arms)": {
+  "value": 4.604560248607253e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full (64) reproduces exact RDMs, b=5 S4t2 (max E_near over arms)": {
+  "value": 7.181337454663492e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full (64) reproduces exact RDMs, b=5 S4t2 (max E_out over arms)": {
+  "value": 5.907889686525057e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full (64) reproduces exact RDMs, b=5 S4t3 (max E_near over arms)": {
+  "value": 6.134093249786571e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full (64) reproduces exact RDMs, b=5 S4t3 (max E_out over arms)": {
+  "value": 6.752145121245274e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full (16) reproduces exact RDMs, b=3 S1 (max E_near over arms)": {
+  "value": 2.7987698690522636e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full (16) reproduces exact RDMs, b=3 S1 (max E_out over arms)": {
+  "value": 2.5693770919031056e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full (16) reproduces exact RDMs, b=3 S2 (max E_near over arms)": {
+  "value": 5.030948211527829e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full (16) reproduces exact RDMs, b=3 S2 (max E_out over arms)": {
+  "value": 6.181883942132893e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full (16) reproduces exact RDMs, b=3 S3p (max E_near over arms)": {
+  "value": 3.4383184692977675e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full (16) reproduces exact RDMs, b=3 S3p (max E_out over arms)": {
+  "value": 4.762768465211247e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full (16) reproduces exact RDMs, b=3 S3h (max E_near over arms)": {
+  "value": 6.969279275139832e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full (16) reproduces exact RDMs, b=3 S3h (max E_out over arms)": {
+  "value": 4.506792093133836e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full (16) reproduces exact RDMs, b=3 S4t1 (max E_near over arms)": {
+  "value": 4.592097838732184e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full (16) reproduces exact RDMs, b=3 S4t1 (max E_out over arms)": {
+  "value": 3.8133052054435586e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full (16) reproduces exact RDMs, b=3 S4t2 (max E_near over arms)": {
+  "value": 7.071425079298472e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full (16) reproduces exact RDMs, b=3 S4t2 (max E_out over arms)": {
+  "value": 6.129420665391367e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full (16) reproduces exact RDMs, b=3 S4t3 (max E_near over arms)": {
+  "value": 5.726957557318282e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=full (16) reproduces exact RDMs, b=3 S4t3 (max E_out over arms)": {
+  "value": 5.607481373496608e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "FD Jacobian: forward(1e-6) vs central(1e-5), rel Frobenius": {
+  "value": 5.330143485516985e-06,
+  "tol": 0.0001,
+  "ok": true
+ },
+ "Jacobian first-order prediction error vs step (steps 1e-3,1e-4,1e-5 x randn)": {
+  "errs": [
+   0.05047512186341052,
+   0.0050459198360094815,
+   0.0005073773535193983
+  ]
+ },
+ "Jacobian predicts the residual change of a 1e-5 step (rel error of the change)": {
+  "value": 0.0005073773535193983,
+  "tol": 0.001,
+  "ok": true
+ },
+ "Jacobian prediction error scales linearly with the step (err(1e-4)/err(1e-5), expect ~10)": {
+  "value": 0.0023907322011507137,
+  "tol": 0.3,
+  "ok": true
+ },
+ "second-order eps_f model vs exact eps_f at |x|~1e-3*sqrt(n) (rel error of the change)": {
+  "value": 5.6702262650269976e-05,
+  "tol": 0.01,
+  "ok": true
+ },
+ "spcf-multi: residual objective non-increasing along the run (max increase, rel)": {
+  "value": 0.0,
+  "tol": 0.0,
+  "ok": true
+ },
+ "spcf-multi: residual objective reduced (final/initial, must be < 1)": {
+  "value": 0.532426088071099,
+  "tol": 0.999,
+  "ok": true
+ },
+ "spcf-multi: per-target extra discarded weight within kappa=0.1 (max g_f - 0.1, rel)": {
+  "value": 0.0,
+  "tol": 0.002,
+  "ok": true
+ },
+ "stacked SVD: sum_f w_f grad eps_f = 0 (|.| / max_f |grad eps_f|)": {
+  "value": 1.4982331019732328e-13,
+  "tol": 1e-08,
+  "ok": true
+ },
+ "kappa->0 reproduces plain stacked SVD (|E_near ratio - 1|)": {
+  "value": 6.578196540685255e-05,
+  "tol": 0.001,
+  "ok": true
+ },
+ "real vs complex chart, S2 chi=6 b=5": {
+  "f_real": 2.9239198195853413e-06,
+  "f_complex": 2.923920988252372e-06,
+  "f0": 5.4916914950172156e-06
+ },
+ "real-chart optimum within 2% of the complex-chart optimum on real targets (f_real/f_complex - 1)": {
+  "value": 0.0,
+  "tol": 0.02,
+  "ok": true
+ },
+ "spcfast cross-check S4t3 psi(t): f_svd (their residual^2) vs my objective of the SVD basis (rel)": {
+  "value": 7.477458767804114e-15,
+  "tol": 1e-06,
+  "ok": true
+ },
+ "spcfast cross-check S4t3 psi(t): f_c of their returned basis vs my objective on it (rel)": {
+  "value": 3.4120514720793774e-15,
+  "tol": 1e-06,
+  "ok": true
+ },
+ "spcfast cross-check S4t3 psi(t): reported discarded weight vs recomputed (abs)": {
+  "value": 4.3368086899420177e-16,
+  "tol": 1e-08,
+  "ok": true
+ },
+ "spcfast cross-check S4t3 psi(t)": {
+  "f_svd": 0.0014499607502401611,
+  "f_theirs": 0.0005401863683205535,
+  "f_mine": 0.0003308557360728085,
+  "kappa_theirs": 0.41094891237811226,
+  "eps_svd": 0.021913475326179495,
+  "eps_theirs": 0.030918794177897124,
+  "eps_mine": 0.030918794177880682
+ },
+ "spcfast cross-check S4t3 psi(t): my SQP optimum at their discarded weight is at least as good (f_mine/f_theirs - 1, must be <= 0)": {
+  "value": -0.3875155770749208,
+  "tol": 0.001,
+  "ok": true
+ },
+ "positive control single target S4t3 psi(t) kappa=0.1": {
+  "E_near_svd": 0.047281317154046404,
+  "E_near_spcf": 0.030574052200572948,
+  "ratio": 0.6466412959892843,
+  "f_ratio": 0.3745371915214856,
+  "E_out_ratio": 1.2942679095612977
+ },
+ "positive control single target S4t3 psi(t) kappa=1.0": {
+  "E_near_svd": 0.047281317154046404,
+  "E_near_spcf": 0.02187652451454329,
+  "ratio": 0.46268855927316455,
+  "f_ratio": 0.1627899743100892,
+  "E_out_ratio": 3.9554415925621895
+ },
+ "spcfast cross-check S4t2 psi(t): f_svd (their residual^2) vs my objective of the SVD basis (rel)": {
+  "value": 1.0586534322982374e-13,
+  "tol": 1e-06,
+  "ok": true
+ },
+ "spcfast cross-check S4t2 psi(t): f_c of their returned basis vs my objective on it (rel)": {
+  "value": 1.4794053391590192e-13,
+  "tol": 1e-06,
+  "ok": true
+ },
+ "spcfast cross-check S4t2 psi(t): reported discarded weight vs recomputed (abs)": {
+  "value": 4.4407565732290655e-16,
+  "tol": 1e-08,
+  "ok": true
+ },
+ "spcfast cross-check S4t2 psi(t)": {
+  "f_svd": 3.300429395329545e-07,
+  "f_theirs": 1.4242171503131192e-07,
+  "f_mine": 1.4150890325503836e-07,
+  "kappa_theirs": 0.03952748178961296,
+  "eps_svd": 9.188140809279767e-05,
+  "eps_theirs": 9.551324877754565e-05,
+  "eps_mine": 9.551324877599132e-05
+ },
+ "spcfast cross-check S4t2 psi(t): my SQP optimum at their discarded weight is at least as good (f_mine/f_theirs - 1, must be <= 0)": {
+  "value": -0.006409217696001557,
+  "tol": 0.001,
+  "ok": true
+ },
+ "positive control single target S4t2 psi(t) kappa=0.1": {
+  "E_near_svd": 0.0008871992672515965,
+  "E_near_spcf": 0.0006510059130950084,
+  "ratio": 0.733776432336021,
+  "f_ratio": 0.3339685593126801,
+  "E_out_ratio": 5.302916940787266
+ },
+ "positive control single target S4t2 psi(t) kappa=1.0": {
+  "E_near_svd": 0.0008871992672515965,
+  "E_near_spcf": 0.0004355158645855929,
+  "ratio": 0.49088844035540335,
+  "f_ratio": 0.1511041171403986,
+  "E_out_ratio": 29.185817521791677
+ },
+ "spectral peak omega: Lanczos vs full ED (abs)": {
+  "value": 5.551115123125783e-17,
+  "tol": 0.002,
+  "ok": true
+ },
+ "correction vector: |(H-E0-w-i eta) x - A|0>| (abs)": {
+  "value": 5.30169367326947e-13,
+  "tol": 1e-09,
+  "ok": true
+ },
+ "G(omega+i eta) from the CG correction vector vs the spectral sum (rel)": {
+  "value": 2.616487077016706e-14,
+  "tol": 1e-09,
+  "ok": true
+ },
+ "S(omega) = Im G / pi at the peak vs Lanczos-weights spectral function (rel)": {
+  "value": 8.601368450206991e-16,
+  "tol": 0.002,
+  "ok": true
+ },
+ "eigsh lowest-3 energies vs dense ED (abs)": {
+  "value": 2.3092638912203256e-14,
+  "tol": 1e-09,
+  "ok": true
+ },
+ "Neel evolution (expm_multiply) vs dense expm (max abs)": {
+  "value": 2.5449466233978494e-15,
+  "tol": 1e-10,
+  "ok": true
+ },
+ "dressed rho with a=0 spans the same subspace as the stacked SVD (|P_a - P_i|_F)": {
+  "value": 2.9449953447884115e-14,
+  "tol": 1e-08,
+  "ok": true
+ },
+ "tfim builder with the ising fields equals exact_ref.sparse_H(ising) (max abs)": {
+  "value": 7.105427357601002e-15,
+  "tol": 1e-13,
+  "ok": true
+ },
+ "summary": {
+  "all_pass": true
+ }
+}

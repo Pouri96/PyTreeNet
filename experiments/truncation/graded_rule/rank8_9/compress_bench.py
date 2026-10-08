@@ -31,9 +31,9 @@ from spcfast_ext import SPCFastExt  # noqa: E402
 
 N_QUBITS = 16
 SPANS = (2, 3, 4, 6, 8)
-# transverse field of the long-range Ising cells, chosen by the pre-declared calibration rule (largest half-chain entropy of the
-# natural-order ground state on the grid in calib_lr.py); see the results report
-H_LR = {0.5: 0.25, 1.5: 0.5, 3.0: 0.5}
+# transverse field of the long-range Ising cells: h = 1, the nearest-neighbour coupling |i-j|^-alpha at |i-j| = 1 (fixed before any
+# T0 number was seen; an entropy-maximising choice would pick the near-degenerate cat-state regime h -> 0 and is not used)
+H_LR = {0.5: 1.0, 1.5: 1.0, 3.0: 1.0}
 LR_SEED = 7
 PPP_SEED = 11
 
@@ -68,6 +68,12 @@ def make_cell(name, N=N_QUBITS):
         return Cell(name, Mo.PauliModel(N, Mo.tfim_terms(N, 1.0, 0.0), name), dict(kind='local control'))
     if name == 'heis':
         return Cell(name, Mo.PauliModel(N, Mo.heis_terms(N), name), dict(kind='local control'))
+    if name.startswith('tfimh'):                       # extra local controls (not in the plan): transverse-field Ising, hz = 0
+        return Cell(name, Mo.PauliModel(N, Mo.tfim_terms(N, float(name[5:]), 0.0), name), dict(kind='local control (extra)'))
+    if name.startswith('xxz'):                         # extra local control: XXZ chain, Delta = float(name[3:])
+        D = float(name[3:])
+        t = [(1.0, ((i, a), (i + 1, a))) for i in range(N - 1) for a in 'XY'] + [(D, ((i, 'Z'), (i + 1, 'Z'))) for i in range(N - 1)]
+        return Cell(name, Mo.PauliModel(N, t, name), dict(kind='local control (extra)'))
     if name.startswith('lr'):
         a, order = name[2:].split('_')
         alpha = float(a)
@@ -172,7 +178,7 @@ def main_selftest():
             print(' ', arm, {k: (round(x, 8) if isinstance(x, float) else x) for k, x in m.items() if k in ('infid', 'dE', 'dE_elem', 'loc4', 'locE4', 'leak')}, info.get('fired'))
 
 
-LADDER = [2, 3, 4, 6, 8, 12, 16, 24, 32]
+LADDER = [2, 3, 4, 6, 8, 12, 16, 24, 32, 48, 64, 96, 128]
 
 
 def main_t0(out, names):

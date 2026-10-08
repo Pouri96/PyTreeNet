@@ -1,0 +1,15 @@
+[PASS] PPP L=4 site: E from elements vs <H> (random state, all sectors) 3.6e-15
+[PASS] PPP L=4 mo: E from elements vs <H> (random state, all sectors) 5.0e-16
+[PASS] PPP L=2 site: spectrum equals an independent Pauli-JW construction 
+[PASS] PPP L=2 mo: spectrum equals an independent Pauli-JW construction 
+[PASS] TFIM Pauli model equals mpsenh.h_bond sum 
+[PASS] dense -> right-canonical MPS -> dense is exact 
+[PASS] SPCFastExt(ext=None) is bit-for-bit the stock SPCFast fired 9 vs 9
+[PASS] external exact target equals the stock target at the first cut of a sweep (chi=1 at bond 0, fired 0/0; max |diff| 0.0e+00)
+[PASS] spcf with f_min = inf reproduces the SVD sweep bit for bit fired 0
+[PASS] variational fit: fidelity non-decreasing from the SVD sweep infid 7.466e-04 -> ['7.466e-04', '7.466e-04', '7.466e-04', '7.466e-04', '7.466e-04', '7.466e-04']
+[PASS] DMRG(chi=16) energy within 1e-6 of ED and not below it -3.20e-14
+[PASS] Heisenberg DMRG(chi=24) reaches the singlet ground state 3.23e-09
+[PASS] PPP L=8 site: residual, <N>, Var N, E(elements) resid 8.7e-14, <N> 8.000000000000, VarN -2.8e-14, E_el-E0 -1.0e-13, gap 1.961
+[PASS] PPP L=8 mo: residual, <N>, Var N, E(elements) resid 2.0e-13, <N> 8.000000000000, VarN 0.0e+00, E_el-E0 2.0e-13, gap 1.961
+[PASS] PPP L=8: E0 identical in site and MO basis -16.8172575616 -16.8172575616

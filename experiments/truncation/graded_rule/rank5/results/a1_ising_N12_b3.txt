@@ -1,0 +1,16 @@
+ising b=3 S1    chi=4: E_near i 1.295e-04 ii 1.295e-04 ii+ 1.295e-04 iii 2.759e-03 iv 7.446e-05 v 1.295e-04 | iv/i 0.58 | 2s
+ising b=3 S1    chi=6: E_near i 4.266e-07 ii 4.266e-07 ii+ 4.266e-07 iii 8.142e-04 iv 1.853e-07 v 4.266e-07 | iv/i 0.43 | 3s
+ising b=3 S1    chi=8: E_near i 7.153e-08 ii 7.153e-08 ii+ 7.153e-08 iii 4.598e-04 iv 3.174e-08 v 7.153e-08 | iv/i 0.44 | 3s
+ising b=3 S2    chi=4: E_near i 4.306e-03 ii 4.153e-03 ii+ 3.370e-03 iii 5.584e-03 iv 4.102e-03 v 1.219e-03 | iv/i 0.95 | 8s
+ising b=3 S2    chi=6: E_near i 3.081e-04 ii 3.014e-04 ii+ 2.644e-04 iii 3.670e-03 iv 2.648e-04 v 6.235e-05 | iv/i 0.86 | 7s
+ising b=3 S2    chi=8: E_near i 4.942e-05 ii 4.942e-05 ii+ 4.427e-05 iii 2.059e-03 iv 3.979e-05 v 2.412e-06 | iv/i 0.81 | 9s
+ising b=3 S3p   chi=4: E_near i 4.877e-03 ii 4.644e-03 ii+ 3.958e-03 iii 6.749e-03 iv 4.686e-03 v 1.797e-03 | iv/i 0.96 | 11s
+ising b=3 S3p   chi=6: E_near i 2.816e-04 ii 2.783e-04 ii+ 2.548e-04 iii 4.636e-03 iv 2.640e-04 v 4.012e-05 | iv/i 0.94 | 12s
+ising b=3 S3p   chi=8: E_near i 4.480e-05 ii 4.407e-05 ii+ 3.491e-05 iii 2.458e-03 iv 4.600e-05 v 4.915e-06 | iv/i 1.03 | 12s
+ising b=3 S3h   chi=4: E_near i 4.137e-03 ii 4.001e-03 ii+ 3.556e-03 iii 6.918e-03 iv 3.945e-03 v 1.211e-03 | iv/i 0.95 | 10s
+ising b=3 S3h   chi=6: E_near i 1.642e-04 ii 1.608e-04 ii+ 1.533e-04 iii 5.883e-03 iv 1.713e-04 v 3.844e-05 | iv/i 1.04 | 12s
+ising b=3 S3h   chi=8: E_near i 4.003e-05 ii 3.888e-05 ii+ 3.346e-05 iii 2.125e-03 iv 3.020e-05 v 2.283e-06 | iv/i 0.75 | 13s
+ising b=3 S4t1  chi=4: E_near i 6.595e-03 ii 5.892e-03 ii+ 5.345e-03 iii 1.879e-02 iv 5.325e-03 v 2.223e-05 | iv/i 0.81 | 22s
+ising b=3 S4t1  chi=6: E_near i 1.575e-03 ii 1.191e-03 ii+ 1.178e-03 iii 8.011e-03 iv 1.418e-03 v 1.591e-07 | iv/i 0.90 | 23s
+ising b=3 S4t1  chi=8: E_near i 1.687e-04 ii 1.613e-04 ii+ 1.314e-04 iii 2.686e-03 iv 1.571e-04 v 4.481e-10 | iv/i 0.93 | 21s
+ising b=3 S4t2  chi=4: E_near i 3.918e-02 ii 3.918e-02 ii+ 3.634e-02 iii 3.794e-02 iv 3.334e-02 v 2.015e-02 | iv/i 0.85 | 20s

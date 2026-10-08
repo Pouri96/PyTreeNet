@@ -33,7 +33,7 @@ for g in GAMMAS:
             if a is None:
                 continue
             b = get('b', g, chi, KB) if g > 0 else a
-            c = get('c', g, 0, kap) if g > 0 else None
+            c = get('c', g, 64, kap) if g > 0 else None
             a0 = get('a', 0.0, chi, 4)
             ea = a['nn_rms']
             eb = b['nn_rms'] if b else float('nan')

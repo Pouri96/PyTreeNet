@@ -1,0 +1,2 @@
+spcf chi=32 nn=4.65e-03 1site=5.49e-03 fired 727/3040 (reps [727, 727]) | cpu spcf 12.46s svd@32 1.70s svd@54(eq nn) 3.77s svd@50(eq 1site) 3.24s | ratio nn 3.31 1site 3.85
+spcf chi=48 nn=1.69e-03 1site=2.15e-03 fired 595/3040 (reps [595, 595]) | cpu spcf 20.48s svd@48 3.16s svd@85(eq nn) 8.54s svd@76(eq 1site) 7.02s | ratio nn 2.40 1site 2.92

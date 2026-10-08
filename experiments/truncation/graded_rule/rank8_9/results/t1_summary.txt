@@ -1,0 +1,98 @@
+T1 summary.  ratios > 1 mean the spcf variant is better than the best of SVD and variational fit (rank 8) / SVD and DMRG (rank 9).
+
+RANK 8: non-local proxies.  rE = best(dE_svd, dE_var) / dE_arm ; rH = best(hw2_svd, hw2_var) / hw2_arm ; far = rms_far4_arm / rms_far4_svd
+cell          chi infid_svdarm               rE     rH    far     leak  leak_svd fired wall/svd
+lr0.5_nat       3  8.10e-03 svd                                           nan                      1.0   (in window)
+                   8.10e-03 varfit         1.00   1.01   1.04      nan
+                   8.21e-03 spcf           1.01   1.05   1.26  0.0e+00   0.0e+00    13      205
+                   8.16e-03 spcf_fw        1.00   1.03   1.18  0.0e+00   0.0e+00    13      195
+                   8.25e-03 spcf_ext       0.99   1.12   1.20  0.0e+00   0.0e+00    12      216
+                   8.19e-03 spcf_ext_fw    0.98   1.10   1.10  0.0e+00   0.0e+00    12      157
+lr0.5_nat       4  5.57e-04 svd                                           nan                      1.0   (in window)
+                   5.54e-04 varfit         1.00   1.04   1.05      nan
+                   6.38e-04 spcf           0.92   1.30   1.72  0.0e+00   0.0e+00    11       32
+ppp_mo_nat     24  7.49e-03 svd                                       7.1e-15                      1.0   (in window)
+                   7.03e-03 varfit         1.07   1.06   0.97  7.5e-07
+                   9.00e-03 spcf           0.85   0.82   1.28  2.6e-08   7.1e-15     3      107
+                   7.77e-03 spcf_fw        0.91   0.91   1.03  2.6e-11   7.1e-15     4      109
+                   8.56e-03 spcf_ext       0.85   0.90   1.11  1.7e-07   7.1e-15     2       93
+                   8.52e-03 spcf_ext_fw    0.85   0.88   1.16  1.7e-09   7.1e-15     4       80
+ppp_mo_nat     32  3.94e-03 svd                                       1.2e-28                      1.0   (in window)
+                   3.86e-03 varfit         1.02   1.02   0.99  6.0e-06
+                   4.24e-03 spcf           0.93   0.90   1.13  1.1e-09   1.2e-28     4       61
+                   4.06e-03 spcf_fw        0.95   0.95   1.09  6.6e-13   1.2e-28     4      126
+                   4.82e-03 spcf_ext       0.83   0.95   1.60  1.8e-06   1.2e-28     5       45
+                   4.28e-03 spcf_ext_fw    0.91   1.06   1.34  7.2e-10   1.2e-28     5       85
+ppp_mo_nat     48  1.34e-03 svd                                       1.5e-28                      1.0   (in window)
+                   1.30e-03 varfit         1.03   1.02   0.99  1.1e-05
+                   1.62e-03 spcf           0.81   0.82   1.38  6.3e-13   1.5e-28     3       44
+                   1.35e-03 spcf_fw        0.96   0.98   1.07  8.7e-13   1.5e-28     3       58
+                   1.67e-03 spcf_ext       0.79   0.81   1.55  1.9e-09   1.5e-28     3       39
+                   1.37e-03 spcf_ext_fw    0.94   1.01   1.16  2.9e-10   1.5e-28     3       49
+
+Rank 8 criteria, HEADLINE: plan non-local proxies (MO-basis PPP, long-range Ising alpha<=1.5) whose T0 f_loc^E >= 0.4 at a usable chi
+  spcf        : n=5  median rE=0.917 rH=0.899 far=1.283  max leak=2.6e-08  max rE=1.01 max rH=1.30  entries with rE,rH>=1.5: none  -> KILL
+  spcf_fw     : n=4  median rE=0.956 rH=0.968 far=1.076  max leak=2.6e-11  max rE=1.00 max rH=1.03  entries with rE,rH>=1.5: none  -> KILL
+  spcf_ext    : n=4  median rE=0.839 rH=0.925 far=1.371  max leak=1.8e-06  max rE=0.99 max rH=1.12  entries with rE,rH>=1.5: none  -> KILL
+  spcf_ext_fw : n=4  median rE=0.926 rH=1.036 far=1.159  max leak=1.7e-09  max rE=0.98 max rH=1.10  entries with rE,rH>=1.5: none  -> KILL
+
+Rank 8 criteria, EXTRA: all other non-local cells (site-basis PPP, alpha=3, cells that failed the T0 0.4 test), same in-window/SVD-leak-free filter
+  spcf        : no entries
+  spcf_fw     : no entries
+  spcf_ext    : no entries
+  spcf_ext_fw : no entries
+
+
+RANK 9: local controls.  ratio = best(err_svd, err_dmrg) / err_spcf per observable class (rms over sites);  dE ratio = dE_svd / dE_spcf
+cell         chi infid_svdarm               <X>   <ZZ1>   <ZZ3>      dE
+tfim_ising     2  5.81e-03 dmrg/svd        0.25    0.40    0.13    1.39   (in window)
+                           spcf            0.33    0.58    0.18    1.33
+                           spcf_fw         0.33    0.58    0.18    1.32
+                           spcf_ext        0.26    0.48    0.13    1.38
+                           spcf_ext_fw     0.27    0.49    0.13    1.38
+tfim_ising     3  7.10e-04 dmrg/svd        0.12    0.22    0.25    1.28   (in window)
+                           spcf            0.27    0.46    0.83    0.99
+                           spcf_fw         0.27    0.46    0.82    0.99
+                           spcf_ext        0.29    0.49    0.53    0.86
+                           spcf_ext_fw     0.29    0.50    0.54    0.88
+tfim_ising     4  1.29e-05 dmrg/svd        0.18    0.42    1.24    1.22   (outside window)
+                           spcf            0.05    0.10    1.04    1.20
+                           spcf_fw         0.08    0.15    1.06    1.21
+                           spcf_ext        0.05    0.10    1.40    1.14
+                           spcf_ext_fw     0.10    0.20    1.62    1.18
+tfim_crit      2  1.13e-02 dmrg/svd        0.24    0.50    0.22    1.51   (outside window)
+                           spcf            0.27    0.55    0.31    1.40
+                           spcf_fw         0.27    0.55    0.31    1.39
+                           spcf_ext        0.24    0.50    0.23    1.49
+                           spcf_ext_fw     0.24    0.50    0.23    1.49
+tfim_crit      3  1.88e-03 dmrg/svd        0.13    0.27    0.24    1.34   (in window)
+                           spcf            0.30    0.50    0.75    1.00
+                           spcf_fw         0.30    0.50    0.75    1.00
+                           spcf_ext        0.36    0.56    0.45    0.90
+                           spcf_ext_fw     0.37    0.57    0.46    0.91
+tfim_crit      4  2.71e-05 dmrg/svd        0.16    0.55    1.19    1.20   (outside window)
+                           spcf            0.03    0.09    0.80    1.21
+                           spcf_fw         0.04    0.12    0.86    1.22
+                           spcf_ext        0.03    0.08    0.94    1.11
+                           spcf_ext_fw     0.05    0.14    1.17    1.16
+heis           4  1.09e-02 dmrg/svd        0.00    0.18    0.95    1.30   (outside window)
+                           spcf            0.00    0.99    1.02    1.05
+                           spcf_fw         0.00    1.00    1.02    1.04
+                           spcf_ext        0.00    1.17    0.98    1.01
+                           spcf_ext_fw     0.00    1.18    0.98    1.01
+heis           6  5.46e-03 dmrg/svd        0.06    0.18    0.90    1.33   (in window)
+                           spcf            0.97    0.94    1.96    0.87
+                           spcf_fw         1.23    1.00    1.83    0.96
+                           spcf_ext        1.03    0.71    2.43    0.74
+                           spcf_ext_fw     1.46    0.83    2.94    0.84
+heis           8  7.87e-05 dmrg/svd        0.00    0.12    0.86    1.10   (outside window)
+                           spcf            0.00    0.23    1.21    1.04
+                           spcf_fw         0.00    0.89    1.13    1.01
+                           spcf_ext        0.00    0.15    1.16    1.04
+                           spcf_ext_fw     0.00    0.31    1.19    1.01
+
+Rank 9 criteria over in-window entries of the local controls
+  spcf        : n=4  median ratio all=0.539  X=0.314 ZZ1=0.539 ZZ3=0.794  median dE ratio=0.995  -> KILL
+  spcf_fw     : n=4  median ratio all=0.540  X=0.315 ZZ1=0.540 ZZ3=0.783  median dE ratio=0.995  -> KILL
+  spcf_ext    : n=4  median ratio all=0.488  X=0.327 ZZ1=0.528 ZZ3=0.491  median dE ratio=0.882  -> KILL
+  spcf_ext_fw : n=4  median ratio all=0.495  X=0.330 ZZ1=0.534 ZZ3=0.500  median dE ratio=0.894  -> KILL

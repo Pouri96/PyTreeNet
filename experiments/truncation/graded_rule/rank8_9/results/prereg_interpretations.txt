@@ -1,0 +1,40 @@
+Interpretations of the pre-registered criteria, fixed at 2026-10-08T15:56:19Z BEFORE any T0 result was read.
+(Plan: reports/first_moves/rank8_9_chemistry_compression.md.  Thresholds are copied from the plan unchanged.)
+
+Elements and spans
+  Pauli proxies: elements = all <sigma^a_i> and <sigma^a_i sigma^b_j> (3N + 9N(N-1)/2 = 1128 at N = 16); span = |i-j|+1.
+  PPP proxies  : elements = gamma_PQ (all ordered pairs) and Gamma_{PQ,RS} = <a+_P a+_Q a_S a_R> (P<Q, R<S, all ordered pair-pairs),
+                 spin orbitals P = 2*orbital+spin (interleaved JW, 16 qubits); span = max - min + 1 over the four (two) indices.
+  window-local = span <= 4 (the plan's definition); spans <= 2, 3, 6, 8 are also recorded.
+  H coefficient of an element: the coefficient c_e with E = sum_e c_e R_e + const (verified to 1e-13 against <psi|H|psi>).
+
+T0 metrics
+  f_loc      = sum_{span<=4} |dR_e|^2 / sum_e |dR_e|^2
+  f_loc^E    = sum_{span<=4} |c_e dR_e|^2 / sum_e |c_e dR_e|^2          (primary; "the same, weighted by the H coefficient")
+  also recorded: signed share  sum_loc Re(c dR) / sum Re(c dR)  and absolute share  sum_loc |Re(c dR)| / sum |Re(c dR)|.
+  Usable chi per cell: SVD-sweep infidelity in [1e-4, 1e-2]; chi taken from the ladder 2,3,4,6,8,12,16,24,32,48,64,96,128
+  (the plan's {4,8,16} is used where it lands in the window; the ladder is extended where it does not).
+  Non-local proxies = MO-basis PPP (any ordering) and long-range Ising alpha in {0.5, 1.5} (natural or random order).
+  KILL    : f_loc^E < 0.25 for EVERY usable (cell, chi) among those non-local proxies (all orderings, all chi).
+  PROCEED : f_loc^E >= 0.4 for at least one usable (cell, chi) of a non-local proxy -> T1 on those cells.
+  AMBIGUOUS: otherwise -> T1 only on the best ordering.
+  Side result "ordering rescue": for a given basis, best-ordering f_loc^E / natural-ordering f_loc^E >= 2 at the same chi.
+  If the decision changes when only the natural ordering is considered, this is reported.
+
+T1 (rank 8) summary rule over the non-local (cell, chi) entries tested (each cell with usable chi, SVD leak-free where PPP)
+  ratio_E  = dE_best(SVD, varfit) / dE_spcf ;  ratio_H = hw2_best(SVD, varfit) / hw2_spcf  (hw2 = rms of c_e dR_e over 2-body elements)
+  far ratio = rms_far4(spcf) / rms_far4(SVD) ; leak = max(Var N, Var Sz).
+  SUCCESS: median over entries of both ratio_E and ratio_H >= 1.5, median far ratio <= 1.10, and leak <= 1e-10 for the spcf arm.
+  KILL   : median ratio_E < 1.2 and median ratio_H < 1.2 (on non-local proxies).  Otherwise AMBIGUOUS.
+  An "any entry" reading is also tabulated, labelled as such.
+  The spcf arm is judged as the better of (spcf, spcf_fw, spcf_ext, spcf_ext_fw) only if reported with the arm named; the headline uses
+  the stock spcf (fw = 0) and the external-target variant separately.
+
+T1 (rank 9) on local controls (tfim_ising, tfim_crit, heis; chi with SVD infidelity in [1e-4,1e-2])
+  per (cell, chi, observable class in <X_i>, <Z_i Z_{i+1}>, <Z_i Z_{i+3}>): ratio = min(err_SVD, err_DMRG(chi)) / err_spcf, err = rms over sites.
+  SUCCESS: median ratio >= 1.5 over all entries AND energy error of spcf <= energy error of SVD (entry-wise median ratio dE_SVD/dE_spcf >= 1).
+  KILL   : spcf loses to DMRG(chi) on all three classes (median ratio per class < 1).
+
+Fermionic sector leak
+  SVD itself can leave the (N, Sz) sector when it cuts through a degenerate Schmidt multiplet.  The criterion "leak <= 1e-10" is
+  therefore applied only at chi where the SVD arm itself is leak-free (<= 1e-10); the SVD leak is reported for every chi.

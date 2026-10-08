@@ -174,166 +174,95 @@ def spec_gamma(spec):
     return float(p[1]) if p[0] == 'rw' else 1.0
 
 
-# ================================================================================================ static (dense bond matrix) tools
-def topk_svd(A, K, p=None, maxit=80, tol=1e-12, seed=0):
-    """Top-K singular triplets of a dense A by block subspace iteration with Rayleigh-Ritz (block size p >= K).  Falls back to the dense
-    SVD for small matrices.  Returns U (m,K), s (K,), Vh (K,n), niter."""
-    m, n = A.shape
-    if min(m, n) <= max(2 * K, 256):
-        U, s, Vh = np.linalg.svd(A, full_matrices=False)
-        return U[:, :K], s[:K], Vh[:K], 0
-    p = p or (K + 24)
+# ================================================================================================ bond-space factor form (static single cut)
+# The same cuts, expressed on the k x k bond matrix diag(s) of an exact two-site tensor theta = U diag(s) Vh.  For k up to 4096 the
+# k x k matrices are never formed: the weighted / far-far operators are "diagonal +- low rank" and are applied to blocks of vectors.
+# The result is returned as factors  M'_b = Pb Qb^T  (rank <= chi, columns nested in chi) so that the truncated operator is
+# U Pb Qb^T Vh and the class errors can be computed without forming the 4096 x 4096 error matrix (see static_cut.py).
+def topk_op(matvec, rmatvec, n, K, p=None, maxit=400, tol=1e-13, seed=0, dense=None):
+    """Top-K singular triplets of an implicit n x n operator by block subspace iteration with Rayleigh-Ritz.  ``dense`` (optional) is the
+    explicit matrix, used when n is small.  Returns Uk (n,K), sk (K,), Vk (n,K), info."""
+    if dense is not None and n <= max(3 * K, 400):
+        U, s, Vh = np.linalg.svd(dense, full_matrices=False)
+        return U[:, :K], s[:K], Vh[:K].T, dict(iters=0, converged=True)
+    p = min(n, p or (K + 32))
     rng = np.random.default_rng(seed)
-    Q, _ = np.linalg.qr(A @ rng.standard_normal((n, p)))
+    Q, _ = np.linalg.qr(matvec(rng.standard_normal((n, p))))
     sprev = None
+    conv = False
     for it in range(1, maxit + 1):
-        Z, _ = np.linalg.qr(A.T @ Q)
-        Q, _ = np.linalg.qr(A @ Z)
-        if it % 2 == 0 or it == maxit:
-            Bm = Q.T @ A
-            Ub, s, Vh = np.linalg.svd(Bm, full_matrices=False)
-            if sprev is not None and np.max(np.abs(s[:K] - sprev[:K])) <= tol * s[0]:
+        Z, _ = np.linalg.qr(rmatvec(Q))
+        Q, _ = np.linalg.qr(matvec(Z))
+        if it % 2 == 0:
+            B = rmatvec(Q).T                                   # (p, n) = Q^T W
+            Ub, s, Vh = np.linalg.svd(B, full_matrices=False)
+            if sprev is not None and np.max(np.abs(s[:K] - sprev[:K])) <= tol * max(s[0], 1e-300):
+                conv = True
                 break
             sprev = s
-    Bm = Q.T @ A
-    Ub, s, Vh = np.linalg.svd(Bm, full_matrices=False)
-    return Q @ Ub[:, :K], s[:K], Vh[:K], it
+    B = rmatvec(Q).T
+    Ub, s, Vh = np.linalg.svd(B, full_matrices=False)
+    return Q @ Ub[:, :K], s[:K], Vh[:K].T, dict(iters=it, converged=conv)
 
 
-def static_layout(N, b):
-    """Row/column class bookkeeping for the cut between sites b and b+1 of an N-site operator (C order, site 0 slowest).
-    Returns dict: nrow, ncol, a (left extent per row), c (right extent per column), weight_row, weight_col (Pauli weights)."""
-    nL, nR = b + 1, N - b - 1
-    nrow, ncol = 4 ** nL, 4 ** nR
-    i = np.arange(nrow)
-    dl = np.stack([(i // 4 ** (nL - 1 - s)) % 4 for s in range(nL)], axis=1)          # digit of site s
-    nz = dl != 0
-    a = np.where(nz.any(1), nL - np.argmax(nz, axis=1), 0)                              # leftmost non-identity: a = b - s_min + 1
-    j = np.arange(ncol)
-    dr = np.stack([(j // 4 ** (nR - 1 - s)) % 4 for s in range(nR)], axis=1)           # digit of site b+1+s
-    nzr = dr != 0
-    c = np.where(nzr.any(1), nR - np.argmax(nzr[:, ::-1], axis=1), 0)                   # rightmost non-identity: c = s_max + 1
-    return dict(nrow=nrow, ncol=ncol, a=a, c=c, wrow=nz.sum(1), wcol=nzr.sum(1), nL=nL, nR=nR)
-
-
-def near_idx(lay, n):
-    """Indices of the near-n rows (first 4^n) and near-n columns (4^n strings with the n sites next to the cut free)."""
-    rows = np.arange(4 ** n)
-    cols = np.arange(4 ** n) * 4 ** (lay['nR'] - n)
-    return rows, cols
-
-
-def weights_wsvd(lay, lam1, lam2):
-    wl = np.ones(lay['nrow'])
-    wr = np.ones(lay['ncol'])
-    r1, c1 = near_idx(lay, 1)
-    r2, c2 = near_idx(lay, 2)
-    w1, w2 = np.sqrt(1 + lam1 + lam2), np.sqrt(1 + lam2)
-    wl[r2] = w2
-    wr[c2] = w2
-    wl[r1] = w1
-    wr[c1] = w1
-    return wl, wr
-
-
-def weights_rw(lay, gamma):
-    return gamma ** (-lay['wrow'].astype(float)), gamma ** (-lay['wcol'].astype(float))
-
-
-class StaticFactors:
-    """Low-rank factors of the truncated bond matrices for chi in ``chis``:  M'(chi) = Pl[:, :chi] @ Qr[:chi]  (weighted arms)."""
-
-    def __init__(self, Mx, wl, wr, K, solver=topk_svd):
-        W = (wl[:, None] * Mx) * wr[None, :]
-        U, s, Vh, self.niter = solver(W, K)
-        self.s = s
-        self.Pl = (U * s) / wl[:, None]
-        self.Qr = Vh / wr[None, :]
-        self.wnorm2 = float(np.sum(W * W))
-
-    def error(self, Mx, chi):
-        return Mx - self.Pl[:, :chi] @ self.Qr[:chi]
-
-
-class StaticDMT:
-    """DMT-n on a dense bond matrix: near rows/columns kept exactly, the far-far block SVD-truncated to chi - 2*4^n."""
-
-    def __init__(self, Mx, lay, n, K, solver=topk_svd):
-        self.n = n
-        self.rows, self.cols = near_idx(lay, n)
-        self.far_r = np.setdiff1d(np.arange(lay['nrow']), self.rows)
-        self.far_c = np.setdiff1d(np.arange(lay['ncol']), self.cols)
-        self.D = Mx[np.ix_(self.far_r, self.far_c)]
-        self.reserved = len(self.rows) + len(self.cols)
-        self.Kd = max(1, K - self.reserved)
-        self.U, self.s, self.Vh, self.niter = solver(self.D, self.Kd)
-
-    def feasible(self, chi):
-        return chi >= self.reserved
-
-    def error(self, Mx, chi):
-        rD = chi - self.reserved
-        Dr = (self.U[:, :rD] * self.s[:rD]) @ self.Vh[:rD] if rD > 0 else 0.0
-        E = np.zeros_like(Mx)
-        E[np.ix_(self.far_r, self.far_c)] = self.D - Dr
-        return E
-
-
-class ClassScorer:
-    """Squared coefficient error summed over the (a, c) classes of strings, C(x) overlaps, Frobenius error."""
-
-    def __init__(self, N, b, model, Mx, c0_site):
-        self.N, self.b, self.model = N, b, model
-        self.lay = static_layout(N, b)
-        lay = self.lay
-        self.amax, self.cmax = lay['nL'], lay['nR']
-        self.Ar = (lay['a'][None, :] == np.arange(self.amax + 1)[:, None]).astype(float)
-        self.Ac = (lay['c'][None, :] == np.arange(self.cmax + 1)[:, None]).astype(float)
-        self.M2 = self.class_sq(Mx)
-        self.fro2 = float(np.sum(Mx * Mx))
-        # flat positions of the strings entering eps_x (x = 0..N-2) and Z_x
-        self.ncol = lay['ncol']
-        self.Mx_C = self.C_of(Mx)
-
-    def class_sq(self, E):
-        return self.Ar @ ((E * E) @ self.Ac.T)
-
-    def _pos(self, sites_paulis):
-        flat = sum(p * 4 ** (self.N - 1 - s) for s, p in sites_paulis)
-        return divmod(flat, self.ncol)
-
-    def C_of(self, Mx):
-        N = self.N
-        gx, gz = P.fields(self.model)
-        out = np.zeros(N - 1)
-        for x in range(N - 1):
-            def g(sp):
-                i, j = self._pos(sp)
-                return Mx[i, j]
-            out[x] = g([(x, 3), (x + 1, 3)]) + gx / 2 * (g([(x, 1)]) + g([(x + 1, 1)])) + gz / 2 * (g([(x, 3)]) + g([(x + 1, 3)]))
+def _lin(Q1, Qx, a1, a2):
+    """X -> X + Q1 diag(a1) Q1^T X + Qx diag(a2) Qx^T X  (symmetric, low-rank perturbation of the identity), a scalars."""
+    def f(X):
+        out = X.copy()
+        if Q1.shape[1]:
+            out += a1 * (Q1 @ (Q1.T @ X))
+        if Qx.shape[1]:
+            out += a2 * (Qx @ (Qx.T @ X))
         return out
-
-    def score(self, E):
-        S = self.class_sq(E)
-        return dict(S=S.tolist(), fro2=float(np.sum(E * E)), dC=(self.C_of(E)).tolist())
+    return f
 
 
-def span_classes(S, S_ref=None):
-    """Collapse an (a, c) table of squared errors into the plan's span classes over straddling strings (a >= 1, c >= 1):
-    le3, s4, s5, ge6, plus the DMT-protection classes unprot1 (a>=2 and c>=2), unprot2 (a>=3 and c>=3) and the one-sided strings."""
-    S = np.asarray(S)
-    A, C = S.shape
-    out = dict(le3=0.0, s4=0.0, s5=0.0, ge6=0.0, unprot1=0.0, unprot2=0.0, onesided=0.0)
-    for a in range(A):
-        for c in range(C):
-            v = S[a, c]
-            if a == 0 or c == 0:
-                out['onesided'] += v
-                continue
-            sp = a + c
-            out['le3' if sp <= 3 else 's4' if sp == 4 else 's5' if sp == 5 else 'ge6'] += v
-            if a >= 2 and c >= 2:
-                out['unprot1'] += v
-            if a >= 3 and c >= 3:
-                out['unprot2'] += v
-    return out
+def bond_factors(kind, s, QL1, QLx, QR1, QRx, chi, n=1, lam1=0.0, lam2=0.0, solver=topk_op):
+    """Factors (Pb, Qb) (k x chi each) of the truncated bond matrix for the cut ``kind`` in {'svd', 'dmt', 'wsvd'}.
+    dmt: Pb = [QL, (I-PL) S QR, Uz sz], Qb = [S QL, QR, Vz], Z = top-(chi - rL - rR) triplets of (I-PL) S (I-PR)   (nested in chi)
+    wsvd: top-chi triplets of Lh S Rh, un-whitened with Li, Ri."""
+    k = len(s)
+    if kind == 'svd':
+        r = min(chi, k)
+        Pb = np.zeros((k, r))
+        Pb[np.arange(r), np.arange(r)] = s[:r]
+        Qb = np.zeros((k, r))
+        Qb[np.arange(r), np.arange(r)] = 1.0
+        return Pb, Qb, dict(iters=0, converged=True)
+    if kind == 'wsvd':
+        w1, w2 = np.sqrt(1.0 + lam1 + lam2), np.sqrt(1.0 + lam2)
+        Lh, Li = _lin(QL1, QLx, w1 - 1, w2 - 1), _lin(QL1, QLx, 1 / w1 - 1, 1 / w2 - 1)
+        Rh, Ri = _lin(QR1, QRx, w1 - 1, w2 - 1), _lin(QR1, QRx, 1 / w1 - 1, 1 / w2 - 1)
+        # the two perturbations share one weight vector only when QL1 == QR1-structure; they are applied separately on each side
+        # (QL1 weight w1 on the near-1 block, w2 on the extra near-2 block), exactly as in OpCut._wsvd
+        mv = lambda X: Lh(s[:, None] * Rh(X))
+        rmv = lambda X: Rh(s[:, None] * Lh(X))
+        dense = None
+        if k <= 400:
+            dense = Lh(np.diag(s)) @ np.eye(k)
+            dense = Rh(dense.T).T
+        Uw, sw, Vw, info = solver(mv, rmv, k, chi, dense=dense)
+        return Li(Uw * sw), Ri(Vw), info
+    if kind == 'dmt':
+        QLn = QL1 if n == 1 else np.hstack([QL1, QLx])
+        QRn = QR1 if n == 1 else np.hstack([QR1, QRx])
+        rL, rR = QLn.shape[1], QRn.shape[1]
+        if chi < rL + rR:
+            raise InfeasibleCut(f'chi={chi} < rL+rR={rL + rR}')
+        fL = lambda X: X - QLn @ (QLn.T @ X)
+        fR = lambda X: X - QRn @ (QRn.T @ X)
+        mv = lambda X: fL(s[:, None] * fR(X))
+        rmv = lambda X: fR(s[:, None] * fL(X))
+        rD = chi - rL - rR
+        dense = None
+        if k <= 400:
+            dense = fL(np.diag(s))
+            dense = fR(dense.T).T
+        if rD > 0:
+            Uz, sz, Vz, info = solver(mv, rmv, k, rD, dense=dense)
+        else:
+            Uz, sz, Vz, info = np.zeros((k, 0)), np.zeros(0), np.zeros((k, 0)), dict(iters=0, converged=True)
+        Pb = np.hstack([QLn, fL(s[:, None] * QRn), Uz * sz])
+        Qb = np.hstack([s[:, None] * QLn, QRn, Vz])
+        return Pb, Qb, info
+    raise ValueError(kind)

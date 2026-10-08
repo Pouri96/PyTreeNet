@@ -30,60 +30,60 @@
   "ok": true
  },
  "dmt:1 chi=12 N=8: preserved functionals of radius 1, worst abs violation over all cuts": {
-  "value": 0.010754719565486175,
+  "value": 8.271378373891913e-15,
   "tol": 1e-12,
-  "ok": false
+  "ok": true
  },
  "dmt:1 chi=12 N=8: energy sum-rule change per cut (sum_x eps_x)": {
   "value": 1.2587950728189274e-14,
   "tol": 1e-12,
   "ok": true
  },
- "dmt:1 chi=12 N=8: window of radius 1 (2n+2 sites) violation (expected NONZERO for dmt)": 0.009613100094455984,
+ "dmt:1 chi=12 N=8: window of radius 1 (2n+2 sites) violation (expected NONZERO for dmt)": 0.004347462872878415,
  "dmt:1 chi=12 N=8: ntruncating cuts": 82,
  "dmt:2 chi=32 N=8: preserved functionals of radius 2, worst abs violation over all cuts": {
-  "value": 0.010294307070162503,
+  "value": 9.71351735912304e-15,
   "tol": 1e-12,
-  "ok": false
+  "ok": true
  },
  "dmt:2 chi=32 N=8: energy sum-rule change per cut (sum_x eps_x)": {
   "value": 1.5237196615937915e-14,
   "tol": 1e-12,
   "ok": true
  },
- "dmt:2 chi=32 N=8: window of radius 2 (2n+2 sites) violation (expected NONZERO for dmt)": 0.0065136757742998395,
+ "dmt:2 chi=32 N=8: window of radius 2 (2n+2 sites) violation (expected NONZERO for dmt)": 0.00649391469038945,
  "dmt:2 chi=32 N=8: ntruncating cuts": 41,
  "wsvd:1e8:0 chi=12 N=8: preserved functionals of radius 1, worst abs violation over all cuts": {
-  "value": 0.00034187758106371855,
+  "value": 8.397178230534763e-10,
   "tol": 1e-07,
-  "ok": false
+  "ok": true
  },
  "wsvd:1e8:0 chi=12 N=8: energy sum-rule change per cut (sum_x eps_x)": {
   "value": 7.968154928464021e-10,
   "tol": 1e-07,
   "ok": true
  },
- "wsvd:1e8:0 chi=12 N=8: window of radius 1 (2n+2 sites) violation (expected NONZERO for dmt)": 0.0006392618560728461,
+ "wsvd:1e8:0 chi=12 N=8: window of radius 1 (2n+2 sites) violation (expected NONZERO for dmt)": 0.00016987209653887558,
  "wsvd:1e8:0 chi=12 N=8: ntruncating cuts": 82,
  "wsvd:0:1e8 chi=32 N=8: preserved functionals of radius 2, worst abs violation over all cuts": {
-  "value": 9.377429398361367e-07,
+  "value": 2.4605573134550696e-10,
   "tol": 1e-07,
-  "ok": false
+  "ok": true
  },
  "wsvd:0:1e8 chi=32 N=8: energy sum-rule change per cut (sum_x eps_x)": {
   "value": 7.804216898624069e-11,
   "tol": 1e-07,
   "ok": true
  },
- "wsvd:0:1e8 chi=32 N=8: window of radius 2 (2n+2 sites) violation (expected NONZERO for dmt)": 4.2200439754812683e-07,
+ "wsvd:0:1e8 chi=32 N=8: window of radius 2 (2n+2 sites) violation (expected NONZERO for dmt)": 3.4007358191749605e-07,
  "wsvd:0:1e8 chi=32 N=8: ntruncating cuts": 41,
  "svd chi=12 N=8: SVD violation radius1/radius2 (expected NONZERO)": [
-  0.0003238547830959554,
-  0.00029076972740264904
+  8.865942870177161e-05,
+  0.00015019129484123133
  ],
  "svd chi=12 N=8: SVD energy sum-rule change per cut (expected NONZERO)": 6.251811362799914e-05,
- "svd loses the energy sum-rule at the cut level (worst per-cut change > 1e-6)": {
-  "value": -6.151811362799914e-05,
+ "svd loses the energy sum-rule at the cut level (worst per-cut change must exceed 1e-6)": {
+  "value": 0.0,
   "tol": 0.0,
   "ok": true
  },
@@ -97,132 +97,243 @@
   "tol": 1e-09,
   "ok": true
  },
- "static svd vs MPO svd cut (N=8, b=3, chi=10)": {
+ "N=8 b=3: bond dimension k of the exact operator at step 10": 120,
+ "static bond-gauge svd vs MPO cut (N=8, b=3, chi=10), dense path": {
   "value": 2.7269853042355408e-15,
-  "tol": 1e-10,
-  "ok": true
- },
- "static wsvd(10.0,0.0) vs MPO wsvd cut (N=8, b=3, chi=10)": {
-  "value": 1.8515744493186048e-13,
   "tol": 1e-09,
   "ok": true
  },
- "static wsvd(0.0,30.0) vs MPO wsvd cut (N=8, b=3, chi=10)": {
-  "value": 8.348464906990545e-08,
-  "tol": 1e-09,
-  "ok": false
+ "   same, Frobenius error norms relative difference": {
+  "value": 4.973860724728538e-08,
+  "tol": 1e-06,
+  "ok": true
  },
- "static wsvd(3.0,100.0) vs MPO wsvd cut (N=8, b=3, chi=10)": {
-  "value": 9.000919684912755e-08,
-  "tol": 1e-09,
-  "ok": false
+ "static bond-gauge svd iterative solver vs dense solver (chi=10)  [converged=True, 0 it]": {
+  "value": 0.0,
+  "tol": 1e-08,
+  "ok": true
  },
- "static dmt:1 vs MPO dmt:1 cut (N=8, b=3, chi=10)": {
-  "value": 1.1657309355975502e-06,
+ "static bond-gauge wsvd:10:0 vs MPO cut (N=8, b=3, chi=10), dense path": {
+  "value": 2.5604518505417673e-15,
   "tol": 1e-09,
-  "ok": false
+  "ok": true
  },
- "static dmt:2 vs MPO dmt:2 cut (N=8, b=3, chi=32)": {
-  "value": 7.148295007588448e-05,
+ "static bond-gauge wsvd:10:0 iterative solver vs dense solver (chi=10)  [converged=True, 4 it]": {
+  "value": 3.892719480091955e-15,
+  "tol": 1e-08,
+  "ok": true
+ },
+ "static bond-gauge wsvd:0:30 vs MPO cut (N=8, b=3, chi=10), dense path": {
+  "value": 6.479628992649838e-10,
   "tol": 1e-09,
-  "ok": false
+  "ok": true
  },
- "static svd vs MPO svd cut (N=8, b=3, chi=20)": {
+ "static bond-gauge wsvd:0:30 iterative solver vs dense solver (chi=10)  [converged=True, 4 it]": {
+  "value": 1.3877787807814457e-15,
+  "tol": 1e-08,
+  "ok": true
+ },
+ "static bond-gauge wsvd:3:100 vs MPO cut (N=8, b=3, chi=10), dense path": {
+  "value": 7.104010205614963e-10,
+  "tol": 1e-09,
+  "ok": true
+ },
+ "static bond-gauge wsvd:3:100 iterative solver vs dense solver (chi=10)  [converged=True, 4 it]": {
+  "value": 1.762479051592436e-15,
+  "tol": 1e-08,
+  "ok": true
+ },
+ "static bond-gauge dmt:1 vs MPO cut (N=8, b=3, chi=10), dense path": {
+  "value": 1.742041071914639e-08,
+  "tol": 1e-05,
+  "ok": true
+ },
+ "static bond-gauge dmt:1 iterative solver vs dense solver (chi=10)  [converged=True, 4 it]": {
+  "value": 6.002143226879753e-16,
+  "tol": 1e-08,
+  "ok": true
+ },
+ "static bond-gauge dmt:2 vs MPO cut (N=8, b=3, chi=32), dense path": {
+  "value": 7.059785744834221e-07,
+  "tol": 1e-05,
+  "ok": true
+ },
+ "static bond-gauge dmt:2 iterative solver vs dense solver (chi=32)  [converged=True, 0 it]": {
+  "value": 0.0,
+  "tol": 1e-08,
+  "ok": true
+ },
+ "static bond-gauge svd vs MPO cut (N=8, b=3, chi=20), dense path": {
   "value": 2.733924198139448e-15,
-  "tol": 1e-10,
-  "ok": true
- },
- "static wsvd(10.0,0.0) vs MPO wsvd cut (N=8, b=3, chi=20)": {
-  "value": 2.831068712794149e-15,
   "tol": 1e-09,
   "ok": true
  },
- "static wsvd(0.0,30.0) vs MPO wsvd cut (N=8, b=3, chi=20)": {
-  "value": 8.374142669716981e-10,
-  "tol": 1e-09,
-  "ok": true
- },
- "static wsvd(3.0,100.0) vs MPO wsvd cut (N=8, b=3, chi=20)": {
-  "value": 1.4629922065603285e-09,
-  "tol": 1e-09,
-  "ok": false
- },
- "static dmt:1 vs MPO dmt:1 cut (N=8, b=3, chi=20)": {
-  "value": 1.1275695778818664e-08,
-  "tol": 1e-09,
-  "ok": false
- },
- "static dmt:2 vs MPO dmt:2 cut (N=8, b=3, chi=42)": {
-  "value": 6.931847604756786e-07,
-  "tol": 1e-09,
-  "ok": false
- },
- "wsvd lam=1e8 (n=1) vs exact on the preserved rows/cols (static)": {
-  "value": 9.36318943656634e-12,
-  "tol": 1e-08,
-  "ok": true
- },
- "dmt:1 preserved rows/cols exact (static)": {
-  "value": 0.0,
-  "tol": 1e-14,
-  "ok": true
- },
- "frobenius error at chi=40: wsvd(lam=1e8,n=1) vs dmt:1": [
-  1.4250504180778165e-06,
-  1.390553433160289e-06
- ],
- "wsvd lam=1e8 (n=1) Frobenius error <= dmt:1 (DMT is a feasible point)": {
-  "value": 0.024808097333683055,
-  "tol": 1e-08,
-  "ok": false
- },
- "wsvd rank <= chi (n=1), numerical rank excess": {
-  "value": 0.0,
-  "tol": 0,
-  "ok": true
- },
- "wsvd lam=1e8 (n=2) vs exact on the preserved rows/cols (static)": {
-  "value": 5.051296335964288e-12,
-  "tol": 1e-08,
-  "ok": true
- },
- "dmt:2 preserved rows/cols exact (static)": {
-  "value": 0.0,
-  "tol": 1e-14,
-  "ok": true
- },
- "frobenius error at chi=40: wsvd(lam=1e8,n=2) vs dmt:2": [
-  1.6254160614988883e-06,
-  0.00039893685470457563
- ],
- "wsvd lam=1e8 (n=2) Frobenius error <= dmt:2 (DMT is a feasible point)": {
+ "static bond-gauge svd iterative solver vs dense solver (chi=20)  [converged=True, 0 it]": {
   "value": 0.0,
   "tol": 1e-08,
   "ok": true
  },
- "wsvd rank <= chi (n=2), numerical rank excess": {
-  "value": 0.0,
-  "tol": 0,
-  "ok": true
- },
- "weighted residual equals sqrt(sum of discarded weighted singular values^2) (Eckart-Young)": {
-  "value": 1.5722727786385182e-12,
+ "static bond-gauge wsvd:10:0 vs MPO cut (N=8, b=3, chi=20), dense path": {
+  "value": 2.6506574712925612e-15,
   "tol": 1e-09,
   "ok": true
  },
- "class table sums to ||M||_F^2": {
+ "static bond-gauge wsvd:10:0 iterative solver vs dense solver (chi=20)  [converged=True, 4 it]": {
+  "value": 3.66720542821497e-15,
+  "tol": 1e-08,
+  "ok": true
+ },
+ "static bond-gauge wsvd:0:30 vs MPO cut (N=8, b=3, chi=20), dense path": {
+  "value": 2.233939060483376e-12,
+  "tol": 1e-09,
+  "ok": true
+ },
+ "static bond-gauge wsvd:0:30 iterative solver vs dense solver (chi=20)  [converged=True, 4 it]": {
+  "value": 1.4224732503009818e-15,
+  "tol": 1e-08,
+  "ok": true
+ },
+ "static bond-gauge wsvd:3:100 vs MPO cut (N=8, b=3, chi=20), dense path": {
+  "value": 1.124951982966766e-11,
+  "tol": 1e-09,
+  "ok": true
+ },
+ "static bond-gauge wsvd:3:100 iterative solver vs dense solver (chi=20)  [converged=True, 4 it]": {
+  "value": 7.717920269892375e-15,
+  "tol": 1e-08,
+  "ok": true
+ },
+ "static bond-gauge dmt:1 vs MPO cut (N=8, b=3, chi=20), dense path": {
+  "value": 1.3222703453429462e-10,
+  "tol": 1e-05,
+  "ok": true
+ },
+ "static bond-gauge dmt:1 iterative solver vs dense solver (chi=20)  [converged=True, 4 it]": {
+  "value": 1.1102230246251565e-16,
+  "tol": 1e-08,
+  "ok": true
+ },
+ "static bond-gauge dmt:2 vs MPO cut (N=8, b=3, chi=42), dense path": {
+  "value": 8.082207987579763e-09,
+  "tol": 1e-05,
+  "ok": true
+ },
+ "static bond-gauge dmt:2 iterative solver vs dense solver (chi=42)  [converged=True, 4 it]": {
+  "value": 1.6653345369377348e-16,
+  "tol": 1e-08,
+  "ok": true
+ },
+ "class table from factors vs direct (chi=8)": {
+  "value": 1.823294799595433e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "C(x) error from factors vs direct (chi=8)": {
+  "value": 4.0657581468206416e-20,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "class table from factors vs direct (chi=16)": {
+  "value": 1.629184055499099e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "C(x) error from factors vs direct (chi=16)": {
+  "value": 1.568814520484454e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "class table from factors vs direct (chi=24)": {
+  "value": 1.3854184720957952e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "C(x) error from factors vs direct (chi=24)": {
+  "value": 1.568814522746276e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "class table of the exact matrix sums to ||M||_F^2": {
   "value": 0.0,
   "tol": 1e-12,
   "ok": true
  },
- "C(x) from the bond matrix == C(x) from the dense vector": {
-  "value": 0.0,
+ "C(x) positions: exact C(x) from bond-matrix entries vs dense vector": {
+  "value": 1.1102230246251565e-16,
   "tol": 1e-13,
   "ok": true
  },
- "dmt:1 error is exactly zero on span<=3, a<=1 and c<=1 strings": {
+ "topk_op wsvd (k=1500, chi=40): weighted error vs Eckart-Young optimum, relative [6 it, converged=True]": {
+  "value": 1.3496850120814576e-15,
+  "tol": 1e-09,
+  "ok": true
+ },
+ "wsvd lam=1e8 (n=1) reproduces the DMT-n preserved rows/cols of the exact operator": {
+  "value": 7.29993843151533e-12,
+  "tol": 1e-08,
+  "ok": true
+ },
+ "dmt:1 preserved rows/cols exact": {
+  "value": 5.099184170891074e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "wsvd lam=1e8 (n=1) matches dmt:1 on the preserved coefficients": {
+  "value": 7.299716386910404e-12,
+  "tol": 1e-08,
+  "ok": true
+ },
+ "frobenius error at chi=40: wsvd(lam=1e4,n=1), dmt:1": [
+  4.783482392445108e-07,
+  1.3905233439411027e-06
+ ],
+ "wsvd lam=1e4 (n=1) Frobenius error <= 1.001 x dmt:1 (DMT is a feasible point of the limit problem)": {
   "value": 0.0,
-  "tol": 1e-28,
+  "tol": 0.0,
+  "ok": true
+ },
+ "wsvd rank <= chi (n=1); numerical rank excess": {
+  "value": 0.0,
+  "tol": 0,
+  "ok": true
+ },
+ "wsvd lam=1e8 (n=2) reproduces the DMT-n preserved rows/cols of the exact operator": {
+  "value": 5.0217330294088924e-12,
+  "tol": 1e-08,
+  "ok": true
+ },
+ "dmt:2 preserved rows/cols exact": {
+  "value": 5.4949466743274555e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "wsvd lam=1e8 (n=2) matches dmt:2 on the preserved coefficients": {
+  "value": 5.021982829589433e-12,
+  "tol": 1e-08,
+  "ok": true
+ },
+ "frobenius error at chi=40: wsvd(lam=1e4,n=2), dmt:2": [
+  5.13082674348089e-07,
+  0.00039765784212580577
+ ],
+ "wsvd lam=1e4 (n=2) Frobenius error <= 1.001 x dmt:2 (DMT is a feasible point of the limit problem)": {
+  "value": 0.0,
+  "tol": 0.0,
+  "ok": true
+ },
+ "wsvd rank <= chi (n=2); numerical rank excess": {
+  "value": 0.0,
+  "tol": 0,
+  "ok": true
+ },
+ "weighted residual equals sqrt(sum of discarded weighted singular values^2) (Eckart-Young, N=8 exact operator)": {
+  "value": 1.5212023821403406e-12,
+  "tol": 1e-09,
+  "ok": true
+ },
+ "dmt:1 error is zero (to 1e-14 abs in squared norm) on span<=3 and one-sided strings": {
+  "value": 1.769417946271825e-16,
+  "tol": 1e-14,
   "ok": true
  },
  "dmt:1 error is nonzero on (2,2) strings": {
@@ -230,19 +341,16 @@
   "tol": 0.0,
   "ok": true
  },
- "dmt:2 error is exactly zero on every a<=2 or c<=2 string": {
-  "value": 0.0,
-  "tol": 1e-28,
+ "dmt:2 error is zero on every a<=2 or c<=2 string": {
+  "value": 1.1102230246251565e-16,
+  "tol": 1e-14,
   "ok": true
  },
- "dmt:1 (this module) vs rank4 DMT-I, dense operator after 12 steps (N=10, chi=12)": {
-  "value": 8.19246671235294e-08,
-  "tol": 1e-09,
-  "ok": false
+ "dmt:1 (this module) vs rank4 DMT-I on identical inputs, worst over 216 cuts (N=10, chi=12, 12 steps)": {
+  "value": 4.4911990793039536e-15,
+  "tol": 1e-11,
+  "ok": true
  },
- "||O|| after 12 steps (rank4 vs rank10)": [
-  0.9999598377287979,
-  0.9999598377270746
- ],
- "all_ok": false
+ "free-running trajectories after 12 steps: max |O_rank4 - O_rank10| (roundoff-level differences are amplified by 12 steps of truncation)": 8.19246671235294e-08,
+ "all_ok": true
 }

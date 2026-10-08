@@ -1,0 +1,34 @@
+=== Test 3: heis, N=10, T=6.0, dt=0.1 ===
+exact C_Z max 0.997
+
+-- chi = 8 (absolute; ratios to svd in brackets) --
+svd                                C_Z rms front 7.15e-02 [1.00] behind 2.70e-01 [1.00] | w front 4.68e-02 [1.00] behind 1.92e-01 [1.00] | lag0.5 0.000 (svd 0.000) | infid 9.35e-01 [1.00] far>=3 6.94e-02 [1.00] cz0 2.73e-02 [1.00] | win1 [1.00] win2 [1.00] win3 [1.00]
+rw:1.6                             C_Z rms front 1.03e-01 [1.44] behind 3.28e-01 [1.22] | w front 6.40e-02 [1.37] behind 2.42e-01 [1.26] | lag0.5 0.001 (svd 0.000) | infid 8.95e-01 [0.96] far>=3 8.79e-02 [1.27] cz0 3.16e-02 [1.16] | win1 [1.21] win2 [1.24] win3 [1.24]
+spcop                              C_Z rms front 6.88e-02 [0.96] behind 2.66e-01 [0.99] | w front 4.73e-02 [1.01] behind 2.00e-01 [1.04] | lag0.5 0.000 (svd 0.000) | infid 9.37e-01 [1.00] far>=3 7.59e-02 [1.09] cz0 3.39e-02 [1.24] | win1 [1.09] win2 [1.13] win3 [1.15]
+svdt                               C_Z rms front 7.15e-02 [1.00] behind 2.70e-01 [1.00] | w front 4.68e-02 [1.00] behind 1.92e-01 [1.00] | lag0.5 0.000 (svd 0.000) | infid 9.35e-01 [1.00] far>=3 6.94e-02 [1.00] cz0 2.73e-02 [1.00] | win1 [1.00] win2 [1.00] win3 [1.00]
+
+-- chi = 16 (absolute; ratios to svd in brackets) --
+svd                                C_Z rms front 3.51e-02 [1.00] behind 1.43e-01 [1.00] | w front 3.13e-02 [1.00] behind 1.07e-01 [1.00] | lag0.5 0.000 (svd 0.000) | infid 9.12e-01 [1.00] far>=3 3.90e-02 [1.00] cz0 1.52e-02 [1.00] | win1 [1.00] win2 [1.00] win3 [1.00]
+rw:1.6                             C_Z rms front 2.31e-02 [0.66] behind 1.54e-01 [1.07] | w front 2.12e-02 [0.68] behind 1.15e-01 [1.07] | lag0.5 0.007 (svd 0.000) | infid 9.18e-01 [1.01] far>=3 4.57e-02 [1.17] cz0 1.50e-02 [0.99] | win1 [1.16] win2 [1.25] win3 [1.28]
+spcop                              C_Z rms front 2.84e-02 [0.81] behind 1.04e-01 [0.72] | w front 2.58e-02 [0.82] behind 8.17e-02 [0.76] | lag0.5 0.000 (svd 0.000) | infid 9.57e-01 [1.05] far>=3 2.04e-02 [0.52] cz0 2.38e-02 [1.57] | win1 [0.56] win2 [0.62] win3 [0.63]
+svdt                               C_Z rms front 3.51e-02 [1.00] behind 1.43e-01 [1.00] | w front 3.13e-02 [1.00] behind 1.07e-01 [1.00] | lag0.5 0.000 (svd 0.000) | infid 9.12e-01 [1.00] far>=3 3.90e-02 [1.00] cz0 1.52e-02 [1.00] | win1 [1.00] win2 [1.00] win3 [1.00]
+
+-- chi = 32 (absolute; ratios to svd in brackets) --
+svd                                C_Z rms front 1.69e-02 [1.00] behind 8.22e-02 [1.00] | w front 1.49e-02 [1.00] behind 5.85e-02 [1.00] | lag0.5 0.000 (svd 0.000) | infid 8.16e-01 [1.00] far>=3 2.63e-02 [1.00] cz0 5.40e-03 [1.00] | win1 [1.00] win2 [1.00] win3 [1.00]
+rw:1.6                             C_Z rms front 1.13e-02 [0.67] behind 1.23e-01 [1.50] | w front 1.12e-02 [0.75] behind 7.97e-02 [1.36] | lag0.5 0.003 (svd 0.000) | infid 8.52e-01 [1.04] far>=3 3.30e-02 [1.26] cz0 4.59e-03 [0.85] | win1 [1.33] win2 [1.18] win3 [1.16]
+spcop                              C_Z rms front 1.28e-02 [0.76] behind 6.32e-02 [0.77] | w front 1.17e-02 [0.78] behind 4.37e-02 [0.75] | lag0.5 0.000 (svd 0.000) | infid 8.41e-01 [1.03] far>=3 1.81e-02 [0.69] cz0 8.28e-03 [1.53] | win1 [0.74] win2 [0.72] win3 [0.68]
+svdt                               C_Z rms front 1.69e-02 [1.00] behind 8.22e-02 [1.00] | w front 1.49e-02 [1.00] behind 5.85e-02 [1.00] | lag0.5 0.000 (svd 0.000) | infid 8.16e-01 [1.00] far>=3 2.63e-02 [1.00] cz0 5.40e-03 [1.00] | win1 [1.00] win2 [1.00] win3 [1.00]
+
+-- cut CPU time (s, process_time inside the cut) and ratio to svd --
+chi= 8 svd                                cut cpu 0.9s ratio 1.0  fired -/729 skipped -
+chi= 8 rw:1.6                             cut cpu 0.2s ratio 0.2  fired -/- skipped -
+chi= 8 spcop                              cut cpu 4.5s ratio 4.9  fired 691/728 skipped 37
+chi= 8 svdt                               cut cpu 0.2s ratio 0.2  fired -/729 skipped -
+chi=16 svd                                cut cpu 3.5s ratio 1.0  fired -/491 skipped -
+chi=16 rw:1.6                             cut cpu 0.5s ratio 0.1  fired -/- skipped -
+chi=16 spcop                              cut cpu 16.6s ratio 4.8  fired 477/491 skipped 14
+chi=16 svdt                               cut cpu 0.5s ratio 0.1  fired -/491 skipped -
+chi=32 svd                                cut cpu 5.5s ratio 1.0  fired -/470 skipped -
+chi=32 rw:1.6                             cut cpu 1.2s ratio 0.2  fired -/- skipped -
+chi=32 spcop                              cut cpu 21.4s ratio 3.9  fired 465/470 skipped 5
+chi=32 svdt                               cut cpu 1.3s ratio 0.2  fired -/470 skipped -

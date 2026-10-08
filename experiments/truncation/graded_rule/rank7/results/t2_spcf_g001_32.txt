@@ -6,3 +6,12 @@
   t= 3.0 1site=3.33e-10 nn=3.85e-09 infid=5.81e-10 F=1.0000 fired=0/1140
   t= 3.5 1site=2.85e-07 nn=2.10e-06 infid=4.39e-07 F=1.0000 fired=0/1330
   t= 4.0 1site=2.14e-05 nn=6.21e-05 infid=2.44e-05 F=1.0000 fired=8/1520
+  t= 4.5 1site=1.19e-04 nn=1.57e-04 infid=4.72e-04 F=0.9999 fired=97/1710
+  t= 5.0 1site=2.95e-04 nn=3.79e-04 infid=3.21e-03 F=0.9996 fired=187/1900
+  t= 5.5 1site=7.37e-04 nn=6.54e-04 infid=1.02e-02 F=0.9986 fired=277/2090
+  t= 6.0 1site=1.26e-03 nn=9.76e-04 infid=2.39e-02 F=0.9966 fired=367/2280
+  t= 6.5 1site=2.17e-03 nn=1.54e-03 infid=4.62e-02 F=0.9930 fired=457/2470
+  t= 7.0 1site=3.58e-03 nn=2.55e-03 infid=7.78e-02 F=0.9878 fired=547/2660
+  t= 7.5 1site=4.97e-03 nn=3.55e-03 infid=1.21e-01 F=0.9799 fired=637/2850
+  t= 8.0 1site=5.49e-03 nn=4.65e-03 infid=1.74e-01 F=0.9699 fired=727/3040
+done {"model": "ising", "N": 20, "T": 8.0, "dt": 0.1, "every": 5, "arm": "spcf:2:0:4:1.0:1-2-3:0:1:1e-7:all:1e-2", "chi": 32, "cpu_tebd": 12.958822831000003, "cpu_total": 30.675401757, "fired": 727, "calls": 3040, "fmin": 0.9997989089498283, "ncut": 3040, "wall_total": 76.5185797214508}

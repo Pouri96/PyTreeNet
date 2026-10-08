@@ -1,0 +1,38 @@
+{
+ "whitened_svd_global_min": {
+  "closed_form": 0.07341506917390486,
+  "theory": 0.07341506917390467,
+  "plain_svd": 0.590928587158996,
+  "best_of_60_lbfgs": 0.07341517196659608,
+  "rank_ok": true,
+  "closed_equals_theory": true,
+  "not_beaten": true,
+  "plain_svd_worse": true
+ },
+ "subspace_R_matches_Mk": 2.5765781391890493e-14,
+ "subspace_L_matches_Mk": 2.7921754976994218e-14,
+ "mu0_equals_svd_subspace": 2.0617815173362213e-15,
+ "shampoo_product_set_relerr": 8.035445752302603e-16,
+ "vlp_product_set_relerr": 2.7093885652825144e-16,
+ "vlp_product_set_fidelity": 1.0,
+ "generic_set_relerr": {
+  "shampoo": 0.7430244119981556,
+  "vlp": 0.7416178088737716
+ },
+ "quadform_product_set_scale_const_check": [
+  0.00016863208624434857,
+  0.00016863208624434873,
+  0.0001686320862443487
+ ],
+ "vlp_real_exact": {
+  "relerr": 3.661230522033687e-16,
+  "fidelity": 1.0
+ },
+ "vlp_real_noisy": {
+  "relerr": 0.06682715839177374,
+  "fidelity": 0.9955341309012806
+ },
+ "kron_solve_real": 2.1404653645808456e-14,
+ "kron_solve_complex": 4.67897029225882e-15,
+ "realify": 3.552713678800501e-15
+}

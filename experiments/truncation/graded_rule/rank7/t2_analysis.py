@@ -197,8 +197,8 @@ def main(tags):
         print(f'(a) all cases hold: {ok_all}   ({sum(crit_a.values())}/{len(crit_a)})')
 
         print('\n(b) win fraction over growth-phase samples vs the best post-processed SVD at equal chi (and vs plain SVD)')
-        print('| chi | metric | growth samples | t_peak | win vs best-pp | win vs svd | win(spcf or spcfF) vs best-pp | "within 20%" fraction (spcf > 0.8 best-pp) | win vs best-pp, whole window with SVD err>=1e-4 |')
-        print('|---|---|---|---|---|---|---|---|---|')
+        print('| chi | metric | growth samples | t_peak | win vs best-pp | win vs svd | win(spcf or spcfF) vs best-pp | "within 20%" fraction (spcf > 0.8 best-pp) | win vs best-pp, whole window with SVD err>=1e-4 | win vs best-pp incl. ORACLE svdFtrue |')
+        print('|---|---|---|---|---|---|---|---|---|---|')
         for c in SPCF_CHIS:
             if c not in dd:
                 continue
@@ -215,7 +215,8 @@ def main(tags):
                 within = (sp > 0.8 * pp)[gp].mean()
                 w_all = (sp < pp)[allw].mean()
                 crit_b[(c, name)] = w
-                print(f'| {c} | {name} | {int(gp.sum())} | {TS[tp]:g} | {w:.2f} | {w_svd:.2f} | {w_F:.2f} | {within:.2f} | {w_all:.2f} |')
+                w_or = (sp < np.minimum(pp, E[f'svdFtrue{c}'][key]))[gp].mean()
+                print(f'| {c} | {name} | {int(gp.sum())} | {TS[tp]:g} | {w:.2f} | {w_svd:.2f} | {w_F:.2f} | {within:.2f} | {w_all:.2f} | {w_or:.2f} |')
         print('(b) >= 0.70 at every chi and metric:', all(v >= 0.7 for v in crit_b.values()))
 
         print('\n(c) eps_c ratio spcf/SVD at equal chi (median / max over growth-phase samples; final sample); plain and connected')
@@ -240,6 +241,9 @@ def main(tags):
             rr = []
             for i in range(NS):
                 ladder_e = [E[f'svd{x}']['enn'][i] for x in chis]
+                if E[f'spcf_{t}_{c}']['enn'][i] < 1e-7:            # both arms exact to rounding, r undefined
+                    rr.append('-')
+                    continue
                 ce, fl = rutil.chi_eq(chis, ladder_e, E[f'spcf_{t}_{c}']['enn'][i])
                 rr.append(f'{ce / c:.2f}{"*" if fl else ""}')
             print(f'| {c} | ' + ' | '.join(rr) + ' |')

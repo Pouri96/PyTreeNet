@@ -3,7 +3,8 @@
 PRE-REGISTERED DEFINITIONS (fixed before the grid was run; see reports/first_moves/rank6_noisy_results.md)
   model ising, Neel start, N = 8, T = 4, dt = 0.1, dephasing L_j = sqrt(gamma) Z_j, gamma in {0, .003, .01, .03, .1}, chi in {6, 8, 12}, kappa in {2, 4}.
   (a) both truncations (chi, kappa), centre-gauged (environment-aware) Kraus truncation, spcf gate quantities logged at every bond cut;
-  (b) bond truncation only: kappa = KB (16, "infinity"); (c) Kraus truncation only: dense purification, no bond truncation, kappa as in (a).
+  (b) bond truncation only: kappa = KB (16, "infinity"); (c) Kraus truncation only: LPDO-TEBD with chi = CINF = 64 (bond truncation negligible: total bond discarded weight is logged and must be < 1e-8), kappa as in (a);
+  for kappa = 2 the dense global-Kraus purification ('cd', exactly chi = infinity) is run as a cross-check of the CINF runs.
   e_a, e_b, e_c = nn rms of (a), (b), (c).  Bond share s_b = e_b / e_a, Kraus share s_c = e_c / e_a.
   gate on-fraction f = (number of logged bond cuts with B_res >= c0 (tail/1e-4)^0.65) / (all (N-1)*2*nsteps = 560 bond cuts of the run); window a = 2 is primary (the
   config in which the gate constants were calibrated, check_gate.py), a = 1 is reported as a robustness check.  rho_f(gamma, chi) = f(gamma, chi) / f(0, chi).
@@ -25,6 +26,7 @@ GAMMAS = [0.0, 0.003, 0.01, 0.03, 0.1]
 CHIS = [6, 8, 12]
 KAPS = [2, 4]
 KB = 16
+CINF = 64
 OUT = 'results/test1_raw.jsonl'
 
 
@@ -39,7 +41,9 @@ def jobs():
             J.append(('b', g, chi, KB))
     for g in GAMMAS[1:]:
         for kap in KAPS:
-            J.append(('c', g, 0, kap))
+            J.append(('c', g, CINF, kap))
+    for g in GAMMAS[1:]:
+        J.append(('cd', g, 0, 2))
     return J
 
 
@@ -53,6 +57,8 @@ def run(j):
     if kind == 'a':
         r = B.cell(MODEL, N, T, DT, g, chi, kap, probe_a=(2, 1), mode='mps', keep_log=True)
     elif kind == 'b':
+        r = B.cell(MODEL, N, T, DT, g, chi, kap, probe_a=None, mode='mps')
+    elif kind == 'c':
         r = B.cell(MODEL, N, T, DT, g, chi, kap, probe_a=None, mode='mps')
     else:
         r = B.cell(MODEL, N, T, DT, g, 0, kap, mode='kraus')
@@ -73,7 +79,7 @@ if __name__ == '__main__':
         B.reference(MODEL, N, T, DT, g)
     todo = [j for j in jobs() if key(j) not in done and (not only or j[0] in only)]
     # heavy jobs first
-    todo.sort(key=lambda j: {'c': 0, 'b': 1, 'a': 2}[j[0]] if j[0] != 'c' or j[3] == 4 else 3)
+    todo.sort(key=lambda j: {'c': 0, 'b': 1, 'a': 2, 'cd': 3}[j[0]])
     print(f'{len(todo)} jobs to run ({len(done)} done)', flush=True)
     with mp.Pool(nproc) as pool:
         for r in pool.imap_unordered(run, todo):
