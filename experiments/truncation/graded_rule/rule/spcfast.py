@@ -34,7 +34,7 @@ def _pstring(a):
 
 class SPCFast:
     def __init__(self, model, N, a=2, taus=(1.0, 2.0), ks=(1, 2, 3), include_static=True, fw=0.1, iters=6, cg_tol=1e-3,
-                 eps_min=1e-7, f_min=0.0, every=1, alphas=(1.0, 0.5, 0.25), pattern='all', rel_skip=1e-2, precision='f32', passes=1, beta=0.0, free=0.0, two=False, bmin=0, bmax=10 ** 6, aL=None, aR=None, wk=None, wst=1.0, wsta=1.0, wtau=None, wE=0.0):
+                 eps_min=1e-7, f_min=0.0, every=1, alphas=(1.0, 0.5, 0.25), pattern='all', rel_skip=1e-2, precision='f32', passes=1, beta=0.0, free=0.0, two=False, bmin=0, bmax=10 ** 6, aL=None, aR=None, wk=None, wst=1.0, wsta=1.0, wtau=None, wE=0.0, gate=0.0, gate_c0=1.2e-4, gate_exp=0.65, gate_log=False):
         self.model, self.N, self.a = model, N, a
         self.taus = ([0.0] if include_static else []) + list(taus)
         self.ks, self.fw, self.iters, self.cg_tol = tuple(ks), fw, iters, cg_tol
@@ -63,6 +63,12 @@ class SPCFast:
         self.cand = []
         self._f32 = {}
         self.achosen = {}
+        # benefit/cost gate (default off): fire only if the measured rms static residual of the SVD cut on the span-2 Pauli strings of
+        # the region (what the fit can repair) exceeds gate * c0 * (tail / 1e-4)^exp (the collateral change of far observables
+        # that the tilt causes, measured to be about the same in four models)
+        self.gate, self.gate_c0, self.gate_exp = gate, gate_c0, gate_exp
+        self.gate_log = [] if gate_log else None
+        self._meta = {}
 
     def start(self, T):
         self.T = T
@@ -124,6 +130,29 @@ class SPCFast:
             os.makedirs(os.path.dirname(fn), exist_ok=True)
             np.savez(fn, data=Fs.data, indices=Fs.indices, indptr=Fs.indptr, shape=np.array(Fs.shape), Fd=self._shape[key][1][1])
         return self._shape[key]
+
+    def _strmeta(self, L):
+        """span (last - first non-identity site + 1) and sqrt(weight) of the static rows, in the row order of _region"""
+        if L not in self._meta:
+            omega = {}
+            for k in self.ks:
+                if k > L:
+                    continue
+                nwin = L - k + 1
+                for off in range(nwin):
+                    for s_ in itertools.product(range(4), repeat=k):
+                        if any(s_):
+                            full = (0,) * off + s_ + (0,) * (L - off - k)
+                            omega[full] = omega.get(full, 0.0) + self.wk.get(k, 1.0) / (nwin * 2 ** k)
+            strs = list(omega)
+            span = np.array([max(i for i, x in enumerate(t) if x) - min(i for i, x in enumerate(t) if x) + 1 for t in strs])
+            self._meta[L] = (span, np.sqrt(np.array([omega[t] for t in strs])))
+        return self._meta[L]
+
+    def _low_span_resid(self, r0, L):
+        span, w = self._strmeta(L)
+        m = span == 2
+        return float(np.sqrt(np.mean((r0[:len(span)][m] / w[m]) ** 2))) if m.any() else 0.0
 
     # ------------------------------------------------------------------ environment maps and the theta -> W map
     def _maps(self, lo, hi, b, l, r):
@@ -233,6 +262,15 @@ class SPCFast:
         f_svd = float(r0 @ r0)
         kept_svd = float(np.sum(sk ** 2))
         self.cand.append((float(np.sum(sq ** 2) / nrm2), f_svd))
+        if self.gate > 0 or self.gate_log is not None:
+            Bres = self._low_span_resid(r0, hi - lo)
+            cost = self.gate_c0 * (tail / 1e-4) ** self.gate_exp
+            if self.gate_log is not None:
+                self.gate_log.append((tail, Bres, cost, b))
+            if self.gate > 0 and Bres < self.gate * cost:
+                self.skipped += 1
+                self.tm['setup'] += pc() - t1
+                return M.EnhCut._plain(U, s, Vh, k, l, r, dirn)
         if f_svd < self.f_min:
             self.skipped += 1
             self.tm['setup'] += pc() - t1

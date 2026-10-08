@@ -1,0 +1,6 @@
+heis N=16 t0=0.8 region a=2  (explained fraction of the true change of the <=3-site marginals)
+bond | tau=0.1   tau=0.25  tau=0.5   tau=0.75  tau=1     tau=1.5   tau=2    
+   5 |      0.51      0.31      0.14      0.22      0.22     -0.01      0.27
+   7 |      0.63      0.52     -0.14     -0.33     -0.06      0.15     -0.00
+   9 |      0.51      0.31      0.15      0.24      0.23     -0.02      0.28
+mean |      0.55      0.38      0.05      0.04      0.13      0.04      0.18

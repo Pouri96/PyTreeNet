@@ -1,0 +1,51 @@
+ising N=16 T=5.0 chi=12: 459 fired cuts, first firing step 24
+
+--- early (first 3 firing steps): 45 cuts, mean discarded weight 2.8e-07 (svd) 2.9e-07 (spcf), region residual after/before 0.39
+  rms change of <Z_i> vs pre-cut state, by site distance d from the cut (region reaches d=2):
+   d      svd        spcf     spcf/svd
+   0   6.83e-08   6.09e-07      8.9x
+   1   1.26e-07   2.09e-06     16.5x
+   2   6.29e-08   1.45e-06     23.0x
+   3   8.83e-08   2.29e-06     25.9x
+   4   7.70e-08   3.17e-06     41.2x
+   5   3.81e-08   2.08e-06     54.5x
+   6   2.03e-08   1.40e-06     68.7x
+   7   1.65e-08   9.02e-07     54.7x
+  rms change of local energy <h_j> by bond offset k = j - b (0 = cut bond):
+  -5   1.29e-07   1.07e-06      8.3x
+  -4   2.27e-07   2.41e-06     10.6x
+  -3   3.54e-07   3.03e-06      8.6x
+  -2   3.83e-07   2.25e-06      5.9x
+  -1   3.97e-07   2.00e-06      5.0x
+  +0   2.35e-07   2.01e-06      8.6x
+  +1   3.12e-07   2.65e-06      8.5x
+  +2   4.84e-07   3.64e-06      7.5x
+  +3   4.18e-07   6.40e-06     15.3x
+  +4   2.67e-07   2.28e-06      8.5x
+  +5   1.77e-07   2.14e-06     12.1x
+  total energy change per cut: svd mean -2.94e-06 (rms 3.3e-06), spcf mean +9.81e-08 (rms 7.9e-06)
+
+--- late (rest): 414 cuts, mean discarded weight 2.6e-05 (svd) 3.9e-05 (spcf), region residual after/before 0.23
+  rms change of <Z_i> vs pre-cut state, by site distance d from the cut (region reaches d=2):
+   d      svd        spcf     spcf/svd
+   0   9.71e-06   4.43e-05      4.6x
+   1   5.99e-06   5.27e-05      8.8x
+   2   4.37e-06   4.96e-05     11.4x
+   3   3.58e-06   7.98e-05     22.3x
+   4   3.43e-06   8.76e-05     25.5x
+   5   4.01e-06   1.10e-04     27.4x
+   6   2.67e-06   8.71e-05     32.6x
+   7   2.14e-06   8.15e-05     38.2x
+  rms change of local energy <h_j> by bond offset k = j - b (0 = cut bond):
+  -5   9.71e-06   1.21e-04     12.5x
+  -4   1.32e-05   9.11e-05      6.9x
+  -3   1.46e-05   1.24e-04      8.5x
+  -2   1.88e-05   8.43e-05      4.5x
+  -1   3.39e-05   1.04e-04      3.1x
+  +0   4.00e-05   1.16e-04      2.9x
+  +1   5.01e-05   1.04e-04      2.1x
+  +2   2.63e-05   1.06e-04      4.0x
+  +3   2.00e-05   1.39e-04      6.9x
+  +4   1.78e-05   1.30e-04      7.3x
+  +5   1.15e-05   1.10e-04      9.6x
+  total energy change per cut: svd mean -1.94e-04 (rms 2.5e-04), spcf mean -3.17e-04 (rms 6.0e-04)

@@ -1,0 +1,10 @@
+ising N=16 T=5.0 chi=16: 286 audited cuts (region 6 sites)
+rms over strings of the change relative to the pre-cut state, mean over cuts;  ratio = spcf/svd
+class                 svd        spcf     ratio
+span 1 (static, in objective)   4.39e-06   2.22e-05    5.07x
+span 2 (static, in objective)   1.91e-04   4.84e-05    0.25x
+span 3 (static, in objective)   1.42e-04   7.85e-05    0.55x
+tau=1 evolved, span<=3 (obj.)   1.53e-04   7.38e-05    0.48x
+span 4-6 (NOT in objective)     1.00e-04   9.85e-05    0.99x
+<Z_i> outside the region        1.33e-06   3.41e-05   25.69x
+fraction of cuts where spcf improved span1 / span2 / span3 / evolved: 0.00 / 1.00 / 1.00 / 1.00
