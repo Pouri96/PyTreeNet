@@ -18,6 +18,11 @@ MB = 2 ** 20
 
 def load():
     rows = json.load(open(os.path.join(RES, 'cost_chunk.json')))
+    clean = os.path.join(RES, 'cost_chunk_clean.json')            # timings repeated with nothing else running on the machine: they replace the first pass
+    if os.path.exists(clean):
+        cr = json.load(open(clean))
+        keys = {(r['variant'], r['chi'], r['what']) for r in cr}
+        rows = [r for r in rows if (r['variant'], r['chi'], r['what']) not in keys] + cr
     d = {}
     for r in rows:
         d.setdefault(r['variant'], {}).setdefault(r['chi'], {})[r['what']] = r

@@ -1,0 +1,15 @@
+spcfc-a1-b8-wf           N= 10: peak-memory ratio spcf / SVD(chi_eq): median 0.91, range 0.65 to 2.14, entries below 1: 23 of 36; median chi_eq/chi_s 1.30
+spcfc-a1-b8-wf           N= 20: peak-memory ratio spcf / SVD(chi_eq): median 0.86, range 0.62 to 2.09, entries below 1: 24 of 36; median chi_eq/chi_s 1.30
+spcfc-a1-b8-wf           N= 50: peak-memory ratio spcf / SVD(chi_eq): median 0.80, range 0.55 to 1.99, entries below 1: 30 of 36; median chi_eq/chi_s 1.30
+spcfc-a1-b8-wf           N=100: peak-memory ratio spcf / SVD(chi_eq): median 0.75, range 0.49 to 1.92, entries below 1: 32 of 36; median chi_eq/chi_s 1.30
+spcfc-a1-b8-wf           N=200: peak-memory ratio spcf / SVD(chi_eq): median 0.69, range 0.42 to 1.85, entries below 1: 32 of 36; median chi_eq/chi_s 1.30
+spcfc-a1-b8-wf-gplain    N= 10: peak-memory ratio spcf / SVD(chi_eq): median 0.91, range 0.82 to 0.98, entries below 1: 12 of 12; median chi_eq/chi_s 1.26
+spcfc-a1-b8-wf-gplain    N= 20: peak-memory ratio spcf / SVD(chi_eq): median 0.89, range 0.78 to 0.95, entries below 1: 12 of 12; median chi_eq/chi_s 1.26
+spcfc-a1-b8-wf-gplain    N= 50: peak-memory ratio spcf / SVD(chi_eq): median 0.83, range 0.71 to 0.94, entries below 1: 12 of 12; median chi_eq/chi_s 1.26
+spcfc-a1-b8-wf-gplain    N=100: peak-memory ratio spcf / SVD(chi_eq): median 0.77, range 0.64 to 0.94, entries below 1: 12 of 12; median chi_eq/chi_s 1.26
+spcfc-a1-b8-wf-gplain    N=200: peak-memory ratio spcf / SVD(chi_eq): median 0.71, range 0.58 to 0.94, entries below 1: 12 of 12; median chi_eq/chi_s 1.26
+spcfc-a2-b1-wf           N= 10: peak-memory ratio spcf / SVD(chi_eq): median 2.18, range 1.38 to 3.54, entries below 1: 0 of 30; median chi_eq/chi_s 1.43
+spcfc-a2-b1-wf           N= 20: peak-memory ratio spcf / SVD(chi_eq): median 1.99, range 1.24 to 3.39, entries below 1: 0 of 30; median chi_eq/chi_s 1.43
+spcfc-a2-b1-wf           N= 50: peak-memory ratio spcf / SVD(chi_eq): median 1.64, range 0.99 to 3.01, entries below 1: 1 of 30; median chi_eq/chi_s 1.43
+spcfc-a2-b1-wf           N=100: peak-memory ratio spcf / SVD(chi_eq): median 1.30, range 0.81 to 2.56, entries below 1: 2 of 30; median chi_eq/chi_s 1.43
+spcfc-a2-b1-wf           N=200: peak-memory ratio spcf / SVD(chi_eq): median 1.01, range 0.68 to 2.03, entries below 1: 14 of 30; median chi_eq/chi_s 1.43

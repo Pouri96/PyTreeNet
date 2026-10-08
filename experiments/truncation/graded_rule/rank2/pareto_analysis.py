@@ -38,14 +38,14 @@ def load_points(cell):
         s = r['series'][-1]
         if r['rep'] == 0:
             put(arm, r['chi'], err=s['rdm2'], nn=s['nn_rms'], cpu=s['cpu'], params=s['params'], src='eqerr_raw', fired=s.get('fired'), calls=s.get('calls'))
-    for fn in ('a1_traj.json', 'pareto_time.json'):
+    for fn in ('a1_traj.json', 'pareto_time.json', 'pareto_time_gplain.json'):
         p = os.path.join(RES, fn)
         if os.path.exists(p):
             for r in json.load(open(p)):
                 if r['cell'] == cell and r.get('mode', 'time') == 'time' and r['arm'] not in ('spcf-a2',):
                     s = r['series'][-1]
                     put(r['arm'], r['chi'], err=s['rdm2'], nn=s['nn_rms'], cpu=s['cpu'], params=s['params'], src=fn, fired=s.get('fired'), calls=s.get('calls'))
-    for fn, key in (('pareto_rss.json', 'rssB'), ('pareto_rss_spcf.json', 'rssB'), ('pareto_rssA.json', 'rssA'), ('pareto_tmem.json', 'tmemB')):
+    for fn, key in (('pareto_rss.json', 'rssB'), ('pareto_rss_spcf.json', 'rssB'), ('pareto_rss_gplain.json', 'rssB'), ('pareto_rssA.json', 'rssA'), ('pareto_tmem.json', 'tmemB')):
         p = os.path.join(RES, fn)
         if os.path.exists(p):
             for r in json.load(open(p)):
@@ -127,8 +127,8 @@ def spcf_style(arm):
     kind = arm.split('-')[0]
     a = arm.split('-')[1]
     chunk = kind == 'spcfc'
-    lab = f'spcf {a[0]} = {a[1:]}' + (', chunked' if chunk else '')
-    return (lab, ORANGE, 'D' if a == 'a2' else 'o', '-' if chunk else (0, (4, 2)), chunk)
+    lab = f'spcf {a[0]} = {a[1:]}' + (', chunked' if chunk else ', unchunked') + (', plain gauge' if 'gplain' in arm else '')
+    return (lab, ORANGE, 'D' if a == 'a2' else ('P' if 'gplain' in arm else 'o'), ('-.' if 'gplain' in arm else '-') if chunk else (0, (4, 2)), chunk)
 
 
 def figure(allpts, axis, xlabel, fname, variants, title, fronts):
@@ -169,10 +169,10 @@ def main():
     allpts = {c: load_points(c) for c in CELLS}
     json.dump({c: {f'{a}|{chi}': p for (a, chi), p in pts.items()} for c, pts in allpts.items()}, open(os.path.join(RES, 'pareto_points.json'), 'w'), indent=1)
     arms = sorted({a for pts in allpts.values() for (a, _) in pts if a not in BASE})
-    fronts = {ax: analyse(allpts, ax) for ax in ('rss', 'cpu')}
+    fronts = {ax: analyse(allpts, ax) for ax in ('rss', 'rssB', 'cpu')}
     json.dump(fronts, open(os.path.join(RES, 'pareto_front.json'), 'w'), indent=1, default=float)
     lines = []
-    for ax, name in (('rss', 'PEAK MEMORY (VmHWM growth, MB)'), ('cpu', 'CPU TIME to T = 4 (s)')):
+    for ax, name in (('rss', 'PEAK MEMORY (VmHWM growth + resident F tables, MB)'), ('rssB', 'PEAK MEMORY without the resident F tables (VmHWM growth, MB)'), ('cpu', 'CPU TIME to T = 4 (s)')):
         lines.append(f'=== {name} ===')
         for arm in arms:
             on = 0
@@ -189,11 +189,18 @@ def main():
                              + ' '.join(f'{x["chi"]}:{x["factor"]:.2f}{"" if x["flag"] == "ok" else "(" + x["flag"][:3] + ")"}' for x in v))
                 fl += fac
             lines.append(f'   cells with a point on the front: {on} of {len([c for c in CELLS if fronts[ax][c]["variants"].get(arm)])};  median factor over cells and chi {np.median(fl) if fl else float("nan"):.2f}')
+            small = [x['factor'] for c in CELLS for x in fronts[ax][c]['variants'].get(arm, []) if x['chi'] <= 24]
+            large = [x['factor'] for c in CELLS for x in fronts[ax][c]['variants'].get(arm, []) if x['chi'] >= 32]
+            if small:
+                lines.append(f'   chi <= 24: median {np.median(small):.2f} (min {min(small):.2f}, max {max(small):.2f}, n={len(small)})' +
+                             (f';  chi >= 32: median {np.median(large):.2f} (min {min(large):.2f}, max {max(large):.2f}, n={len(large)})' if large else ''))
     open(os.path.join(RES, 'pareto_front.txt'), 'w').write('\n'.join(lines) + '\n')
     print('\n'.join(lines))
     figure(allpts, 'rss', 'peak memory over the run (MB, resident-set high-water growth)', 'pareto_peak_mem.png',
            [a for a in arms if a != 'spcf-a2' or True],
            'Final-state Pareto (Ising N = 10, T = 4): final rdm2 error against PEAK memory over the whole run. Lower-left is better. Numbers on spcf points are chi.', fronts)
+    figure(allpts, 'rssB', 'peak memory over the run without the resident F tables (MB)', 'pareto_peak_mem_notables.png', [a for a in arms],
+           'Same as the memory figure with the constant F tables of spcf (about 8 MB at a = 2, 0.3 MB at a = 1, chunked) left out. Numbers on spcf points are chi.', fronts)
     figure(allpts, 'cpu', 'total CPU time to reach T = 4 (s)', 'pareto_peak_time.png', arms,
            'Final-state Pareto (Ising N = 10, T = 4): final rdm2 error against total CPU time. Lower-left is better. Numbers on spcf points are chi.', fronts)
 
