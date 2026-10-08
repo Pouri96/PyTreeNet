@@ -28,7 +28,7 @@ What decides the verdict:
 
 The tilt in `spcflpdo.py` follows `spcfpur.py` line for line. I did not import the rank 2 module, because its ancilla dimension is uniform and an LPDO needs a different K on each cut site. The state is the repo `ising` model with a Néel start, N = 8 (N = 10 for checks), dt = 0.1, T = 4. The noise is dephasing L_j = √γ Z_j. The operation list per step is: noise on site 0; for b = 0..N-2 gate(b, R) then noise on b+1; noise on N-1; for b = N-2..0 gate(b, L) then noise on b. Every site is dephased for a total time dt per step, and the reference uses exactly this list.
 
-## 2. Test 0: correctness gates. All 22 pass (`results/test0.json`, `results/test_spcflpdo.json`)
+## 2. Test 0: correctness gates. All 22 checks of `test0.py` pass, as do the tilt checks of `test_spcflpdo.py` (`results/test0.json`, `results/test_spcflpdo.json`)
 
 | check | result |
 |---|---|
@@ -91,7 +91,7 @@ The γ = 0 on-fractions, which ρ_f divides by, are 0.263 at χ = 6, 0.070 at χ
 
 - The repairable residual does not fade with γ. The on-fraction rises, because noise makes the purification more entangled and more cuts discard enough weight for the gate to fire. The "gain decays with γ" failure mode predicted by rank 3 is not seen in this audit.
 - Kraus truncation does not dominate the nn-rms error at χ ≤ 8, even at γ = 0.1 with κ = 4 (s_c = 0.55 at χ = 6, 0.66 at χ = 8). It does dominate at χ = 12 (s_c = 0.85 at γ = 0.1) and at κ = 2.
-- Kraus truncation **does** dominate the energy error. At γ = 0.03, E_abs is about 0.28 at κ = 4 against about 0.04 at κ = 16.
+- Kraus truncation **does** dominate the energy error. At γ = 0.03, E_abs is 0.26-0.30 at κ = 4 against 0.02-0.07 at κ = 16 (χ = 6-12).
 - Audit quality:
   - (c) at χ = 64 has a total bond discarded weight ≤ 2×10⁻⁷ over all cuts. At κ = 2 it equals the dense χ = ∞ purification to 5 digits (for example 9.8257e-3 for both at γ = 0.01).
   - (b) at κ = 16 has a cumulative Kraus discarded weight of 2×10⁻⁴ (γ = 0.01), 2×10⁻³ (γ = 0.03) and 2×10⁻² (γ = 0.1). So "∞" is good to γ = 0.03 and approximate at γ = 0.1.
@@ -123,10 +123,10 @@ Gain is SVD nn rms divided by spcf nn rms. The trace ratio is spcf over SVD.
 
 - **Success: not met.** No γ ≥ 0.01 cell has two adjacent χ at gain ≥ 2. The nearest are (1.86, 2.13) at γ = 0.01 and (2.08, 1.95) at γ = 0.03.
 - The second condition holds: the γ = 0.01 gains (1.86, 2.13, 1.21) are at least half the γ = 0 gains (1.49, 1.89, 1.79) at χ = 6 and 8.
-- **Kill: not hit.** The maximum gain is 2.13 and the trace norm is never worse. The ratio is ≤ 1.01 everywhere.
+- **Kill: not hit.** The maximum gain is 2.13, and the trace-norm ratio (spcf over SVD) is ≤ 1.014 everywhere (≤ 0.98 at every γ ≥ 0.01).
 - Classification: ambiguous, a narrow miss at N = 8. The pure-state gain in this small cell is itself only 1.5-1.9×, so a 2× bar is above what even the pure-state spcf delivers at N = 8.
 - The gated arm is indistinguishable from ungated. Its gain is identical to two decimals, and it fires on the same cuts except 133 against 153 at (0.01, 12). So the gate is not costing anything here.
-- The energy error is **not** improved. E_abs is 0.46-0.97× at γ = 0.01 and about 1× at γ ≥ 0.03, as in the closed-system findings: energy is not in the objective.
+- The energy error is **not** improved. spcf's E_abs is 1.03-1.18× SVD's at γ = 0.01, 1.02-1.10× at γ = 0.03, about 1× at γ = 0.1, and up to 2.2× at γ = 0 (χ = 8). This matches the closed-system findings: energy is not in the objective.
 
 ### 4b. N = 10 check on the same κ = 4 grid (T = 4, a = 2)
 
