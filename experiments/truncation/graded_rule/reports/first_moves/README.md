@@ -69,3 +69,19 @@ The first tests are cheap, and each comes with its own kill criterion. Three run
 - **Rank 2 Test 1** decides whether purifications have a usable error window.
 
 Ranks 4 and 10 test the linear-target constructions. Ranks 5, 6, 7 and 8/9 are lower-priority probes, and each can be dropped on its first test.
+
+## Status after the first execution round (agents pruned to the top 3)
+
+Token use was high, so the execution agents were pruned to the three directions with the best partial evidence. The stopped agents left code and partial results in their folders. Each partial result below is my reading of their logs, not a finished test.
+
+| Direction | Status | Partial evidence at stop |
+|---|---|---|
+| Rank 7 (`rank7/`) | **continuing** | T2 passed every pre-registered check (N = 20 Ising, `rank7/results/t2_analysis_g001.txt`):<br>• spcf beats the best post-processed SVD at equal χ in 88-100% of growth-phase samples;<br>• all-pairs ZZ error ε_c is 0.30-0.32x SVD (median);<br>• χ reduction r(t) peaks at 1.9-2.1.<br>T3 (kicked Ising) was running. |
+| Rank 1 (`rank1/`) | **continuing** | Test 1 continued: renormalized SVD still errs behind the front (rms 0.07 at χ = 8).<br>Test 2 was ambiguous: static ratios 0.5-0.8 (0.23-0.37 with 3 GN passes).<br>Test 3 was neither success nor kill: C_Z and w ratios 0.60-0.85, contour lag cut by 31-48% at χ = 8-16, infidelity unchanged, about 3.7x SVD CPU. |
+| Rank 2 (`rank2/`) | **continuing** | Test 0 done. The SVD μ-scan is done and found usable cells at μ ≤ 1 in the backward gauge (e.g. stag μ = 0.25, T = 4: rdm2 2e-3 to 5e-2). The spcf arms had not run yet. |
+| Rank 4 (`rank4/`) | stopped | Test 1 (Ising N = 16, T = 6) is noisy and non-monotone in χ. DMT-σ0 beats SVD-renorm and DMT-I by roughly 1-3x at some χ, not ≥ 3x consistently. Leaning toward the kill or ambiguous branch. |
+| Rank 5 (`rank5/`) | stopped | A1 (Ising N = 12): spcf-multi/SVD is 0.75-1.07, but the oracle weight arm (ii+) is as good or better. This matches the kill branch "the gain is just reweighting". |
+| Rank 6 (`rank6/`) | stopped | Test 0 passed. Test 1 (no-tilt audit) was mid-run; no verdict. |
+| Ranks 8-9 (`rank8_9/`) | stopped | T0 sent it to T1. In T1 on the PPP proxies, spcf is *worse* than SVD and variational fitting at matched χ (e.g. site-PPP χ = 12: hw2 0.043 vs 0.028). That points to kill. |
+| Rank 10 (`rank10/`) | stopped | Infrastructure and unit tests only; no test result. |
+| Whitening (`whiten/`) | stopped | Math validation and T0 profiling only; T1 was not finished. It is still the key open question for any wall-clock claim, and the first thing to restart if budget allows. |

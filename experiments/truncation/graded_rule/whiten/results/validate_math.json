@@ -12,17 +12,18 @@
  "subspace_R_matches_Mk": 2.5765781391890493e-14,
  "subspace_L_matches_Mk": 2.7921754976994218e-14,
  "mu0_equals_svd_subspace": 2.0617815173362213e-15,
- "shampoo_product_set_relerr": 8.035445752302603e-16,
- "vlp_product_set_relerr": 2.7093885652825144e-16,
+ "gram_G1_vs_einsum": 5.934725118018886e-13,
+ "shampoo_product_set_relerr": 4.333963670751148e-16,
+ "vlp_product_set_relerr": 4.64748541174256e-16,
  "vlp_product_set_fidelity": 1.0,
  "generic_set_relerr": {
   "shampoo": 0.7430244119981556,
-  "vlp": 0.7416178088737716
+  "vlp": 0.7416178088737717
  },
  "quadform_product_set_scale_const_check": [
   0.00016863208624434857,
-  0.00016863208624434873,
-  0.0001686320862443487
+  0.00016863208624434868,
+  0.00016863208624434863
  ],
  "vlp_real_exact": {
   "relerr": 3.661230522033687e-16,

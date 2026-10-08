@@ -1,0 +1,1 @@
+tfim_crit b=3 S1    chi=4: E_near i 2.385e-04 ii 2.385e-04 ii+ 2.385e-04 iii 4.570e-03 iv 1.479e-04 v 2.385e-04 | iv/i 0.62 | 1s

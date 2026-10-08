@@ -1,0 +1,31 @@
+== ppp_mo_nat chi=32: sum|c dR|^2 = 3.599e-02, dE = 8.636e-02
+   gamma[4,4]                         span=1   c=  30.896 dR=+1.763e-03  c*dR=-5.446e-02  share=0.082  cum=0.082
+   gamma[5,5]                         span=1   c=  30.896 dR=+1.708e-03  c*dR=-5.275e-02  share=0.077  cum=0.160
+   gamma[6,6]                         span=1   c=  30.157 dR=+1.694e-03  c*dR=-5.108e-02  share=0.073  cum=0.232
+   gamma[8,8]                         span=1   c=  27.965 dR=-1.676e-03  c*dR=+4.687e-02  share=0.061  cum=0.293
+   gamma[7,7]                         span=1   c=  30.157 dR=+1.522e-03  c*dR=-4.589e-02  share=0.059  cum=0.352
+   gamma[9,9]                         span=1   c=  27.965 dR=-1.621e-03  c*dR=+4.533e-02  share=0.057  cum=0.409
+   gamma[0,0]                         span=1   c=  36.328 dR=+1.215e-03  c*dR=-4.415e-02  share=0.054  cum=0.463
+   gamma[11,11]                       span=1   c=  25.921 dR=-1.703e-03  c*dR=+4.413e-02  share=0.054  cum=0.517
+   gamma[1,1]                         span=1   c=  36.328 dR=+1.211e-03  c*dR=-4.401e-02  share=0.054  cum=0.571
+   gamma[3,3]                         span=1   c=  32.985 dR=+1.327e-03  c*dR=-4.376e-02  share=0.053  cum=0.624
+   gamma[10,10]                       span=1   c=  25.921 dR=-1.657e-03  c*dR=+4.294e-02  share=0.051  cum=0.676
+   gamma[2,2]                         span=1   c=  32.985 dR=+1.289e-03  c*dR=-4.252e-02  share=0.050  cum=0.726
+   shares of sum|c dR|^2: 1-body 0.861  2-body 0.139; span<=4 0.917; 1-body AND span<=4 0.850; 2-body AND span<=4 0.066
+   gamma diagonal (orbital occupations) share 0.850; number of elements for 99% of the weight: 127 of 14656
+   signed energy error: span<=4 +5.788e-02, span>4 +2.848e-02, total +8.636e-02
+== lr0.5_nat chi=4: sum|c dR|^2 = 2.540e-04, dE = 7.129e-03
+   ((6, 'Z'), (9, 'Z'))               span=4   c=   0.577 dR=+7.734e-03  c*dR=+4.465e-03  share=0.079  cum=0.079
+   ((5, 'Z'), (8, 'Z'))               span=4   c=   0.577 dR=+7.687e-03  c*dR=+4.438e-03  share=0.078  cum=0.156
+   ((7, 'Z'), (10, 'Z'))              span=4   c=   0.577 dR=+7.628e-03  c*dR=+4.404e-03  share=0.076  cum=0.232
+   ((4, 'Z'), (7, 'Z'))               span=4   c=   0.577 dR=+7.448e-03  c*dR=+4.300e-03  share=0.073  cum=0.305
+   ((8, 'Z'), (11, 'Z'))              span=4   c=   0.577 dR=+7.328e-03  c*dR=+4.231e-03  share=0.070  cum=0.376
+   ((3, 'Z'), (6, 'Z'))               span=4   c=   0.577 dR=+7.025e-03  c*dR=+4.056e-03  share=0.065  cum=0.441
+   ((9, 'Z'), (12, 'Z'))              span=4   c=   0.577 dR=+6.844e-03  c*dR=+3.951e-03  share=0.061  cum=0.502
+   ((2, 'Z'), (5, 'Z'))               span=4   c=   0.577 dR=+6.132e-03  c*dR=+3.540e-03  share=0.049  cum=0.551
+   ((10, 'Z'), (13, 'Z'))             span=4   c=   0.577 dR=+5.896e-03  c*dR=+3.404e-03  share=0.046  cum=0.597
+   ((1, 'Z'), (4, 'Z'))               span=4   c=   0.577 dR=+5.031e-03  c*dR=+2.905e-03  share=0.033  cum=0.630
+   ((6, 'Z'), (8, 'Z'))               span=3   c=   0.707 dR=-4.016e-03  c*dR=-2.840e-03  share=0.032  cum=0.662
+   ((7, 'Z'), (9, 'Z'))               span=3   c=   0.707 dR=-3.956e-03  c*dR=-2.797e-03  share=0.031  cum=0.693
+   shares of sum|c dR|^2: 1-body 0.004  2-body 0.996; span<=4 0.900; 1-body AND span<=4 0.004; 2-body AND span<=4 0.896
+   signed energy error: span<=4 +2.076e-02, span>4 -1.363e-02, total +7.129e-03

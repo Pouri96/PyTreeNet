@@ -8,3 +8,5 @@ ising b=5 S3p   chi=4: E_near i 5.494e-02 ii 5.263e-02 ii+ 4.677e-02 iii 5.557e-
 ising b=5 S3p   chi=6: E_near i 2.100e-03 ii 2.100e-03 ii+ 1.724e-03 iii 8.145e-03 iv 2.067e-03 v 1.684e-04 | iv/i 0.98 | 21s
 ising b=5 S3p   chi=8: E_near i 1.542e-03 ii 8.512e-04 ii+ 7.011e-04 iii 6.694e-03 iv 1.218e-03 v 3.772e-06 | iv/i 0.79 | 33s
 ising b=5 S3h   chi=4: E_near i 4.022e-02 ii 3.857e-02 ii+ 3.330e-02 iii 3.855e-02 iv 3.729e-02 v 1.485e-03 | iv/i 0.93 | 22s
+ising b=5 S3h   chi=6: E_near i 2.711e-03 ii 2.711e-03 ii+ 2.211e-03 iii 9.192e-03 iv 2.653e-03 v 5.759e-05 | iv/i 0.98 | 24s
+ising b=5 S3h   chi=8: E_near i 1.684e-03 ii 9.188e-04 ii+ 7.423e-04 iii 7.794e-03 iv 1.260e-03 v 3.880e-06 | iv/i 0.75 | 29s

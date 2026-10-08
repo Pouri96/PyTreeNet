@@ -14,3 +14,6 @@ ising b=3 S4t1  chi=4: E_near i 6.595e-03 ii 5.892e-03 ii+ 5.345e-03 iii 1.879e-
 ising b=3 S4t1  chi=6: E_near i 1.575e-03 ii 1.191e-03 ii+ 1.178e-03 iii 8.011e-03 iv 1.418e-03 v 1.591e-07 | iv/i 0.90 | 23s
 ising b=3 S4t1  chi=8: E_near i 1.687e-04 ii 1.613e-04 ii+ 1.314e-04 iii 2.686e-03 iv 1.571e-04 v 4.481e-10 | iv/i 0.93 | 21s
 ising b=3 S4t2  chi=4: E_near i 3.918e-02 ii 3.918e-02 ii+ 3.634e-02 iii 3.794e-02 iv 3.334e-02 v 2.015e-02 | iv/i 0.85 | 20s
+ising b=3 S4t2  chi=6: E_near i 1.826e-02 ii 1.826e-02 ii+ 1.618e-02 iii 1.643e-02 iv 1.539e-02 v 1.503e-03 | iv/i 0.84 | 24s
+ising b=3 S4t2  chi=8: E_near i 4.250e-03 ii 4.250e-03 ii+ 3.926e-03 iii 1.246e-02 iv 2.860e-03 v 2.705e-04 | iv/i 0.67 | 25s
+ising b=3 S4t3  chi=4: E_near i 5.864e-02 ii 5.858e-02 ii+ 5.833e-02 iii 5.628e-02 iv 5.666e-02 v 4.840e-02 | iv/i 0.97 | 30s
