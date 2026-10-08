@@ -1,19 +1,52 @@
 === Test 3: ising, N=10, T=6.0, dt=0.1 ===
 exact C_Z max 1.642
 
+-- chi = 4 (absolute; ratios to svd in brackets) --
+svd                                C_Z rms front 4.52e-02 [1.00] behind 1.98e-01 [1.00] | w front 3.94e-02 [1.00] behind 1.22e-01 [1.00] | lag0.5 1.532 (svd 1.532) | infid 9.67e-01 [1.00] far>=3 5.86e-02 [1.00] cz0 4.81e-02 [1.00] | win1 [1.00] win2 [1.00] win3 [1.00]
+rw:1.6                             C_Z rms front 8.07e-02 [1.79] behind 1.97e-01 [0.99] | w front 6.92e-02 [1.76] behind 1.24e-01 [1.02] | lag0.5 1.532 (svd 1.532) | infid 9.56e-01 [0.99] far>=3 6.66e-02 [1.14] cz0 3.33e-02 [0.69] | win1 [1.11] win2 [1.14] win3 [1.16]
+spcop                              C_Z rms front 3.24e-02 [0.72] behind 1.85e-01 [0.93] | w front 2.87e-02 [0.73] behind 1.07e-01 [0.88] | lag0.5 1.532 (svd 1.532) | infid 9.78e-01 [1.01] far>=3 5.05e-02 [0.86] cz0 3.24e-02 [0.67] | win1 [0.88] win2 [0.86] win3 [0.81]
+svdt                               C_Z rms front 4.52e-02 [1.00] behind 1.98e-01 [1.00] | w front 3.94e-02 [1.00] behind 1.22e-01 [1.00] | lag0.5 1.532 (svd 1.532) | infid 9.67e-01 [1.00] far>=3 5.86e-02 [1.00] cz0 4.81e-02 [1.00] | win1 [1.00] win2 [1.00] win3 [1.00]
+
 -- chi = 8 (absolute; ratios to svd in brackets) --
 svd                                C_Z rms front 1.97e-02 [1.00] behind 6.70e-02 [1.00] | w front 1.54e-02 [1.00] behind 4.08e-02 [1.00] | lag0.5 0.210 (svd 0.210) | infid 9.45e-01 [1.00] far>=3 2.35e-02 [1.00] cz0 1.85e-02 [1.00] | win1 [1.00] win2 [1.00] win3 [1.00]
 rw:1.6                             C_Z rms front 8.22e-03 [0.42] behind 6.42e-02 [0.96] | w front 9.74e-03 [0.63] behind 3.68e-02 [0.90] | lag0.5 0.171 (svd 0.210) | infid 9.26e-01 [0.98] far>=3 2.06e-02 [0.88] cz0 9.28e-03 [0.50] | win1 [0.89] win2 [0.83] win3 [0.78]
 spcop                              C_Z rms front 1.21e-02 [0.62] behind 7.19e-02 [1.07] | w front 9.30e-03 [0.60] behind 3.60e-02 [0.88] | lag0.5 0.146 (svd 0.210) | infid 9.49e-01 [1.00] far>=3 2.20e-02 [0.94] cz0 2.35e-02 [1.27] | win1 [0.96] win2 [0.88] win3 [0.84]
 svdt                               C_Z rms front 1.97e-02 [1.00] behind 6.70e-02 [1.00] | w front 1.54e-02 [1.00] behind 4.08e-02 [1.00] | lag0.5 0.210 (svd 0.210) | infid 9.45e-01 [1.00] far>=3 2.35e-02 [1.00] cz0 1.85e-02 [1.00] | win1 [1.00] win2 [1.00] win3 [1.00]
 
+-- chi = 16 (absolute; ratios to svd in brackets) --
+svd                                C_Z rms front 9.52e-03 [1.00] behind 2.87e-02 [1.00] | w front 7.02e-03 [1.00] behind 1.48e-02 [1.00] | lag0.5 0.060 (svd 0.060) | infid 7.50e-01 [1.00] far>=3 9.35e-03 [1.00] cz0 2.59e-03 [1.00] | win1 [1.00] win2 [1.00] win3 [1.00]
+rw:1.6                             C_Z rms front 7.37e-03 [0.77] behind 2.81e-02 [0.98] | w front 6.33e-03 [0.90] behind 1.41e-02 [0.95] | lag0.5 0.079 (svd 0.060) | infid 7.48e-01 [1.00] far>=3 8.23e-03 [0.88] cz0 1.31e-03 [0.51] | win1 [0.96] win2 [0.91] win3 [0.80]
+spcop                              C_Z rms front 6.88e-03 [0.72] behind 2.45e-02 [0.85] | w front 4.82e-03 [0.69] behind 1.15e-02 [0.77] | lag0.5 0.031 (svd 0.060) | infid 7.56e-01 [1.01] far>=3 7.38e-03 [0.79] cz0 3.77e-03 [1.46] | win1 [0.81] win2 [0.77] win3 [0.76]
+svdt                               C_Z rms front 9.52e-03 [1.00] behind 2.87e-02 [1.00] | w front 7.02e-03 [1.00] behind 1.48e-02 [1.00] | lag0.5 0.060 (svd 0.060) | infid 7.50e-01 [1.00] far>=3 9.35e-03 [1.00] cz0 2.59e-03 [1.00] | win1 [1.00] win2 [1.00] win3 [1.00]
+
+-- chi = 32 (absolute; ratios to svd in brackets) --
+svd                                C_Z rms front 3.38e-03 [1.00] behind 7.36e-03 [1.00] | w front 2.44e-03 [1.00] behind 4.56e-03 [1.00] | lag0.5 0.013 (svd 0.013) | infid 3.62e-01 [1.00] far>=3 3.46e-03 [1.00] cz0 6.10e-04 [1.00] | win1 [1.00] win2 [1.00] win3 [1.00]
+rw:1.6                             C_Z rms front 1.47e-03 [0.43] behind 7.33e-03 [1.00] | w front 1.29e-03 [0.53] behind 4.75e-03 [1.04] | lag0.5 0.011 (svd 0.013) | infid 4.13e-01 [1.14] far>=3 3.10e-03 [0.90] cz0 4.00e-04 [0.65] | win1 [1.01] win2 [0.99] win3 [0.93]
+spcop                              C_Z rms front 3.57e-03 [1.05] behind 6.11e-03 [0.83] | w front 2.50e-03 [1.02] behind 3.49e-03 [0.76] | lag0.5 0.013 (svd 0.013) | infid 3.58e-01 [0.99] far>=3 2.92e-03 [0.84] cz0 2.71e-04 [0.44] | win1 [0.85] win2 [0.82] win3 [0.81]
+svdt                               C_Z rms front 3.38e-03 [1.00] behind 7.36e-03 [1.00] | w front 2.44e-03 [1.00] behind 4.56e-03 [1.00] | lag0.5 0.013 (svd 0.013) | infid 3.62e-01 [1.00] far>=3 3.46e-03 [1.00] cz0 6.10e-04 [1.00] | win1 [1.00] win2 [1.00] win3 [1.00]
+
 -- cut CPU time (s, process_time inside the cut) and ratio to svd --
+chi= 4 svd                                cut cpu 0.4s ratio 1.0  fired -/522 skipped -
+chi= 4 rw:1.6                             cut cpu 0.1s ratio 0.2  fired -/- skipped -
+chi= 4 spcop                              cut cpu 1.5s ratio 4.2  fired 435/521 skipped 86
+chi= 4 svdt                               cut cpu 0.1s ratio 0.3  fired -/522 skipped -
 chi= 8 svd                                cut cpu 0.6s ratio 1.0  fired -/448 skipped -
 chi= 8 rw:1.6                             cut cpu 0.1s ratio 0.2  fired -/- skipped -
 chi= 8 spcop                              cut cpu 2.1s ratio 3.7  fired 365/448 skipped 83
 chi= 8 svdt                               cut cpu 0.2s ratio 0.3  fired -/448 skipped -
+chi=16 svd                                cut cpu 1.8s ratio 1.0  fired -/274 skipped -
+chi=16 rw:1.6                             cut cpu 0.4s ratio 0.2  fired -/- skipped -
+chi=16 spcop                              cut cpu 5.9s ratio 3.4  fired 227/274 skipped 47
+chi=16 svdt                               cut cpu 0.4s ratio 0.2  fired -/274 skipped -
+chi=32 svd                                cut cpu 2.6s ratio 1.0  fired -/217 skipped -
+chi=32 rw:1.6                             cut cpu 1.0s ratio 0.4  fired -/- skipped -
+chi=32 spcop                              cut cpu 9.7s ratio 3.7  fired 181/217 skipped 36
+chi=32 svdt                               cut cpu 1.0s ratio 0.4  fired -/217 skipped -
 
 === pre-registered reading for arm spcop on ising ===
+chi= 4: C_Z ratios front 0.72 behind 0.93 | w ratios front 0.73 behind 0.88 | lag0.5 reduction +0% (svd 1.532, arm 1.532) | infid x1.01 far x0.86 cz0 x0.67
 chi= 8: C_Z ratios front 0.62 behind 1.07 | w ratios front 0.60 behind 0.88 | lag0.5 reduction +31% (svd 0.210, arm 0.146) | infid x1.00 far x0.94 cz0 x1.27
-chis with >=2x lower rms in BOTH C_Z and w: front 0/1, behind 0/1  (success needs >= 2 of 3 in front or behind)
+chi=16: C_Z ratios front 0.72 behind 0.85 | w ratios front 0.69 behind 0.77 | lag0.5 reduction +48% (svd 0.060, arm 0.031) | infid x1.01 far x0.79 cz0 x1.46
+chi=32: C_Z ratios front 1.05 behind 0.83 | w ratios front 1.02 behind 0.76 | lag0.5 reduction +3% (svd 0.013, arm 0.013) | infid x0.99 far x0.84 cz0 x0.44
+chis with >=2x lower rms in BOTH C_Z and w: front 0/4, behind 0/4  (success needs >= 2 of 3 in front or behind)
 kill test (ratio > 0.75 at all chi, both regions, C_Z and w): False; best ratio seen 0.60, worst 1.07
