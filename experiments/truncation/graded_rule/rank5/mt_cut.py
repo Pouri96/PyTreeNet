@@ -460,6 +460,151 @@ class SPCMulti:
         J = np.concatenate([(r1 - r0[None]) / self.h, (h1 - hinge0[None]) / self.h], axis=1).T
         return J
 
+    def _lm(self, x, shift, rho, maxit, tol, lam, verbose=False):
+        """Levenberg-Marquardt (Marquardt column scaling) on  sum r^2 + rho sum max(0, g_f + shift_f)^2,  g_f the relative
+        extra discarded weight of target f minus kappa.  Returns x, lambda, n iterations, merit."""
+        def parts(xx):
+            r_, e_, _ = self.aug(xx[None], 0.0)
+            gg = e_[0] / self.eps0 - 1.0 - (self.kappa if self.kappa is not None else 1e30)
+            hg = np.sqrt(rho) * np.maximum(0.0, gg + shift) if self.kappa is not None else np.zeros(0)
+            return r_[0], hg
+
+        r0, hg0 = parts(x)
+        phi = float(r0 @ r0 + hg0 @ hg0)
+        stall = 0
+        nit = 0
+        for it in range(maxit):
+            nit += 1
+            X = np.tile(x, (self.npar, 1)) + self.h * np.eye(self.npar)
+            r1, e1, _ = self.aug(X, 0.0)
+            if self.kappa is not None:
+                g1 = e1 / self.eps0[None] - 1.0 - self.kappa
+                h1 = np.sqrt(rho) * np.maximum(0.0, g1 + shift[None])
+            else:
+                h1 = np.zeros((self.npar, 0))
+            J = np.concatenate([(r1 - r0[None]) / self.h, (h1 - hg0[None]) / self.h], axis=1).T
+            rv = np.concatenate([r0, hg0])
+            g = J.T @ rv
+            A = J.T @ J
+            dA = np.maximum(np.diag(A), 1e-12 * np.diag(A).max() + 1e-300)
+            ok = False
+            for _ in range(40):
+                try:
+                    step = -np.linalg.solve(A + lam * np.diag(dA), g)
+                except np.linalg.LinAlgError:
+                    lam *= 10
+                    continue
+                xn = x + step
+                rn, hn = parts(xn)
+                phin = float(rn @ rn + hn @ hn)
+                if phin < phi:
+                    ok = True
+                    break
+                lam *= 4.0
+                if lam > 1e14:
+                    break
+            if not ok:
+                break
+            rel = (phi - phin) / phi
+            x, r0, hg0, phi = xn, rn, hn, phin
+            lam = max(lam / 3.0, 1e-10)
+            if verbose:
+                print(f'     lm it{it:3d} merit={phi:.5e} f={r0 @ r0:.5e} lam={lam:.1e} rel={rel:.1e}', flush=True)
+            if rel < tol:
+                stall += 1
+                if stall >= 3:
+                    break
+            else:
+                stall = 0
+        return x, lam, nit, phi
+
+    def run_al(self, outer=8, maxit=60, tol=1e-5, rho_factor=1e2, verbose=False, x0=None):
+        """augmented-Lagrangian (method of multipliers) for  min f(C)  s.t.  eps_f(C) <= (1+kappa) eps_f(stack) for all f"""
+        x = np.zeros(self.npar) if x0 is None else x0.copy()
+        r, e, _ = self.aug(x[None], 0.0)
+        f0 = float(np.sum(r ** 2))
+        lam, nit = 1e-2, 0
+        hist = [f0]
+        if self.kappa is None:
+            x, lam, n, phi = self._lm(x, np.zeros(0), 0.0, maxit * 4, tol, lam, verbose)
+            nit += n
+            shrink = 1.0
+        else:
+            rho = rho_factor * f0 / self.kappa ** 2
+            shift = np.zeros(self.F)
+            for o in range(outer):
+                x, lam, n, phi = self._lm(x, shift, rho, maxit, tol, lam, verbose)
+                nit += n
+                r, e, _ = self.aug(x[None], 0.0)
+                gg = e[0] / self.eps0 - 1.0 - self.kappa
+                hist.append(float(np.sum(r ** 2)))
+                if verbose:
+                    print(f'   outer {o} f={hist[-1]:.5e} maxviol={gg.max():+.3e} shift={np.round(shift, 4)}', flush=True)
+                if gg.max() < 1e-3 * self.kappa:
+                    break
+                shift = np.maximum(0.0, shift + gg)
+            shrink = 1.0
+            r, e, _ = self.aug(x[None], 0.0)
+            if float(np.max(e[0] / self.eps0 - 1.0)) > self.kappa:
+                lo_, hi_ = 0.0, 1.0
+                for _ in range(40):
+                    mid = 0.5 * (lo_ + hi_)
+                    _, em, _ = self.aug((mid * x)[None], 0.0)
+                    if float(np.max(em[0] / self.eps0 - 1.0)) <= self.kappa:
+                        lo_ = mid
+                    else:
+                        hi_ = mid
+                shrink = lo_
+                x = shrink * x
+        r, e, _ = self.aug(x[None], 0.0)
+        info = dict(f0=f0, f=float(np.sum(r[0] ** 2)), nit=nit, nev=self.nev, shrink=shrink, hist=hist,
+                    g_f=(e[0] / self.eps0 - 1.0).tolist())
+        return x, info
+
+    def run_slsqp(self, maxiter=300, x0=None, verbose=False, ftol=1e-12):
+        """SLSQP (BFGS Hessian) on f(x)/f0 with the F relative-discarded-weight constraints, FD gradients/Jacobian"""
+        from scipy.optimize import minimize
+        x0 = np.zeros(self.npar) if x0 is None else x0.copy()
+        r, e, _ = self.aug(x0[None], 0.0)
+        f0 = float(np.sum(r ** 2))
+        cache = {}
+
+        def get(x):
+            key = x.tobytes()
+            if cache.get('key') != key:
+                r_, e_, _ = self.aug(x[None], 0.0)
+                cache.update(key=key, r=r_[0], e=e_[0])
+            return cache['r'], cache['e']
+
+        def fun(x):
+            r_, _ = get(x)
+            return float(r_ @ r_) / f0
+
+        def grad(x):
+            r_, e_ = get(x)
+            X = np.tile(x, (self.npar, 1)) + self.h * np.eye(self.npar)
+            r1, _, _ = self.aug(X, 0.0)
+            J = ((r1 - r_[None]) / self.h).T
+            return 2 * (J.T @ r_) / f0
+
+        def con(x):
+            _, e_ = get(x)
+            return (self.kappa - (e_ / self.eps0 - 1.0)) / self.kappa
+
+        def conj(x):
+            _, e_ = get(x)
+            X = np.tile(x, (self.npar, 1)) + self.h * np.eye(self.npar)
+            _, e1, _ = self.aug(X, 0.0)
+            return -((e1 - e_[None]) / self.eps0[None] / self.h).T / self.kappa
+
+        cons = [] if self.kappa is None else [dict(type='ineq', fun=con, jac=conj)]
+        sol = minimize(fun, x0, jac=grad, constraints=cons, method='SLSQP', options=dict(maxiter=maxiter, ftol=ftol))
+        x = sol.x
+        r, e, _ = self.aug(x[None], 0.0)
+        info = dict(f0=f0, f=float(np.sum(r[0] ** 2)), nit=int(sol.nit), nev=self.nev, shrink=1.0, hist=[f0],
+                    g_f=(e[0] / self.eps0 - 1.0).tolist(), status=int(sol.status), msg=str(sol.message))
+        return x, info
+
     def run_ls(self, mu_factors=(1e3, 1e5), max_nfev=150, method='trf'):
         """same problem through scipy least_squares (trust region, scaled by the Jacobian columns); staged hinge weight,
         final scale-back for exact feasibility"""

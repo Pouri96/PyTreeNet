@@ -1,2 +1,3 @@
 svd  chi= 32 params= 23208 infid=2.038e-01 rdm2=2.28e-02 1site=1.23e-02 nn=1.13e-02 nnn=8.68e-03 | single run cpu 1.63s  steady cpu 1.68s wall 2.65s
 spcf chi= 32 params= 23208 infid=1.741e-01 rdm2=9.73e-03 1site=5.49e-03 nn=4.65e-03 nnn=4.72e-03 | single run cpu 11.48s  steady cpu 8.17s wall 13.83s  fired 601/3040
+spcf chi= 48 params= 45736 infid=6.751e-02 rdm2=3.67e-03 1site=2.15e-03 nn=1.69e-03 nnn=1.91e-03 | single run cpu 18.65s  steady cpu 12.12s wall 18.94s  fired 450/3040
