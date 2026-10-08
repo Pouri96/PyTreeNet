@@ -104,3 +104,34 @@ The full write-ups are in the `*_results.md` files. Directions not listed here s
 - run the rank 6 DMT head-to-head, which shares the same `dmt_np.py`.
 
 No cheap closed form exists yet, so any claim stays at the level of accuracy and memory, not wall-clock.
+
+## Final verdict (after the cost and Pareto checks)
+
+**What spcf is.** Plain SVD keeps the χ components of a cut that best preserve the whole state. spcf keeps the same χ but tilts the kept subspace so the 1-3-site reduced density matrices around the cut are preserved.
+
+**What holds up.** At equal χ, spcf gives lower local error than SVD:
+- 2.5-4.7x lower on purifications at finite temperature (rank 2), and also lower than DMT there;
+- 2.2-3.8x lower on noisy LPDO dynamics (rank 6, partly from a post-hoc setting);
+- about 3x lower on pure-state Ising quenches.
+
+**What does not hold up.**
+- **Time.** At equal error, spcf is about 10x slower than SVD (rank 2, N = 10). On the time Pareto front SVD dominates, because a larger χ wins.
+- **Peak memory.** The cut builds a window state of about 4096·χ² numbers with the a = 2 window, which is 1 GB at χ = 64. Its peak RAM is therefore *higher* than SVD's at equal error. The earlier "2-3x memory saving" holds only for the *stored* state, not for peak memory.
+- **Cost scaling.** With a = 2 the per-cut overhead grows from 150x to 300x SVD as χ goes from 8 to 64. With a = 1 it stays flat at about 11x SVD, but the accuracy at a = 1 is untested.
+- **The closed-form speed-up** (whitening) did not deliver: it was parked.
+
+**Directions.**
+
+| Direction | Verdict |
+|---|---|
+| Ranks 1 (OTOC), 4, 5, 8-9, 10 | Dropped or parked |
+| Rank 7 (circuits) | Killed |
+| Rank 7 (quenches) | Memory claim only, now weakened by peak memory |
+| Rank 2 (purifications) | Best accuracy result |
+| Rank 6 (LPDO) | Promising only alongside rank 2 |
+
+**Bottom line.** spcf is a real accuracy-at-fixed-χ improvement for local observables, but **it is not yet practical**: SVD at a larger χ reaches the same accuracy faster and with less peak RAM. Two cheap tests decide whether that can change:
+1. Does the a = 1 window keep the gain?
+2. Does building the window state in chunks bring peak memory down to the SVD level?
+
+If both fail, write spcf up as a diagnostic or accuracy result, not a practical method.
