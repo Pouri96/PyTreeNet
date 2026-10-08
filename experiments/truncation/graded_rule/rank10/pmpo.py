@@ -107,6 +107,11 @@ def dense_op(T):
     return x[..., 0].reshape(-1)
 
 
+def reweight(T, gamma):
+    """Inverse of ``unweight``: physical -> rTEBD frame, c~_P = c_P / gamma^{|P|}."""
+    return unweight(T, 1.0 / gamma)
+
+
 def unweight(T, gamma):
     """Physical-frame copy of a reweighted-frame MPO: c_P = gamma^{|P|} c~_P (identity for gamma == 1)."""
     if gamma == 1.0:
@@ -209,7 +214,7 @@ def run_heis(model, N, T0, chi, nsteps, dt, cut, gamma=1.0, gates=None, snap=Non
     ``snap(n, T)`` is called after every full step with the tensors in the frame the sweep lives in (use ``unweight`` for rw).
     ``hook(b, dirn, n, Tsnap, theta, A, B)`` is called at every cut (tests).  Returns dict(T, disc, wall, maxbond)."""
     S = gates or pauli_gates(model, N, dt, gamma)
-    T = [t.copy() for t in T0]
+    T = [t.copy() for t in (T0 if gamma == 1.0 else reweight(T0, gamma))]       # T0 is given in the physical frame
     needs_env = getattr(cut, 'needs_env', False)
     one = np.ones(1)
     t0 = time.time()

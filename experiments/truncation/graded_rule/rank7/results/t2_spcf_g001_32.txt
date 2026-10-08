@@ -1,0 +1,8 @@
+  t= 0.5 1site=9.77e-16 nn=7.91e-16 infid=1.44e-14 F=1.0000 fired=0/190
+  t= 1.0 1site=1.31e-15 nn=1.23e-15 infid=-1.02e-14 F=1.0000 fired=0/380
+  t= 1.5 1site=2.27e-15 nn=3.48e-15 infid=-4.44e-16 F=1.0000 fired=0/570
+  t= 2.0 1site=8.31e-15 nn=1.40e-14 infid=1.60e-14 F=1.0000 fired=0/760
+  t= 2.5 1site=1.16e-13 nn=2.75e-12 infid=7.79e-14 F=1.0000 fired=0/950
+  t= 3.0 1site=3.33e-10 nn=3.85e-09 infid=5.81e-10 F=1.0000 fired=0/1140
+  t= 3.5 1site=2.85e-07 nn=2.10e-06 infid=4.39e-07 F=1.0000 fired=0/1330
+  t= 4.0 1site=2.14e-05 nn=6.21e-05 infid=2.44e-05 F=1.0000 fired=8/1520
