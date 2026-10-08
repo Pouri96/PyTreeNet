@@ -93,6 +93,8 @@ def make_cut(arm, N, diag):
     """returns (cut, gamma)"""
     if arm == 'svd':
         return spcop.OpCut(N, diag=diag), 1.0
+    if arm == 'svdt':                                   # identical trajectory, no diagnostics: the timing baseline
+        return spcop.OpCut(N, diag=False), 1.0
     if arm.startswith('rw:'):
         return O.svd_cut_op, float(arm.split(':')[1])
     if arm.startswith('spcop'):
@@ -114,10 +116,27 @@ def make_cut(arm, N, diag):
     raise ValueError(arm)
 
 
+class TimedCut:
+    """wraps a cut and accumulates its CPU time (process_time), so the cost ratio excludes the scoring done in the snapshots"""
+    def __init__(self, cut):
+        self.cut, self.t = cut, 0.0
+
+    def start(self, T):
+        if hasattr(self.cut, 'start'):
+            self.cut.start(T)
+
+    def __call__(self, theta, chi, dirn, A, B, b):
+        t0 = time.process_time()
+        out = self.cut(theta, chi, dirn) if self.cut is O.svd_cut_op else self.cut(theta, chi, dirn, A, B, b)
+        self.t += time.process_time() - t0
+        return out
+
+
 def run_arm(model, N, chi, T, dt, arm, diag=True, site=0):
     ref = get_ref(model, N, T, dt)
     nsteps = ref['nsteps']
     cut, gamma = make_cut(arm, N, diag)
+    tcut = TimedCut(cut)
     gops = O.pauli_gates(model, N, dt, gamma=gamma)
     p1 = np.zeros((nsteps + 1, N, 4))
     cz0 = np.zeros(nsteps + 1)
@@ -138,8 +157,10 @@ def run_arm(model, N, chi, T, dt, arm, diag=True, site=0):
             stats[step] = snapshot_stats(c, cex / np.linalg.norm(cex), N)
         ncuts.append(len(getattr(cut, 'log', [])))
 
-    Tm, wall = O.run_op_tebd(N, chi, nsteps, gops, cut, snap=snap, site=site)
-    rec = dict(model=model, N=N, chi=chi, T=T, dt=dt, arm=arm, wall=wall, maxrank=int(max(O.ranks(Tm))),
+    c0 = time.process_time()
+    Tm, wall = O.run_op_tebd(N, chi, nsteps, gops, tcut, snap=snap, site=site)
+    cpu = time.process_time() - c0           # includes the snapshot scoring, identical for every arm
+    rec = dict(model=model, N=N, chi=chi, T=T, dt=dt, arm=arm, wall=wall, cpu=cpu, cut_cpu=tcut.t, maxrank=int(max(O.ranks(Tm))),
                p1=p1.tolist(), cz0=cz0.tolist(), logkept=lk.tolist(), snaps={str(k): v for k, v in stats.items()},
                ncuts_by_step=ncuts)
     if hasattr(cut, 'log') and len(cut.log):

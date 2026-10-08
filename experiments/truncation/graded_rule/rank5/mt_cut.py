@@ -396,23 +396,36 @@ def gate_cost(tail):
     return GATE_C0 * (max(tail, 1e-300) / 1e-4) ** GATE_EXP
 
 
-# ------------------------------------------------------------------------------------------ spcf-multi: dense GN / LM
-class SPCMulti:
-    """Shared-C Gauss-Newton on the Grassmannian chart Q = qr(B_k + B_perp C).  Residual vector
-    r = (h(rho(Q Q^dag M_f)) - h(rho(M_f)))_f over all targets (equal weights), Jacobian by forward finite differences.
-    Optional constraint: eps_f(Q) <= (1 + kappa) eps_f(Q_stack) for every target (squared hinge, then a final scale-back)."""
+# ------------------------------------------------------------------------------------------ spcf-multi: dense GN / SQP
+def complete_basis(Q):
+    """orthonormal (Bk, Bp): Bk spans Q, Bp its orthogonal complement"""
+    Qf, _ = np.linalg.qr(Q, mode='complete')
+    k = Q.shape[1]
+    return Qf[:, :k], Qf[:, k:]
 
-    def __init__(self, geom, Ms, hv_ex, Bk, Bp, cplx, kappa=0.1, h=1e-6, chunk=96):
+
+class SPCMulti:
+    """Shared-C Gauss-Newton on the Grassmannian chart Q = qr(B_k + B_perp C) around the current subspace (the chart is
+    re-centred after every accepted step).  Residual r = (h(rho(Q Q^dag M_f)) - h(rho(M_f)))_f over all targets with equal
+    weights; Jacobian by forward finite differences of the true map (the plan's 'dense Gauss-Newton with finite-difference
+    Jacobian').  Constraint (trust region): eps_f(Q) <= (1 + kappa) eps_f(Q_stack) for every target, i.e. the per-target
+    fidelity loss against the stacked-SVD basis is at most kappa times that basis's discarded weight of the same target.
+    Each step is the solution of  min |r_c + J x|^2 + lam |x|^2  s.t. the second-order model of the constraints, via its
+    F-dimensional dual; the second-order model of eps_f is exact (closed form from the left density matrix of target f)."""
+
+    def __init__(self, geom, Ms, hv_ex, Q0, cplx, kappa=0.1, h=1e-6, chunk=96):
         self.g, self.Ms, self.hv_ex = geom, Ms, hv_ex
-        self.Bk, self.Bp = Bk, Bp
-        self.nb, self.chi = Bp.shape[1], Bk.shape[1]
+        self.Q0 = Q0
+        self.chi = Q0.shape[1]
+        self.nb = Q0.shape[0] - self.chi
         self.cplx = cplx
         self.kappa, self.h, self.chunk = kappa, h, chunk
         self.npar = self.nb * self.chi * (2 if cplx else 1)
         self.F = len(Ms)
-        self.eps0 = np.maximum(eps_of(Ms, project(Ms, Bk)), 1e-14)
-        self.nev = 0
         self.nrm2 = np.array([np.linalg.norm(m) ** 2 for m in Ms])
+        self.eps0 = np.maximum(eps_of(Ms, project(Ms, Q0)), 1e-14)
+        self.rho = [m @ m.conj().T / n2 for m, n2 in zip(Ms, self.nrm2)]
+        self.nev = 0
 
     def to_C(self, X):
         X = np.atleast_2d(X)
@@ -421,18 +434,17 @@ class SPCMulti:
             return (X[:, :n] + 1j * X[:, n:]).reshape(len(X), self.nb, self.chi)
         return X.reshape(len(X), self.nb, self.chi)
 
-    def Q_of(self, X):
+    def Q_of(self, X, Bk, Bp):
         C = self.to_C(X)
-        Y = self.Bk[None] + self.Bp[None] @ C
-        Q, _ = np.linalg.qr(Y)
+        Q, _ = np.linalg.qr(Bk[None] + Bp[None] @ C)
         return Q
 
-    def evaluate(self, X):
+    def evaluate(self, X, Bk, Bp):
         """X (n, npar) -> r (n, F*nres), eps (n, F)"""
         X = np.atleast_2d(X)
         rs, es = [], []
         for i0 in range(0, len(X), self.chunk):
-            Q = self.Q_of(X[i0:i0 + self.chunk])
+            Q = self.Q_of(X[i0:i0 + self.chunk], Bk, Bp)
             rr, ee = [], []
             for f, Mf in enumerate(self.Ms):
                 R = np.swapaxes(Q.conj(), -1, -2) @ Mf                      # (n, chi, dimR)
@@ -444,286 +456,179 @@ class SPCMulti:
         self.nev += len(X)
         return np.concatenate(rs), np.concatenate(es)
 
-    def aug(self, X, mu):
-        r, e = self.evaluate(X)
+    def eval_Q(self, Q):
+        """residual and eps of an explicit orthonormal Q (chi columns)"""
+        rr, ee = [], []
+        for f, Mf in enumerate(self.Ms):
+            R = Q.conj().T @ Mf
+            ee.append(1.0 - np.sum(np.abs(R) ** 2) / self.nrm2[f])
+            rr.append(self.g.hvec(self.g.region_rho(Q @ R)) - self.hv_ex[f])
+        self.nev += 1
+        return np.concatenate(rr), np.array(ee)
+
+    def eps_model(self, Bk, Bp):
+        """per target: (eps_c, grad (npar), Mq (npar,npar)) with eps(x) = eps_c + grad.x + x^T Mq x to second order"""
+        out = []
+        n = self.nb * self.chi
+        for f in range(self.F):
+            rho = self.rho[f]
+            Kk, Kkp, Kpp = Bk.conj().T @ rho @ Bk, Bk.conj().T @ rho @ Bp, Bp.conj().T @ rho @ Bp
+            epsc = 1.0 - float(np.trace(Kk).real)
+            ell = (-2.0 * Kkp.T).reshape(-1)                      # ell[p*chi+i] = -2 Kkp[i,p]
+            Hc = np.kron(np.eye(self.nb), Kk.T) - np.kron(Kpp, np.eye(self.chi))
+            if self.cplx:
+                grad = np.concatenate([ell.real, -ell.imag])
+                Hr, Hi = Hc.real, Hc.imag
+                Mq = np.block([[Hr, -Hi], [Hi, Hr]])
+            else:
+                grad = ell.real
+                Mq = Hc.real
+            out.append((epsc, grad, 0.5 * (Mq + Mq.T)))
+        return out
+
+    def _dual_step(self, JtJ2, g0, emod, lam, nu0=None, kmod=None):
+        """solve min x^T (JtJ2/2 ... ) as described; returns x, nu.  Objective  q(x) = g0.x + 1/2 x^T JtJ2 x  (+ lam/2 |x|^2)"""
+        n = self.npar
+        I = np.eye(n)
+        kmod = self.kappa if kmod is None else kmod
         if self.kappa is None:
-            return r, e, np.zeros((len(r), 0))
-        hinge = np.sqrt(mu) * np.maximum(0.0, e / self.eps0[None] - 1.0 - self.kappa)
-        return r, e, hinge
+            x = -np.linalg.solve(JtJ2 + lam * I, g0)
+            return x, np.zeros(self.F), True
+        sc = np.array([1.0 / self.eps0[f] for f in range(self.F)])
+        base = JtJ2 + lam * I
 
-    def merit(self, r, hinge):
-        return float(np.sum(r ** 2) + np.sum(hinge ** 2))
+        def prim(nu):
+            Hs = base.copy()
+            gs = g0.copy()
+            for f in range(self.F):
+                if nu[f] > 0:
+                    Hs += 2.0 * nu[f] * sc[f] * emod[f][2]
+                    gs = gs + nu[f] * sc[f] * emod[f][1]
+            return Hs, gs
 
-    def jac(self, x, mu, r0, hinge0):
-        X = np.tile(x, (self.npar, 1)) + self.h * np.eye(self.npar)
-        r1, e1, h1 = self.aug(X, mu)
-        J = np.concatenate([(r1 - r0[None]) / self.h, (h1 - hinge0[None]) / self.h], axis=1).T
-        return J
+        def cons(x):
+            return np.array([(emod[f][0] + emod[f][1] @ x + x @ emod[f][2] @ x) * sc[f] - 1.0 - kmod
+                             for f in range(self.F)])
 
-    def _lm(self, x, shift, rho, maxit, tol, lam, verbose=False):
-        """Levenberg-Marquardt (Marquardt column scaling) on  sum r^2 + rho sum max(0, g_f + shift_f)^2,  g_f the relative
-        extra discarded weight of target f minus kappa.  Returns x, lambda, n iterations, merit."""
-        def parts(xx):
-            r_, e_, _ = self.aug(xx[None], 0.0)
-            gg = e_[0] / self.eps0 - 1.0 - (self.kappa if self.kappa is not None else 1e30)
-            hg = np.sqrt(rho) * np.maximum(0.0, gg + shift) if self.kappa is not None else np.zeros(0)
-            return r_[0], hg
+        # projected Newton / active set on the F-dimensional dual
+        nu = np.zeros(self.F) if nu0 is None else nu0.copy()
+        nus = (g0 @ g0) ** 0.5 + 1e-30
+        for _ in range(60):
+            Hs, gs = prim(nu)
+            try:
+                L = np.linalg.cholesky(Hs)
+            except np.linalg.LinAlgError:
+                return None, nu, False
+            x = -np.linalg.solve(Hs, gs)
+            c = cons(x)
+            act = (nu > 0) | (c > 0)
+            if np.all(c[~act] <= 1e-12) and np.all(np.abs(c[nu > 0]) < 1e-4 * self.kappa) and np.all(c <= 1e-4 * self.kappa):
+                return x, nu, True
+            # Newton on the active constraints: dc_f/dnu_k = (grad_f + 2 Mq_f x)^T dx/dnu_k, dx/dnu_k = -Hs^-1 (sc_k (grad_k + 2 Mq_k x))
+            A = np.array([sc[f] * (emod[f][1] + 2.0 * emod[f][2] @ x) for f in range(self.F)])        # (F, n)
+            Dm = A @ np.linalg.solve(Hs, A.T)
+            idx = np.where(act)[0]
+            if len(idx) == 0:
+                return x, nu, True
+            rhs = c[idx]                      # dc/dnu = -Dm  =>  Dm d = c  (raise nu where violated)
+            try:
+                d = np.linalg.solve(Dm[np.ix_(idx, idx)] + 1e-12 * np.eye(len(idx)) * np.trace(Dm) / max(self.F, 1), rhs)
+            except np.linalg.LinAlgError:
+                return None, nu, False
+            dn = np.zeros(self.F)
+            dn[idx] = d
+            # step with non-negativity, damped
+            t = 1.0
+            for _ in range(30):
+                trial = np.maximum(nu + t * dn, 0.0)
+                Ht, gt = prim(trial)
+                try:
+                    np.linalg.cholesky(Ht)
+                    break
+                except np.linalg.LinAlgError:
+                    t *= 0.5
+            nu = np.maximum(nu + t * dn, 0.0)
+        Hs, gs = prim(nu)
+        x = -np.linalg.solve(Hs, gs)
+        return x, nu, bool(np.all(cons(x) <= 5e-2 * self.kappa))
 
-        r0, hg0 = parts(x)
-        phi = float(r0 @ r0 + hg0 @ hg0)
+    def run(self, maxit=40, tol=1e-4, lam0=1e-3, verbose=False):
+        chi, nb = self.chi, self.nb
+        Qc = self.Q0.copy()
+        rc, ec = self.eval_Q(Qc)
+        f0 = fc = float(rc @ rc)
+        lam = lam0 * 1.0
+        hist = [f0]
         stall = 0
+        nu = None
         nit = 0
+        kap = self.kappa
         for it in range(maxit):
             nit += 1
-            X = np.tile(x, (self.npar, 1)) + self.h * np.eye(self.npar)
-            r1, e1, _ = self.aug(X, 0.0)
-            if self.kappa is not None:
-                g1 = e1 / self.eps0[None] - 1.0 - self.kappa
-                h1 = np.sqrt(rho) * np.maximum(0.0, g1 + shift[None])
-            else:
-                h1 = np.zeros((self.npar, 0))
-            J = np.concatenate([(r1 - r0[None]) / self.h, (h1 - hg0[None]) / self.h], axis=1).T
-            rv = np.concatenate([r0, hg0])
-            g = J.T @ rv
-            A = J.T @ J
-            dA = np.maximum(np.diag(A), 1e-12 * np.diag(A).max() + 1e-300)
-            ok = False
-            for _ in range(40):
-                try:
-                    step = -np.linalg.solve(A + lam * np.diag(dA), g)
-                except np.linalg.LinAlgError:
-                    lam *= 10
+            Bk, Bp = complete_basis(Qc)
+            X = self.h * np.eye(self.npar)
+            r1, _ = self.evaluate(X, Bk, Bp)
+            J = ((r1 - rc[None]) / self.h).T                               # (m, npar)
+            JtJ2 = 2.0 * J.T @ J
+            g0 = 2.0 * J.T @ rc
+            emod = self.eps_model(Bk, Bp) if kap is not None else None
+            dsc = np.maximum(np.diag(JtJ2), 1e-12 * np.diag(JtJ2).max())
+            accepted = False
+            kmod = kap
+            ncorr = 0
+            for tr in range(30):
+                x, nu_new, okd = self._dual_step(JtJ2, g0, emod, lam * float(np.mean(dsc)), nu, kmod)
+                if x is None or not okd:
+                    lam *= 4.0
                     continue
-                xn = x + step
-                rn, hn = parts(xn)
-                phin = float(rn @ rn + hn @ hn)
-                if phin < phi:
-                    ok = True
+                Qn = self.Q_of(x[None], Bk, Bp)[0]
+                rn, en = self.eval_Q(Qn)
+                fn = float(rn @ rn)
+                gmax = float(np.max(en / self.eps0 - 1.0))
+                if kap is not None and gmax > kap * (1 + 1e-3) and ncorr < 6:
+                    kmod -= 1.2 * (gmax - kap)               # second-order correction of the constraint level
+                    ncorr += 1
+                    continue
+                if fn < fc and (kap is None or gmax <= kap * (1 + 1e-3)):
+                    accepted = True
                     break
                 lam *= 4.0
-                if lam > 1e14:
-                    break
-            if not ok:
+                ncorr = 0
+                kmod = kap
+            if not accepted:
                 break
-            rel = (phi - phin) / phi
-            x, r0, hg0, phi = xn, rn, hn, phin
-            lam = max(lam / 3.0, 1e-10)
+            nu = nu_new
+            rel = (fc - fn) / fc
+            Qc, rc, ec, fc = Qn, rn, en, fn
+            lam = max(lam / 3.0, 1e-8)
+            hist.append(fc)
             if verbose:
-                print(f'     lm it{it:3d} merit={phi:.5e} f={r0 @ r0:.5e} lam={lam:.1e} rel={rel:.1e}', flush=True)
+                print(f'   sqp it{it:3d} f={fc:.5e} lam={lam:.1e} gmax={gmax:+.3e} nu={np.array2string(nu, precision=2)} rel={rel:.1e}', flush=True)
             if rel < tol:
                 stall += 1
                 if stall >= 3:
                     break
             else:
                 stall = 0
-        return x, lam, nit, phi
-
-    def run_al(self, outer=8, maxit=60, tol=1e-5, rho_factor=1e2, verbose=False, x0=None):
-        """augmented-Lagrangian (method of multipliers) for  min f(C)  s.t.  eps_f(C) <= (1+kappa) eps_f(stack) for all f"""
-        x = np.zeros(self.npar) if x0 is None else x0.copy()
-        r, e, _ = self.aug(x[None], 0.0)
-        f0 = float(np.sum(r ** 2))
-        lam, nit = 1e-2, 0
-        hist = [f0]
-        if self.kappa is None:
-            x, lam, n, phi = self._lm(x, np.zeros(0), 0.0, maxit * 4, tol, lam, verbose)
-            nit += n
-            shrink = 1.0
-        else:
-            rho = rho_factor * f0 / self.kappa ** 2
-            shift = np.zeros(self.F)
-            for o in range(outer):
-                x, lam, n, phi = self._lm(x, shift, rho, maxit, tol, lam, verbose)
-                nit += n
-                r, e, _ = self.aug(x[None], 0.0)
-                gg = e[0] / self.eps0 - 1.0 - self.kappa
-                hist.append(float(np.sum(r ** 2)))
-                if verbose:
-                    print(f'   outer {o} f={hist[-1]:.5e} maxviol={gg.max():+.3e} shift={np.round(shift, 4)}', flush=True)
-                if gg.max() < 1e-3 * self.kappa:
-                    break
-                shift = np.maximum(0.0, shift + gg)
-            shrink = 1.0
-            r, e, _ = self.aug(x[None], 0.0)
-            if float(np.max(e[0] / self.eps0 - 1.0)) > self.kappa:
-                lo_, hi_ = 0.0, 1.0
-                for _ in range(40):
-                    mid = 0.5 * (lo_ + hi_)
-                    _, em, _ = self.aug((mid * x)[None], 0.0)
-                    if float(np.max(em[0] / self.eps0 - 1.0)) <= self.kappa:
-                        lo_ = mid
-                    else:
-                        hi_ = mid
-                shrink = lo_
-                x = shrink * x
-        r, e, _ = self.aug(x[None], 0.0)
-        info = dict(f0=f0, f=float(np.sum(r[0] ** 2)), nit=nit, nev=self.nev, shrink=shrink, hist=hist,
-                    g_f=(e[0] / self.eps0 - 1.0).tolist())
-        return x, info
-
-    def run_slsqp(self, maxiter=300, x0=None, verbose=False, ftol=1e-12):
-        """SLSQP (BFGS Hessian) on f(x)/f0 with the F relative-discarded-weight constraints, FD gradients/Jacobian"""
-        from scipy.optimize import minimize
-        x0 = np.zeros(self.npar) if x0 is None else x0.copy()
-        r, e, _ = self.aug(x0[None], 0.0)
-        f0 = float(np.sum(r ** 2))
-        cache = {}
-
-        def get(x):
-            key = x.tobytes()
-            if cache.get('key') != key:
-                r_, e_, _ = self.aug(x[None], 0.0)
-                cache.update(key=key, r=r_[0], e=e_[0])
-            return cache['r'], cache['e']
-
-        def fun(x):
-            r_, _ = get(x)
-            return float(r_ @ r_) / f0
-
-        def grad(x):
-            r_, e_ = get(x)
-            X = np.tile(x, (self.npar, 1)) + self.h * np.eye(self.npar)
-            r1, _, _ = self.aug(X, 0.0)
-            J = ((r1 - r_[None]) / self.h).T
-            return 2 * (J.T @ r_) / f0
-
-        def con(x):
-            _, e_ = get(x)
-            return (self.kappa - (e_ / self.eps0 - 1.0)) / self.kappa
-
-        def conj(x):
-            _, e_ = get(x)
-            X = np.tile(x, (self.npar, 1)) + self.h * np.eye(self.npar)
-            _, e1, _ = self.aug(X, 0.0)
-            return -((e1 - e_[None]) / self.eps0[None] / self.h).T / self.kappa
-
-        cons = [] if self.kappa is None else [dict(type='ineq', fun=con, jac=conj)]
-        sol = minimize(fun, x0, jac=grad, constraints=cons, method='SLSQP', options=dict(maxiter=maxiter, ftol=ftol))
-        x = sol.x
-        r, e, _ = self.aug(x[None], 0.0)
-        info = dict(f0=f0, f=float(np.sum(r[0] ** 2)), nit=int(sol.nit), nev=self.nev, shrink=1.0, hist=[f0],
-                    g_f=(e[0] / self.eps0 - 1.0).tolist(), status=int(sol.status), msg=str(sol.message))
-        return x, info
-
-    def run_ls(self, mu_factors=(1e3, 1e5), max_nfev=150, method='trf'):
-        """same problem through scipy least_squares (trust region, scaled by the Jacobian columns); staged hinge weight,
-        final scale-back for exact feasibility"""
-        from scipy.optimize import least_squares
-        x = np.zeros(self.npar)
-        r, e, hg = self.aug(x[None], 0.0)
-        f0 = float(np.sum(r ** 2))
-        mus = mu_factors if self.kappa is not None else (0.0,)
-        nfev = 0
-        hist = [f0]
-        cache = {}
-
-        def fun(xx, mu):
-            r_, e_, h_ = self.aug(xx[None], mu)
-            cache['last'] = (xx.copy(), r_[0], h_[0])
-            return np.concatenate([r_[0], h_[0]])
-
-        def jac(xx, mu):
-            lx, r_, h_ = cache['last']
-            if not np.array_equal(lx, xx):
-                fun(xx, mu)
-                lx, r_, h_ = cache['last']
-            return self.jac(xx, mu, r_, h_)
-
-        for mf in mus:
-            mu = mf * f0
-            sol = least_squares(fun, x, jac=jac, args=(mu,), method=method, x_scale='jac', tr_solver='exact',
-                                ftol=1e-10, xtol=1e-10, gtol=1e-12, max_nfev=max_nfev)
-            x = sol.x
-            nfev += sol.nfev
-            rr, ee, _ = self.aug(x[None], 0.0)
-            hist.append(float(np.sum(rr[0] ** 2)))
-        shrink = 1.0
-        if self.kappa is not None:
-            r, e, _ = self.aug(x[None], 0.0)
-            viol = float(np.max(e[0] / self.eps0 - 1.0))
-            if viol > self.kappa:
-                lo_, hi_ = 0.0, 1.0
-                for _ in range(40):
-                    mid = 0.5 * (lo_ + hi_)
-                    _, em, _ = self.aug((mid * x)[None], 0.0)
-                    if float(np.max(em[0] / self.eps0 - 1.0)) <= self.kappa:
-                        lo_ = mid
-                    else:
-                        hi_ = mid
-                shrink = lo_
-                x = shrink * x
-        r, e, _ = self.aug(x[None], 0.0)
-        info = dict(f0=f0, f=float(np.sum(r[0] ** 2)), nit=nfev, nev=self.nev, shrink=shrink, hist=hist,
-                    g_f=(e[0] / self.eps0 - 1.0).tolist(), status=int(sol.status))
-        return x, info
-
-    def run(self, maxit=30, mu_factors=(1e3, 1e5), tol=1e-4, lam0=1e-3, verbose=False, x0=None):
-        x = np.zeros(self.npar) if x0 is None else x0.copy()
-        r, e, hg = self.aug(x[None], 0.0)
-        f0 = float(np.sum(r ** 2))
-        hist = [f0]
-        lam = lam0
-        mus = mu_factors if self.kappa is not None else (0.0,)
-        nit = 0
-        for mf in mus:
-            mu = mf * f0 / 1.0
-            r, e, hg = self.aug(x[None], mu)
-            r0, hg0 = r[0], hg[0]
-            phi = self.merit(r0, hg0)
-            stall = 0
-            for it in range(maxit):
-                nit += 1
-                J = self.jac(x, mu, r0, hg0)
-                rv = np.concatenate([r0, hg0])
-                g = J.T @ rv
-                A = J.T @ J
-                dA = np.diag(A).copy()
-                dA = np.maximum(dA, 1e-12 * dA.max() + 1e-300)
-                ok = False
-                for _ in range(14):
-                    try:
-                        step = -np.linalg.solve(A + lam * np.diag(dA), g)
-                    except np.linalg.LinAlgError:
-                        lam *= 10
-                        continue
-                    xn = x + step
-                    rn, en, hn = self.aug(xn[None], mu)
-                    phin = self.merit(rn[0], hn[0])
-                    if phin < phi:
-                        ok = True
-                        break
-                    lam *= 4.0
-                if not ok:
-                    break
-                rel = (phi - phin) / phi
-                x, r0, hg0, phi = xn, rn[0], hn[0], phin
-                lam = max(lam / 3.0, 1e-9)
-                hist.append(float(np.sum(r0 ** 2)))
-                if verbose:
-                    print(f'   it{nit:3d} f={hist[-1]:.4e} merit={phi:.4e} lam={lam:.1e} rel={rel:.2e}', flush=True)
-                if rel < tol:
-                    stall += 1
-                    if stall >= 2:
-                        break
+        # final exact feasibility (up to the 2% slack of the line search): scale back along the geodesic-free ray in the
+        # last chart is impossible after re-centring, so interpolate the projector coefficients with the start instead
+        g_f = ec / self.eps0 - 1.0
+        if kap is not None and np.max(g_f) > kap:
+            lo_, hi_ = 0.0, 1.0
+            Bk0, Bp0 = complete_basis(self.Q0)
+            # coordinates of span(Qc) in the chart of Q0 (valid while Bk0^dag Qc is invertible)
+            Cc = (Bp0.conj().T @ Qc) @ np.linalg.inv(Bk0.conj().T @ Qc)
+            xc = np.concatenate([Cc.real.ravel(), Cc.imag.ravel()]) if self.cplx else Cc.real.ravel()
+            for _ in range(40):
+                mid = 0.5 * (lo_ + hi_)
+                Qm = self.Q_of((mid * xc)[None], Bk0, Bp0)[0]
+                _, em = self.eval_Q(Qm)
+                if float(np.max(em / self.eps0 - 1.0)) <= kap:
+                    lo_ = mid
                 else:
-                    stall = 0
-        # exact feasibility: scale the chart coordinates back along the ray until every target is within kappa
-        shrink = 1.0
-        if self.kappa is not None:
-            r, e, _ = self.aug(x[None], 0.0)
-            viol = float(np.max(e[0] / self.eps0 - 1.0))
-            if viol > self.kappa:
-                lo_, hi_ = 0.0, 1.0
-                for _ in range(40):
-                    mid = 0.5 * (lo_ + hi_)
-                    _, em, _ = self.aug((mid * x)[None], 0.0)
-                    if float(np.max(em[0] / self.eps0 - 1.0)) <= self.kappa:
-                        lo_ = mid
-                    else:
-                        hi_ = mid
-                shrink = lo_
-                x = shrink * x
-        r, e, _ = self.aug(x[None], 0.0)
-        info = dict(f0=f0, f=float(np.sum(r[0] ** 2)), nit=nit, nev=self.nev, shrink=shrink, hist=hist,
-                    g_f=(e[0] / self.eps0 - 1.0).tolist())
-        return x, info
+                    hi_ = mid
+            Qc = self.Q_of((lo_ * xc)[None], Bk0, Bp0)[0]
+            rc, ec = self.eval_Q(Qc)
+            fc = float(rc @ rc)
+        info = dict(f0=f0, f=fc, nit=nit, nev=self.nev, hist=hist, g_f=(ec / self.eps0 - 1.0).tolist())
+        return Qc, info

@@ -1,0 +1,127 @@
+Test 2: static one-sweep compression of the exact |O(t)>> (Ising, N=10). Ratios are arm / svd at equal chi.
+
+--- t = 2.0 (primary) ---
+chi=4: svd absolute: 1-site 3.19e-03 2-site 1.80e-03 3-site 9.01e-04 far d>=3 2.14e-03 ZZ-OTOC d3 7.74e-03 infid 1.77e-02 p1 (=C) 3.19e-03 | dC behind rms 5.63e-03 (n=2) front 1.16e-02 (n=3)
+   spcop      ratio: 1-site 0.72 2-site 0.76 3-site 0.89 far d>=3 0.69 ZZ-OTOC d3 1.16 infid 1.16 p1 (=C) 0.72 | C behind 0.94 front 0.85 | fired 3/3 wall 1.1s
+   spcop_k1   ratio: 1-site 0.91 2-site 1.48 3-site 1.69 far d>=3 1.03 ZZ-OTOC d3 1.54 infid 2.50 p1 (=C) 0.91 | C behind 2.37 front 1.00 | fired 3/3 wall 1.1s
+   spcop_k12  ratio: 1-site 0.70 2-site 0.76 3-site 0.96 far d>=3 0.68 ZZ-OTOC d3 1.12 infid 1.23 p1 (=C) 0.70 | C behind 0.91 front 0.80 | fired 3/3 wall 1.4s
+   spcop_p3   ratio: 1-site 0.65 2-site 0.68 3-site 0.82 far d>=3 0.63 ZZ-OTOC d3 1.17 infid 1.32 p1 (=C) 0.65 | C behind 1.24 front 0.79 | fired 3/3 wall 3.3s
+chi=8: svd absolute: 1-site 3.02e-05 2-site 3.31e-05 3-site 2.63e-05 far d>=3 3.00e-05 ZZ-OTOC d3 2.12e-04 infid 1.42e-04 p1 (=C) 3.02e-05 | dC behind rms 4.19e-05 (n=2) front 1.21e-04 (n=3)
+   spcop      ratio: 1-site 1.02 2-site 0.66 3-site 0.72 far d>=3 1.08 ZZ-OTOC d3 1.03 infid 1.05 p1 (=C) 1.02 | C behind 2.47 front 1.01 | fired 2/2 wall 0.4s
+   spcop_k1   ratio: 1-site 0.81 2-site 0.98 3-site 1.00 far d>=3 0.94 ZZ-OTOC d3 1.13 infid 1.00 p1 (=C) 0.81 | C behind 0.34 front 0.87 | fired 2/2 wall 0.4s
+   spcop_k12  ratio: 1-site 0.84 2-site 0.55 3-site 1.08 far d>=3 0.96 ZZ-OTOC d3 1.09 infid 1.02 p1 (=C) 0.84 | C behind 0.85 front 0.89 | fired 2/2 wall 0.5s
+   spcop_p3   ratio: 1-site 1.01 2-site 0.58 3-site 0.62 far d>=3 1.08 ZZ-OTOC d3 1.01 infid 1.11 p1 (=C) 1.01 | C behind 1.69 front 1.04 | fired 2/2 wall 1.1s
+chi=16: svd absolute: 1-site 4.72e-09 2-site 1.83e-08 3-site 7.35e-08 far d>=3 1.12e-07 ZZ-OTOC d3 3.38e-07 infid 2.07e-08 p1 (=C) 4.72e-09 | dC behind rms 6.91e-09 (n=2) front 1.63e-08 (n=3)
+   spcop      ratio: 1-site 1.00 2-site 1.00 3-site 1.00 far d>=3 1.00 ZZ-OTOC d3 1.00 infid 1.00 p1 (=C) 1.00 | C behind 1.00 front 1.00 | fired 0/0 wall 0.1s
+   spcop_k1   ratio: 1-site 1.00 2-site 1.00 3-site 1.00 far d>=3 1.00 ZZ-OTOC d3 1.00 infid 1.00 p1 (=C) 1.00 | C behind 1.00 front 1.00 | fired 0/0 wall 0.0s
+   spcop_k12  ratio: 1-site 1.00 2-site 1.00 3-site 1.00 far d>=3 1.00 ZZ-OTOC d3 1.00 infid 1.00 p1 (=C) 1.00 | C behind 1.00 front 1.00 | fired 0/0 wall 0.0s
+   spcop_p3   ratio: 1-site 1.00 2-site 1.00 3-site 1.00 far d>=3 1.00 ZZ-OTOC d3 1.00 infid 1.00 p1 (=C) 1.00 | C behind 1.00 front 1.00 | fired 0/0 wall 0.1s
+chi=32: svd absolute: 1-site 4.56e-12 2-site 1.29e-10 3-site 4.03e-10 far d>=3 1.12e-09 ZZ-OTOC d3 1.22e-09 infid 1.70e-11 p1 (=C) 4.56e-12 | dC behind rms 4.04e-12 (n=2) front 1.49e-11 (n=3)
+   spcop      ratio: 1-site 1.00 2-site 1.00 3-site 1.00 far d>=3 1.00 ZZ-OTOC d3 1.00 infid 1.00 p1 (=C) 1.00 | C behind 1.00 front 1.00 | fired 0/0 wall 0.1s
+   spcop_k1   ratio: 1-site 1.00 2-site 1.00 3-site 1.00 far d>=3 1.00 ZZ-OTOC d3 1.00 infid 1.00 p1 (=C) 1.00 | C behind 1.00 front 1.00 | fired 0/0 wall 0.1s
+   spcop_k12  ratio: 1-site 1.00 2-site 1.00 3-site 1.00 far d>=3 1.00 ZZ-OTOC d3 1.00 infid 1.00 p1 (=C) 1.00 | C behind 1.00 front 1.00 | fired 0/0 wall 0.1s
+   spcop_p3   ratio: 1-site 1.00 2-site 1.00 3-site 1.00 far d>=3 1.00 ZZ-OTOC d3 1.00 infid 1.00 p1 (=C) 1.00 | C behind 1.00 front 1.00 | fired 0/0 wall 0.1s
+
+--- t = 3.0 (supplementary) ---
+chi=4: svd absolute: 1-site 1.91e-02 2-site 9.64e-03 3-site 4.96e-03 far d>=3 1.21e-02 ZZ-OTOC d3 6.68e-02 infid 2.09e-01 p1 (=C) 1.91e-02 | dC behind rms 8.21e-02 (n=5) front 5.13e-02 (n=1)
+   spcop      ratio: 1-site 0.65 2-site 0.68 3-site 0.75 far d>=3 0.64 ZZ-OTOC d3 0.61 infid 1.18 p1 (=C) 0.65 | C behind 0.52 front 0.78 | fired 5/5 wall 4.4s
+   spcop_k1   ratio: 1-site 0.62 2-site 0.95 3-site 0.94 far d>=3 0.65 ZZ-OTOC d3 0.46 infid 1.35 p1 (=C) 0.62 | C behind 0.37 front 0.65 | fired 5/5 wall 5.0s
+   spcop_k12  ratio: 1-site 0.65 2-site 0.71 3-site 0.84 far d>=3 0.65 ZZ-OTOC d3 0.60 infid 1.24 p1 (=C) 0.65 | C behind 0.53 front 0.78 | fired 5/5 wall 4.8s
+   spcop_p3   ratio: 1-site 0.59 2-site 0.64 3-site 0.75 far d>=3 0.57 ZZ-OTOC d3 0.65 infid 1.56 p1 (=C) 0.59 | C behind 0.38 front 0.86 | fired 5/5 wall 13.8s
+chi=8: svd absolute: 1-site 2.75e-03 2-site 1.57e-03 3-site 9.41e-04 far d>=3 1.70e-03 ZZ-OTOC d3 1.07e-02 infid 2.73e-02 p1 (=C) 2.75e-03 | dC behind rms 1.01e-02 (n=5) front 1.13e-02 (n=1)
+   spcop      ratio: 1-site 0.86 2-site 0.84 3-site 0.90 far d>=3 0.89 ZZ-OTOC d3 1.06 infid 1.11 p1 (=C) 0.86 | C behind 0.73 front 1.02 | fired 4/4 wall 5.4s
+   spcop_k1   ratio: 1-site 0.68 2-site 0.86 3-site 1.03 far d>=3 0.78 ZZ-OTOC d3 0.78 infid 1.21 p1 (=C) 0.68 | C behind 0.41 front 0.89 | fired 4/4 wall 5.9s
+   spcop_k12  ratio: 1-site 0.78 2-site 0.80 3-site 1.02 far d>=3 0.83 ZZ-OTOC d3 0.97 infid 1.11 p1 (=C) 0.78 | C behind 0.58 front 0.99 | fired 4/4 wall 5.1s
+   spcop_p3   ratio: 1-site 0.77 2-site 0.77 3-site 0.83 far d>=3 0.81 ZZ-OTOC d3 0.97 infid 1.26 p1 (=C) 0.77 | C behind 0.57 front 0.99 | fired 4/4 wall 14.0s
+chi=16: svd absolute: 1-site 3.95e-05 2-site 2.84e-05 3-site 2.00e-05 far d>=3 3.01e-05 ZZ-OTOC d3 2.13e-04 infid 2.24e-04 p1 (=C) 3.95e-05 | dC behind rms 6.04e-05 (n=5) front 2.22e-04 (n=1)
+   spcop      ratio: 1-site 0.99 2-site 0.80 3-site 0.79 far d>=3 0.96 ZZ-OTOC d3 0.85 infid 1.01 p1 (=C) 0.99 | C behind 0.70 front 1.00 | fired 2/2 wall 4.3s
+   spcop_k1   ratio: 1-site 0.97 2-site 1.00 3-site 1.00 far d>=3 0.99 ZZ-OTOC d3 0.96 infid 1.00 p1 (=C) 0.97 | C behind 0.59 front 1.00 | fired 2/2 wall 4.2s
+   spcop_k12  ratio: 1-site 0.97 2-site 0.80 3-site 0.93 far d>=3 0.97 ZZ-OTOC d3 0.89 infid 1.00 p1 (=C) 0.97 | C behind 0.61 front 1.00 | fired 2/2 wall 4.6s
+   spcop_p3   ratio: 1-site 0.98 2-site 0.79 3-site 0.71 far d>=3 0.96 ZZ-OTOC d3 0.86 infid 1.01 p1 (=C) 0.98 | C behind 0.66 front 1.01 | fired 2/2 wall 11.1s
+chi=32: svd absolute: 1-site 3.22e-07 2-site 6.80e-07 3-site 6.54e-07 far d>=3 1.23e-06 ZZ-OTOC d3 5.11e-06 infid 1.71e-06 p1 (=C) 3.22e-07 | dC behind rms 3.93e-07 (n=5) front 1.85e-06 (n=1)
+   spcop      ratio: 1-site 1.14 2-site 0.41 3-site 0.56 far d>=3 1.03 ZZ-OTOC d3 1.11 infid 1.00 p1 (=C) 1.14 | C behind 1.50 front 1.00 | fired 1/1 wall 1.8s
+   spcop_k1   ratio: 1-site 0.98 2-site 1.00 3-site 1.00 far d>=3 1.00 ZZ-OTOC d3 0.99 infid 1.00 p1 (=C) 0.98 | C behind 0.73 front 1.00 | fired 1/1 wall 1.8s
+   spcop_k12  ratio: 1-site 1.04 2-site 0.41 3-site 0.88 far d>=3 0.99 ZZ-OTOC d3 0.95 infid 1.00 p1 (=C) 1.04 | C behind 0.94 front 1.00 | fired 1/1 wall 1.7s
+   spcop_p3   ratio: 1-site 1.04 2-site 0.31 3-site 0.40 far d>=3 1.05 ZZ-OTOC d3 0.97 infid 1.00 p1 (=C) 1.04 | C behind 1.15 front 1.00 | fired 1/1 wall 4.1s
+
+--- t = 4.0 (primary) ---
+chi=4: svd absolute: 1-site 4.80e-02 2-site 2.70e-02 3-site 1.36e-02 far d>=3 2.91e-02 ZZ-OTOC d3 1.26e-01 infid 5.12e-01 p1 (=C) 4.80e-02 | dC behind rms 1.13e-01 (n=6) front 9.60e-02 (n=2)
+   spcop      ratio: 1-site 0.52 2-site 0.49 3-site 0.54 far d>=3 0.47 ZZ-OTOC d3 0.62 infid 1.20 p1 (=C) 0.52 | C behind 0.55 front 0.74 | fired 7/7 wall 5.2s
+   spcop_k1   ratio: 1-site 0.43 2-site 0.46 3-site 0.52 far d>=3 0.40 ZZ-OTOC d3 0.58 infid 1.16 p1 (=C) 0.43 | C behind 0.45 front 0.63 | fired 7/7 wall 4.7s
+   spcop_k12  ratio: 1-site 0.51 2-site 0.47 3-site 0.53 far d>=3 0.46 ZZ-OTOC d3 0.60 infid 1.19 p1 (=C) 0.51 | C behind 0.63 front 0.69 | fired 7/7 wall 5.2s
+   spcop_p3   ratio: 1-site 0.34 2-site 0.37 3-site 0.43 far d>=3 0.28 ZZ-OTOC d3 0.41 infid 1.26 p1 (=C) 0.34 | C behind 0.17 front 0.75 | fired 7/7 wall 13.4s
+chi=8: svd absolute: 1-site 1.71e-02 2-site 9.75e-03 3-site 5.06e-03 far d>=3 9.38e-03 ZZ-OTOC d3 4.35e-02 infid 2.19e-01 p1 (=C) 1.71e-02 | dC behind rms 3.32e-02 (n=6) front 5.27e-02 (n=2)
+   spcop      ratio: 1-site 0.52 2-site 0.55 3-site 0.63 far d>=3 0.50 ZZ-OTOC d3 0.87 infid 1.14 p1 (=C) 0.52 | C behind 0.41 front 0.76 | fired 6/6 wall 5.5s
+   spcop_k1   ratio: 1-site 0.44 2-site 0.63 3-site 0.72 far d>=3 0.49 ZZ-OTOC d3 0.84 infid 1.16 p1 (=C) 0.44 | C behind 0.30 front 0.64 | fired 6/6 wall 5.7s
+   spcop_k12  ratio: 1-site 0.50 2-site 0.54 3-site 0.63 far d>=3 0.51 ZZ-OTOC d3 0.91 infid 1.15 p1 (=C) 0.50 | C behind 0.36 front 0.72 | fired 6/6 wall 6.0s
+   spcop_p3   ratio: 1-site 0.42 2-site 0.44 3-site 0.50 far d>=3 0.40 ZZ-OTOC d3 0.79 infid 1.27 p1 (=C) 0.42 | C behind 0.27 front 0.70 | fired 6/6 wall 14.2s
+chi=16: svd absolute: 1-site 3.40e-03 2-site 2.00e-03 3-site 1.07e-03 far d>=3 1.53e-03 ZZ-OTOC d3 9.03e-03 infid 2.87e-02 p1 (=C) 3.40e-03 | dC behind rms 6.20e-03 (n=6) front 1.48e-02 (n=2)
+   spcop      ratio: 1-site 0.93 2-site 0.91 3-site 0.92 far d>=3 0.91 ZZ-OTOC d3 0.95 infid 1.03 p1 (=C) 0.93 | C behind 0.86 front 0.98 | fired 4/4 wall 6.3s
+   spcop_k1   ratio: 1-site 0.72 2-site 0.85 3-site 0.86 far d>=3 0.81 ZZ-OTOC d3 0.84 infid 1.26 p1 (=C) 0.72 | C behind 0.56 front 0.82 | fired 4/4 wall 6.6s
+   spcop_k12  ratio: 1-site 0.91 2-site 0.90 3-site 0.92 far d>=3 0.89 ZZ-OTOC d3 0.94 infid 1.03 p1 (=C) 0.91 | C behind 0.82 front 0.97 | fired 4/4 wall 6.2s
+   spcop_p3   ratio: 1-site 0.77 2-site 0.76 3-site 0.77 far d>=3 0.78 ZZ-OTOC d3 0.82 infid 1.16 p1 (=C) 0.77 | C behind 0.47 front 0.90 | fired 4/4 wall 15.3s
+chi=32: svd absolute: 1-site 1.71e-04 2-site 1.01e-04 3-site 5.87e-05 far d>=3 8.04e-05 ZZ-OTOC d3 4.14e-04 infid 1.17e-03 p1 (=C) 1.71e-04 | dC behind rms 2.30e-04 (n=6) front 7.41e-04 (n=2)
+   spcop      ratio: 1-site 0.98 2-site 0.95 3-site 0.89 far d>=3 0.97 ZZ-OTOC d3 0.99 infid 1.01 p1 (=C) 0.98 | C behind 0.99 front 1.01 | fired 3/3 wall 6.3s
+   spcop_k1   ratio: 1-site 0.96 2-site 0.99 3-site 0.99 far d>=3 0.96 ZZ-OTOC d3 0.97 infid 1.00 p1 (=C) 0.96 | C behind 0.97 front 1.00 | fired 3/3 wall 6.0s
+   spcop_k12  ratio: 1-site 0.96 2-site 0.94 3-site 0.98 far d>=3 0.97 ZZ-OTOC d3 0.97 infid 1.00 p1 (=C) 0.96 | C behind 0.97 front 1.00 | fired 3/3 wall 6.6s
+   spcop_p3   ratio: 1-site 0.98 2-site 0.95 3-site 0.86 far d>=3 0.98 ZZ-OTOC d3 1.01 infid 1.02 p1 (=C) 0.98 | C behind 0.98 front 1.02 | fired 3/3 wall 19.2s
+
+--- t = 5.0 (supplementary) ---
+chi=4: svd absolute: 1-site 1.37e-01 2-site 7.65e-02 3-site 4.02e-02 far d>=3 7.58e-02 ZZ-OTOC d3 3.58e-01 infid 7.43e-01 p1 (=C) 1.37e-01 | dC behind rms 3.63e-01 (n=7) front 1.62e-01 (n=3)
+   spcop      ratio: 1-site 0.30 2-site 0.29 3-site 0.26 far d>=3 0.30 ZZ-OTOC d3 0.35 infid 1.21 p1 (=C) 0.30 | C behind 0.29 front 0.40 | fired 7/7 wall 5.4s
+   spcop_k1   ratio: 1-site 0.34 2-site 0.34 3-site 0.29 far d>=3 0.34 ZZ-OTOC d3 0.26 infid 1.21 p1 (=C) 0.34 | C behind 0.34 front 0.28 | fired 7/7 wall 4.8s
+   spcop_k12  ratio: 1-site 0.30 2-site 0.29 3-site 0.26 far d>=3 0.30 ZZ-OTOC d3 0.28 infid 1.20 p1 (=C) 0.30 | C behind 0.29 front 0.40 | fired 7/7 wall 4.8s
+   spcop_p3   ratio: 1-site 0.17 2-site 0.18 3-site 0.18 far d>=3 0.18 ZZ-OTOC d3 0.24 infid 1.23 p1 (=C) 0.17 | C behind 0.05 front 0.43 | fired 7/7 wall 12.5s
+chi=8: svd absolute: 1-site 5.46e-02 2-site 3.05e-02 3-site 1.56e-02 far d>=3 2.97e-02 ZZ-OTOC d3 1.40e-01 infid 5.05e-01 p1 (=C) 5.46e-02 | dC behind rms 1.48e-01 (n=7) front 8.93e-02 (n=3)
+   spcop      ratio: 1-site 0.42 2-site 0.43 3-site 0.40 far d>=3 0.40 ZZ-OTOC d3 0.41 infid 1.29 p1 (=C) 0.42 | C behind 0.32 front 0.81 | fired 7/7 wall 5.2s
+   spcop_k1   ratio: 1-site 0.35 2-site 0.47 3-site 0.45 far d>=3 0.34 ZZ-OTOC d3 0.32 infid 1.29 p1 (=C) 0.35 | C behind 0.22 front 0.66 | fired 7/7 wall 5.0s
+   spcop_k12  ratio: 1-site 0.42 2-site 0.45 3-site 0.43 far d>=3 0.40 ZZ-OTOC d3 0.37 infid 1.32 p1 (=C) 0.42 | C behind 0.29 front 0.83 | fired 7/7 wall 5.2s
+   spcop_p3   ratio: 1-site 0.31 2-site 0.30 3-site 0.26 far d>=3 0.29 ZZ-OTOC d3 0.33 infid 1.28 p1 (=C) 0.31 | C behind 0.12 front 0.73 | fired 7/7 wall 15.4s
+chi=16: svd absolute: 1-site 1.80e-02 2-site 1.02e-02 3-site 5.04e-03 far d>=3 8.41e-03 ZZ-OTOC d3 3.65e-02 infid 1.86e-01 p1 (=C) 1.80e-02 | dC behind rms 3.99e-02 (n=7) front 4.98e-02 (n=3)
+   spcop      ratio: 1-site 0.61 2-site 0.64 3-site 0.63 far d>=3 0.55 ZZ-OTOC d3 0.54 infid 1.18 p1 (=C) 0.61 | C behind 0.31 front 0.82 | fired 5/5 wall 6.9s
+   spcop_k1   ratio: 1-site 0.57 2-site 0.67 3-site 0.70 far d>=3 0.58 ZZ-OTOC d3 0.50 infid 1.29 p1 (=C) 0.57 | C behind 0.30 front 0.75 | fired 5/5 wall 6.6s
+   spcop_k12  ratio: 1-site 0.58 2-site 0.61 3-site 0.61 far d>=3 0.53 ZZ-OTOC d3 0.46 infid 1.23 p1 (=C) 0.58 | C behind 0.30 front 0.79 | fired 5/5 wall 6.7s
+   spcop_p3   ratio: 1-site 0.47 2-site 0.45 3-site 0.38 far d>=3 0.42 ZZ-OTOC d3 0.37 infid 1.28 p1 (=C) 0.47 | C behind 0.15 front 0.71 | fired 5/5 wall 20.0s
+chi=32: svd absolute: 1-site 3.80e-03 2-site 2.10e-03 3-site 9.83e-04 far d>=3 1.66e-03 ZZ-OTOC d3 6.81e-03 infid 3.37e-02 p1 (=C) 3.80e-03 | dC behind rms 6.87e-03 (n=7) front 1.27e-02 (n=3)
+   spcop      ratio: 1-site 0.94 2-site 0.95 3-site 0.94 far d>=3 0.90 ZZ-OTOC d3 0.89 infid 1.02 p1 (=C) 0.94 | C behind 0.79 front 1.01 | fired 5/5 wall 8.6s
+   spcop_k1   ratio: 1-site 0.86 2-site 0.93 3-site 0.94 far d>=3 0.86 ZZ-OTOC d3 0.86 infid 1.24 p1 (=C) 0.86 | C behind 0.52 front 0.98 | fired 5/5 wall 8.6s
+   spcop_k12  ratio: 1-site 0.94 2-site 0.94 3-site 0.95 far d>=3 0.90 ZZ-OTOC d3 0.90 infid 1.02 p1 (=C) 0.94 | C behind 0.77 front 1.00 | fired 5/5 wall 9.2s
+   spcop_p3   ratio: 1-site 0.84 2-site 0.84 3-site 0.82 far d>=3 0.77 ZZ-OTOC d3 0.71 infid 1.13 p1 (=C) 0.84 | C behind 0.54 front 0.97 | fired 5/5 wall 24.9s
+
+--- t = 6.0 (supplementary) ---
+chi=4: svd absolute: 1-site 2.04e-01 2-site 1.16e-01 3-site 6.06e-02 far d>=3 1.05e-01 ZZ-OTOC d3 5.18e-01 infid 8.22e-01 p1 (=C) 2.04e-01 | dC behind rms 5.18e-01 (n=8) front 3.09e-01 (n=2)
+   spcop      ratio: 1-site 0.34 2-site 0.29 3-site 0.25 far d>=3 0.31 ZZ-OTOC d3 0.23 infid 1.18 p1 (=C) 0.34 | C behind 0.30 front 0.33 | fired 7/7 wall 6.8s
+   spcop_k1   ratio: 1-site 0.35 2-site 0.34 3-site 0.32 far d>=3 0.32 ZZ-OTOC d3 0.35 infid 1.19 p1 (=C) 0.35 | C behind 0.33 front 0.42 | fired 7/7 wall 6.4s
+   spcop_k12  ratio: 1-site 0.32 2-site 0.29 3-site 0.27 far d>=3 0.30 ZZ-OTOC d3 0.27 infid 1.18 p1 (=C) 0.32 | C behind 0.29 front 0.31 | fired 7/7 wall 5.9s
+   spcop_p3   ratio: 1-site 0.15 2-site 0.12 3-site 0.12 far d>=3 0.13 ZZ-OTOC d3 0.15 infid 1.19 p1 (=C) 0.15 | C behind 0.15 front 0.34 | fired 7/7 wall 15.8s
+chi=8: svd absolute: 1-site 1.24e-01 2-site 7.02e-02 3-site 3.65e-02 far d>=3 6.11e-02 ZZ-OTOC d3 3.10e-01 infid 6.97e-01 p1 (=C) 1.24e-01 | dC behind rms 3.17e-01 (n=8) front 2.14e-01 (n=2)
+   spcop      ratio: 1-site 0.37 2-site 0.33 3-site 0.31 far d>=3 0.35 ZZ-OTOC d3 0.27 infid 1.24 p1 (=C) 0.37 | C behind 0.25 front 0.49 | fired 7/7 wall 7.4s
+   spcop_k1   ratio: 1-site 0.67 2-site 0.71 3-site 0.70 far d>=3 0.64 ZZ-OTOC d3 0.65 infid 1.18 p1 (=C) 0.67 | C behind 0.56 front 0.84 | fired 7/7 wall 7.8s
+   spcop_k12  ratio: 1-site 0.41 2-site 0.38 3-site 0.37 far d>=3 0.39 ZZ-OTOC d3 0.37 infid 1.24 p1 (=C) 0.41 | C behind 0.30 front 0.56 | fired 7/7 wall 6.4s
+   spcop_p3   ratio: 1-site 0.24 2-site 0.22 3-site 0.20 far d>=3 0.20 ZZ-OTOC d3 0.18 infid 1.25 p1 (=C) 0.24 | C behind 0.17 front 0.56 | fired 7/7 wall 17.9s
+chi=16: svd absolute: 1-site 5.54e-02 2-site 3.08e-02 3-site 1.56e-02 far d>=3 2.57e-02 ZZ-OTOC d3 1.33e-01 infid 4.47e-01 p1 (=C) 5.54e-02 | dC behind rms 1.37e-01 (n=8) front 1.37e-01 (n=2)
+   spcop      ratio: 1-site 0.60 2-site 0.60 3-site 0.58 far d>=3 0.53 ZZ-OTOC d3 0.49 infid 1.27 p1 (=C) 0.60 | C behind 0.47 front 0.90 | fired 5/5 wall 7.6s
+   spcop_k1   ratio: 1-site 0.72 2-site 0.80 3-site 0.81 far d>=3 0.71 ZZ-OTOC d3 0.68 infid 1.27 p1 (=C) 0.72 | C behind 0.55 front 0.97 | fired 5/5 wall 7.5s
+   spcop_k12  ratio: 1-site 0.62 2-site 0.62 3-site 0.60 far d>=3 0.56 ZZ-OTOC d3 0.50 infid 1.30 p1 (=C) 0.62 | C behind 0.47 front 0.92 | fired 5/5 wall 7.8s
+   spcop_p3   ratio: 1-site 0.37 2-site 0.32 3-site 0.28 far d>=3 0.32 ZZ-OTOC d3 0.23 infid 1.30 p1 (=C) 0.37 | C behind 0.23 front 0.69 | fired 5/5 wall 23.3s
+chi=32: svd absolute: 1-site 1.93e-02 2-site 1.03e-02 3-site 4.99e-03 far d>=3 8.40e-03 ZZ-OTOC d3 3.91e-02 infid 1.84e-01 p1 (=C) 1.93e-02 | dC behind rms 4.09e-02 (n=8) front 6.55e-02 (n=2)
+   spcop      ratio: 1-site 0.81 2-site 0.80 3-site 0.79 far d>=3 0.76 ZZ-OTOC d3 0.73 infid 1.12 p1 (=C) 0.81 | C behind 0.65 front 0.98 | fired 5/5 wall 11.0s
+   spcop_k1   ratio: 1-site 0.79 2-site 0.87 3-site 0.91 far d>=3 0.82 ZZ-OTOC d3 0.80 infid 1.31 p1 (=C) 0.79 | C behind 0.58 front 0.98 | fired 5/5 wall 10.4s
+   spcop_k12  ratio: 1-site 0.79 2-site 0.79 3-site 0.78 far d>=3 0.75 ZZ-OTOC d3 0.70 infid 1.17 p1 (=C) 0.79 | C behind 0.61 front 0.97 | fired 5/5 wall 6.5s
+   spcop_p3   ratio: 1-site 0.57 2-site 0.51 3-site 0.47 far d>=3 0.53 ZZ-OTOC d3 0.43 infid 1.26 p1 (=C) 0.57 | C behind 0.34 front 0.83 | fired 5/5 wall 12.9s
+
+=== pre-registered reading (spcop vs svd) ===
+Continue: ratio on 1-site AND 2-site marginals <= 0.5 at chi = 8 or 16, infidelity ratio <= 1.2, far-marginal (d>=3) ratio <= 1.5.
+Kill: ratio >= 0.8 at all chi.   Ambiguous: 0.5 - 0.8.
+-- t = 2.0 --
+chi= 4: r1=0.72 r2=0.76 r3=0.89 infid=1.16 far=0.69   -> worst-of(r1,r2)=0.76; meets continue-criteria: False
+chi= 8: r1=1.02 r2=0.66 r3=0.72 infid=1.05 far=1.08   -> worst-of(r1,r2)=1.02; meets continue-criteria: False
+chi=16: r1=1.00 r2=1.00 r3=1.00 infid=1.00 far=1.00   -> worst-of(r1,r2)=1.00; meets continue-criteria: False
+chi=32: r1=1.00 r2=1.00 r3=1.00 infid=1.00 far=1.00   -> worst-of(r1,r2)=1.00; meets continue-criteria: False
+   min over chi of worst-of(r1,r2): 0.76;  all chi >= 0.8: False
+-- t = 4.0 --
+chi= 4: r1=0.52 r2=0.49 r3=0.54 infid=1.20 far=0.47   -> worst-of(r1,r2)=0.52; meets continue-criteria: False
+chi= 8: r1=0.52 r2=0.55 r3=0.63 infid=1.14 far=0.50   -> worst-of(r1,r2)=0.55; meets continue-criteria: False
+chi=16: r1=0.93 r2=0.91 r3=0.92 infid=1.03 far=0.91   -> worst-of(r1,r2)=0.93; meets continue-criteria: False
+chi=32: r1=0.98 r2=0.95 r3=0.89 infid=1.01 far=0.97   -> worst-of(r1,r2)=0.98; meets continue-criteria: False
+   min over chi of worst-of(r1,r2): 0.52;  all chi >= 0.8: False

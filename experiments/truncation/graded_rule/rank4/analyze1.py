@@ -9,7 +9,11 @@ ARMS = ['svd_raw', 'svd_renorm', 'dmt_I', 'dmt_neel']
 
 
 def load(path):
-    return json.load(open(path))
+    recs = json.load(open(path))
+    extra = Path(str(path).replace('.json', '_b.json'))
+    if extra.exists() and extra != Path(path):
+        recs = recs + json.load(open(extra))
+    return recs
 
 
 def mps_at_params(recs, params):
@@ -127,3 +131,28 @@ if __name__ == '__main__':
         t, _ = analyze(p)
         texts.append(t)
         print()
+
+
+def horizon_table(path, horizons=(2.0, 3.0, 4.0, 5.0, 6.0), chis=None):
+    """Delta_max restricted to t <= T' (causal: identical to a shorter run).  Returns markdown."""
+    recs = load(path)
+    dt = recs[0]['dt']
+    mpo = {(r['arm'], r['chi']): r for r in recs if r['kind'] == 'mpo'}
+    mps = {r['chi']: r for r in recs if r['kind'] == 'mps'}
+    chis = chis or sorted({c for (_, c) in mpo})
+    out = []
+    out.append(f"#### {recs[0]['model']}: Delta_max restricted to t <= T' (same runs, causal)\n")
+    out.append("| T' | chi | SVD-raw | SVD-renorm | DMT-I | DMT-s0 | SVD-renorm/DMT-s0 | DMT-I/DMT-s0 | MPS(nominal chi_s) | best MPO / MPS |")
+    out.append('|---|---|---|---|---|---|---|---|---|---|')
+    for Tp in horizons:
+        n = int(round(Tp / dt))
+        for c in chis:
+            if not all((a, c) in mpo for a in ARMS):
+                continue
+            d = {a: float(np.max(np.array(mpo[(a, c)]['err'])[:n + 1])) for a in ARMS}
+            cs = min(mps, key=lambda k: abs(k - np.sqrt(2) * c))
+            dm = float(np.max(np.array(mps[cs]['err'])[:n + 1]))
+            best = min(d.values())
+            out.append(f"| {Tp:g} | {c} | {d['svd_raw']:.1e} | {d['svd_renorm']:.1e} | {d['dmt_I']:.1e} | {d['dmt_neel']:.1e} | "
+                       f"{d['svd_renorm'] / d['dmt_neel']:.1f} | {d['dmt_I'] / d['dmt_neel']:.1f} | {dm:.1e} (chi_s={cs}) | {best / max(dm, 1e-16):.1f} |")
+    return '\n'.join(out)

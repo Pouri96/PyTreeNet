@@ -1,6 +1,7 @@
 """Test-1 driver.  python bench.py MODEL N T dt OUT.json NPROC SPEC [SPEC ...]
 SPEC:  mpo:ARM:CHI      ARM in svd_raw, svd_renorm, dmt_I, dmt_neel
        pp:EPS[:XCAP]    Pauli propagation, coefficient threshold EPS (optional X/Y-count cap)
+       ppf:M[:EPS]      pi_m^{sigma0} folding to M-body after every gate (optional EPS)
        mps:CHI          Schroedinger MPS-TEBD
 Error metric: Delta(n) = |<Z_i0>_approx(n dt) - <Z_i0>_dense(n dt)|, Delta_max over n = 0..T/dt, Delta(T)."""
 import os
@@ -20,10 +21,10 @@ import refs
 def run_job(args):
     model, N, T, dt, spec = args
     nsteps = int(round(T / dt))
-    i0 = N // 2 - 1
+    i0 = int(os.environ.get('RANK4_I0', N // 2 - 1))
     ex = refs.dense_traj(model, N, nsteps, dt)[:, i0, 2]
     p = spec.split(':')
-    rec = dict(model=model, N=N, T=T, dt=dt, spec=spec, kind=p[0])
+    rec = dict(model=model, N=N, T=T, dt=dt, spec=spec, kind=p[0], i0=i0)
     if p[0] == 'mpo':
         arm, chi = p[1], int(p[2])
         cutname = {'svd_raw': 'svd_raw', 'svd_renorm': 'svd_renorm', 'dmt_I': 'dmt', 'dmt_neel': 'dmt'}[arm]
@@ -41,6 +42,14 @@ def run_job(args):
         err = np.abs(r['val'] - ex)
         rec.update(arm='pp' if xcap is None else f'xspd{xcap}', eps=eps, xcap=xcap, params=r['params'],
                    peak_strings=r['peak_strings'], wall=r['wall'], truncated=r['truncated'], last_n=r['last_n'])
+        rec['val'] = r['val'].tolist()
+    elif p[0] == 'ppf':
+        m = int(p[1])
+        eps = float(p[2]) if len(p) > 2 else 0.0
+        r = B.pp_traj(model, N, nsteps, dt, i0, 3, eps, fold=m)
+        err = np.abs(r['val'] - ex)
+        rec.update(arm=f'fold{m}', eps=eps, fold=m, params=r['params'], peak_strings=r['peak_strings'], wall=r['wall'],
+                   truncated=r['truncated'], last_n=r['last_n'])
         rec['val'] = r['val'].tolist()
     elif p[0] == 'mps':
         chi = int(p[1])

@@ -1,0 +1,14 @@
+{
+ "ising": {
+  "vs_pauli_prop": 1.7763568394002505e-15,
+  "vs_dense_state": 1.4988010832439613e-15
+ },
+ "isingT": {
+  "vs_pauli_prop": 2.7755575615628914e-16,
+  "vs_dense_state": 1.2212453270876722e-15
+ },
+ "heis": {
+  "vs_pauli_prop": 1.609823385706477e-15,
+  "vs_dense_state": 2.55351295663786e-15
+ }
+}

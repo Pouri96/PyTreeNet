@@ -1,0 +1,187 @@
+{
+ "0.1 dense Lindblad(gamma=0) == |psi><psi|  N=8 T=2.0": {
+  "ok": true,
+  "maxabs": 1.8050973453552271e-16
+ },
+ "0.1 dense Lindblad(gamma=0) == |psi><psi|  N=8 T=4.0": {
+  "ok": true,
+  "maxabs": 1.9845721796578468e-16
+ },
+ "0.2a dephasing channel == exp(L tau) for L(rho)=gamma(Z rho Z - rho)": {
+  "ok": true,
+  "maxabs": 3.1031676915590914e-17
+ },
+ "0.2b Strang operation list converges to exact Lindblad (error ~ dt^p, p>=1.8 expected)": {
+  "ok": true,
+  "errs": [
+   0.0030189405254257007,
+   0.0007465066746122351,
+   0.00018613313663962128
+  ],
+  "order": 2.003820243461032
+ },
+ "0.3 dense Lindblad gamma=0.01: trace 1, Hermitian, PSD": {
+  "ok": true,
+  "trace": 1.0000000000000073,
+  "herm": 8.407706481618461e-17,
+  "lam_min": 9.946645953252204e-08,
+  "purity": 0.6044887047670846
+ },
+ "0.3 dense Lindblad gamma=0.1: trace 1, Hermitian, PSD": {
+  "ok": true,
+  "trace": 0.9999999999999832,
+  "herm": 2.083474391183281e-17,
+  "lam_min": 1.0474298593018878e-05,
+  "purity": 0.02836572667682462
+ },
+ "0.4a exact LPDO == dense Lindblad  N=6 gamma=0.0": {
+  "ok": true,
+  "maxabs": 3.632164660233972e-16,
+  "Ks": [
+   1,
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "bonds": [
+   2,
+   4,
+   6,
+   4,
+   2
+  ]
+ },
+ "0.4a exact LPDO == dense Lindblad  N=6 gamma=0.1": {
+  "ok": true,
+  "maxabs": 1.887379279454227e-15,
+  "Ks": [
+   8,
+   8,
+   8,
+   8,
+   8,
+   8
+  ],
+  "bonds": [
+   8,
+   8,
+   8,
+   8,
+   8
+  ]
+ },
+ "0.4b LPDO(chi=inf,kappa=1, centre-gauged) == dense global Kraus truncation  N=6 gamma=0.1": {
+  "ok": true,
+  "maxabs": 4.3570023770087404e-14,
+  "kraus_disc_mps": 0.08873700354402296,
+  "kraus_disc_dense": 0.08873700354402297,
+  "Ks": [
+   1,
+   1,
+   1,
+   1,
+   1,
+   1
+  ]
+ },
+ "0.4b LPDO(chi=inf,kappa=2, centre-gauged) == dense global Kraus truncation  N=6 gamma=0.1": {
+  "ok": true,
+  "maxabs": 4.7934449625000895e-15,
+  "kraus_disc_mps": 0.0007179037928249039,
+  "kraus_disc_dense": 0.0007179037928249131,
+  "Ks": [
+   2,
+   2,
+   2,
+   2,
+   2,
+   2
+  ]
+ },
+ "0.4b LPDO(chi=inf,kappa=3, centre-gauged) == dense global Kraus truncation  N=6 gamma=0.1": {
+  "ok": true,
+  "maxabs": 7.395597637137062e-15,
+  "kraus_disc_mps": 1.6565983951676777e-05,
+  "kraus_disc_dense": 1.6565983951660053e-05,
+  "Ks": [
+   3,
+   3,
+   3,
+   3,
+   3,
+   3
+  ]
+ },
+ "0.5 gamma=0 LPDO-SVD == MPS-SVD  N=8 T=4.0 chi=6": {
+  "ok": true,
+  "bitwise": true,
+  "max_tensor_diff": 0.0,
+  "state_diff": 0.0
+ },
+ "0.5 gamma=0 LPDO-SVD == MPS-SVD  N=8 T=4.0 chi=8": {
+  "ok": true,
+  "bitwise": true,
+  "max_tensor_diff": 0.0,
+  "state_diff": 0.0
+ },
+ "0.5 gamma=0 LPDO-SVD == MPS-SVD  N=8 T=4.0 chi=12": {
+  "ok": true,
+  "bitwise": true,
+  "max_tensor_diff": 0.0,
+  "state_diff": 0.0
+ },
+ "0.6 gate log (tail, B_res, cost, b) vs SPCFast.gate_log  N=8 chi=6 a=2": {
+  "ok": true,
+  "n_spcf": 147,
+  "n_mine": 147,
+  "max_rel_B": 2.3651335245730076e-12,
+  "max_rel_tail": 0.0,
+  "max_rel_cost": 0.0
+ },
+ "0.6 gate log (tail, B_res, cost, b) vs SPCFast.gate_log  N=8 chi=6 a=1": {
+  "ok": true,
+  "n_spcf": 147,
+  "n_mine": 147,
+  "max_rel_B": 3.6715222547043645e-12,
+  "max_rel_tail": 0.0,
+  "max_rel_cost": 0.0
+ },
+ "0.6 gate log (tail, B_res, cost, b) vs SPCFast.gate_log  N=8 chi=8 a=2": {
+  "ok": true,
+  "n_spcf": 39,
+  "n_mine": 39,
+  "max_rel_B": 2.715697817694278e-12,
+  "max_rel_tail": 0.0,
+  "max_rel_cost": 0.0
+ },
+ "0.6 gate log (tail, B_res, cost, b) vs SPCFast.gate_log  N=8 chi=8 a=1": {
+  "ok": true,
+  "n_spcf": 39,
+  "n_mine": 39,
+  "max_rel_B": 4.828203037715633e-13,
+  "max_rel_tail": 0.0,
+  "max_rel_cost": 0.0
+ },
+ "0.7 region rho (Kraus traced, Gram form) == partial trace of dense rho  gamma=0.1 kappa=4 chi=8 a=2": {
+  "ok": true,
+  "worst_rel": 7.0622326459378585e-15,
+  "n": 168
+ },
+ "0.7 region rho (Kraus traced, Gram form) == partial trace of dense rho  gamma=0.1 kappa=4 chi=8 a=1": {
+  "ok": true,
+  "worst_rel": 5.610125910877569e-15,
+  "n": 168
+ },
+ "0.7 region rho (Kraus traced, Gram form) == partial trace of dense rho  gamma=0.03 kappa=3 chi=6 a=2": {
+  "ok": true,
+  "worst_rel": 3.729501618740341e-15,
+  "n": 168
+ },
+ "0.8 LPDO rho: trace 1, PSD (lam_min >= -1e-14), Hermitian": {
+  "ok": true,
+  "trace": 0.9999999999999988,
+  "lam_min": 1.2201664937593827e-06
+ }
+}

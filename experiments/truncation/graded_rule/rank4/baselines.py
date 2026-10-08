@@ -27,6 +27,44 @@ def _nxy(keys):
     return np.bitwise_count((keys ^ (keys >> 1)) & _XYMASK)
 
 
+def fold_strings(keys, coef, m, N, v):
+    """pi_m^{sigma0} (Perez-Wojtowicz-Plenio 2609.12840 Eq. 4) for a product reference with single-site <Z> = v[i,3]=+-1,
+    <X>=<Y>=0 (the Neel state): a string with weight > m is replaced by
+        sum_{U subset of its Z-sites, |U| <= m - n_xy}  c * prod_{i in Z-sites \\ U} mu_i * S(n_rest, K) * (XY part x Z_U),
+    S = sum_{j=0}^{K} (-1)^j C(n_rest, j), K = m - n_xy - |U|, n_rest = |Zs| - |U|.  Strings with n_xy > m are dropped.
+    Weight-<=m strings are fixed points.  Preserves <sigma0|.|sigma0> exactly."""
+    import itertools
+    from scipy.special import comb
+    nz = (keys | (keys >> 1)) & _XYMASK
+    heavy = np.bitwise_count(nz) > m
+    if not heavy.any():
+        return keys, coef
+    kl, cl = keys[~heavy], coef[~heavy]
+    kh, ch = keys[heavy], coef[heavy]
+    xy = (kh ^ (kh >> 1)) & _XYMASK
+    zz = (kh & (kh >> 1)) & _XYMASK
+    nxy = np.bitwise_count(xy).astype(np.int64)
+    nzs = np.bitwise_count(zz).astype(np.int64)
+    ok = nxy <= m
+    kh, ch, xy, zz, nxy, nzs = kh[ok], ch[ok], xy[ok], zz[ok], nxy[ok], nzs[ok]
+    kx = kh & (xy | (xy << 1))
+    oddmask = np.int64(sum(1 << (2 * i) for i in range(N) if v[i, 3] < 0))
+    outk, outc = [kl], [cl]
+    for k in range(0, m + 1):
+        for sites in itertools.combinations(range(N), k):
+            U = np.int64(sum(1 << (2 * i) for i in sites))
+            sel = (nxy + k <= m) & ((zz & U) == U)
+            if not sel.any():
+                continue
+            n_rest = nzs[sel] - k
+            K = m - nxy[sel] - k
+            S = np.where(n_rest == 0, 1.0, ((-1.0) ** K) * comb(np.maximum(n_rest - 1, 0), K))
+            sign = 1.0 - 2.0 * (np.bitwise_count((zz[sel] & ~U) & oddmask) & 1)
+            outk.append(kx[sel] | U | (U << 1))
+            outc.append(ch[sel] * sign * S)
+    return np.concatenate(outk), np.concatenate(outc)
+
+
 def _eval(keys, coef, v):
     """sum_P c_P prod_i v_i[p_i]."""
     N = v.shape[0]
@@ -73,6 +111,8 @@ def pp_traj(model, N, nsteps, dt, i0, pauli, eps, xcap=None, fold=None, cap=3_00
                     outk.append(nk)
                     outc.append(nc)
             nk, nc = np.concatenate(outk), np.concatenate(outc)
+            if fold is not None:
+                nk, nc = fold_strings(nk, nc, fold, N, v)
             uk, inv = np.unique(nk, return_inverse=True)
             uc = np.bincount(inv, weights=nc, minlength=len(uk))
             keep = np.abs(uc) >= eps

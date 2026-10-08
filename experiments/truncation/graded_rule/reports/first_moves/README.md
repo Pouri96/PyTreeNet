@@ -1,0 +1,71 @@
+# First moves for the cut-local truncation (spcf) application directions
+
+This folder holds the second-pass investigation of the directions ranked in
+`../Cut local truncation applications.md`. Rank 3 (quantum trajectories) is out of scope by request.
+
+The first pass rested on abstracts only. This pass used the paper-search MCP server, which reached full texts.
+One agent per direction did four things:
+- re-checked the report's claims against the papers;
+- searched for prior art;
+- named the code entry points in this repo;
+- planned a first move and 1-3 cheap tests, with success and kill criteria fixed before any run.
+
+No benchmarks were run in the planning step. Each direction's first tests are now being executed, and the results go to `<direction>_results.md` in this folder.
+
+## Verdicts at a glance
+
+| Direction | Notes | Verdict | What changed versus the report | First move | Decisive first test |
+|---|---|---|---|---|---|
+| Rank 1: OTOC and operator fronts | `rank1_otoc.md` | conditional | SVD-MPO is already exact at and ahead of the front (χ = 4 matches χ = 32 for C ≲ 0.1), so any gain lies behind the front. The "halting" failure in 1901.05793 may be lost norm on an unrenormalized MPO. The targets are diagonal Pauli-label marginals, so a d = 4 port is cheap. Time splitting (2202.07060) is a baseline the report missed | `rank1/op_tebd.py`, `spcop.py` (diagonal-target tilt) | Does renormalized SVD still err behind the front (rms ΔC ≥ 0.02)? If not, kill |
+| Rank 2: purification at finite T | `rank2_purification.md` | conditional | The bar is SVD on a backward-gauge purification, which DMT's own paper finds about as good as DMT. At high T there may be nothing to repair. DMT's conclusion already proposes "controlled-metric truncation" and must be cited. Wrong ID: KBM is 1111.4508 | `rank2/spcfpur.py` (d = 4 site+ancilla), driver with a 4^N reference | μ scan from pure to mixed: ≥ 2x on rdm2 at μ ≤ 1 against SVD in its best gauge |
+| Rank 4: reference-state MPO | `rank4_refstate.md` | conditional (cheap; not really spcf) | Exact as "DMT with a swapped covector", so no tilt is needed. The closest prior art is 2609.12840 (Plenio group, Pauli-propagation twin). Wrong ID: xSPD is 2409.03097, not 2506.13241 | `rank4/heis_mpo.py` with SVD, DMT-I and DMT-σ0 | DMT-σ0 ≥ 3x better than both SVD and DMT-I on ⟨Néel\|Z(t)\|Néel⟩; also compared with MPS-TEBD at matched memory |
+| Rank 5: multi-target DMRG | `rank5_dmrg.md` | conditional, leaning weak | Truncation only picks a basis; targets are re-solved afterwards, so a gain may wash out. A tilt may only rediscover better target weights. The "unpredictably" quote is not in either cited paper. Best sub-case: time-step-targeting tDMRG | `rank5/mt_cut.py`, a dense single-cut harness | A1: beats the oracle-best weight by ≥ 1.5x; A2: keeps ≥ 50% of the gain after re-solving |
+| Rank 6: noisy/LPDO | `rank6_noisy.md` | conditional, weak standalone | The LPDO pain points are Kraus-dimension growth and the fidelity collapse at depth ≈ 0.17/ε, not the bond cut. The local-positivity niche is covered by DMT. "MPDO" in Cheng et al. means LPDO | LPDO-TEBD driver plus an audit with no tilt | Does SVD's repairable residual survive γ = 0.01? |
+| Rank 7: 1D benchmarking | `rank7_benchmarking.md` | weak to conditional | A 2.5-5x error drop converts to only r ≈ 1.6 in χ. Memory saving is about 2.5-3x; wall-clock is 3-9x worse today. The D-Wave quote is from 2403.00910. The verification consumers use fidelity-based extrapolation, which spcf decouples from local error | existing `pareto_spcf.py`, then `rank7/ladder_t.py` | T2: does spcf beat SVD plus free post-processing (F-rescaling, log F and 1/χ extrapolation)? |
+| Ranks 8 and 9: chemistry and post-hoc compression | `rank8_9_chemistry_compression.md` | weak (8 as written, 9); conditional (8 reformulated) | NEVPT2 barely depends on M′. The real low-M damage is false intruder states, a global effect. N-representability is no advantage, since SVD has it too. Rescue: block-renormalized cross-cut targets | `rank8_9/compress_bench.py` | T0: what share of the energy-weighted RDM error lies in the window? Below 25%: kill the window version |
+| Rank 10: infinite-T transport | `rank10_transport.md` | weak as an application, useful control | Targets are linear, so the right tool is a closed-form window-weighted SVD (wsvd), not a GN tilt. One niche: span-4/5 strings that DMT ℓ = 3 ignores | `rank10/` wsvd, DMT ℓ = 3/5 and rTEBD arms | Single cut: wsvd ≥ 2x better on span-4/5 than DMT ℓ = 3 at equal span ≤ 3 error |
+| Cross-cutting: whitening and novelty | `crosscut_whitening_novelty.md` | novelty resolved; whitening conditional | Paeckel [73] is Stoudenmire's fidelity note and [74] is DMT, so there is no threat. The review's Sec. 9 suggests the idea, so cite it. 1-2x SVD cost is unreachable with region-based metrics; only a target-free core metric could get there | `whiten/whiten_probe.py`, `SPCWhite` | T1: does the oracle Kronecker GN step keep ≥ 60% of the exact GN drop? Below 35%: kill the closed form |
+
+## Findings that cut across directions
+
+1. **The core novelty claim survives full-text reading.** No pure-state MPS truncation that targets local RDMs was found. The Paeckel [73]/[74] threat is resolved. Two framing obligations remain:
+   - cite DMT's "controlled-metric truncation" remark (1707.01506, Discussion) as the origin of locality-weighted truncation;
+   - cite Paeckel Sec. 9 as an anticipated direction.
+2. **The linear-versus-quadratic dividing line holds, and it sharpens.**
+   - Where targets are linear (ranks 4 and 10, and rank 2 at high T in the backward gauge), the right object is a closed-form construction: a DMT reserve, a swapped covector, or a window-whitened SVD. A Gauss-Newton tilt is the wrong tool there.
+   - spcf's tilt is native only where targets are quadratic (ranks 1, 2, 5 and 6).
+3. **Baselines are stronger than the report assumed.** Each direction now has to beat a specific baseline:
+   - rank 1: renormalized SVD and time splitting;
+   - rank 2: SVD in the backward gauge;
+   - rank 4: Schrödinger MPS-TEBD at matched memory;
+   - rank 5: an oracle weight scan;
+   - rank 6: DMT on a plain MPO;
+   - rank 7: post-processed SVD.
+
+   Every first test is designed against that stronger baseline.
+4. **Cost is the binding constraint.**
+   - The χ reduction at equal error is r ≈ 1.6 (rank 7), so wall-clock only pays if the per-cut overhead drops below about 4x.
+   - The whitening study puts the floor at about 5x for any metric that needs the region state.
+   - Getting to about 2x needs a target-free core metric. That is the deciding open question for any wall-clock claim.
+5. **Report corrections to carry into any write-up:**
+   - KBM is 1111.4508, not 1205.3756.
+   - xSPD is 2409.03097, not 2506.13241.
+   - 0706.2480 is about TFIM, not XXZ.
+   - The D-Wave quote is from 2403.00910, not 2503.05693.
+   - The multi-target "unpredictably" quote is unattributable.
+   - DMT χ_preserve = 2^ℓ (8 for ℓ = 3), counted inside the cap.
+   - DMT positivity is only ameliorated, not guaranteed.
+   - DMT's Hamiltonian is the repo's `ising` model divided by 4.
+6. **Environment notes.**
+   - `dmt_baseline.py` cannot run in this environment (`gcg` and `pytreenet.special_ttn.pauli` are missing), so ranks 2, 4, 6 and 10 need a standalone numpy DMT.
+   - scipy was missing and has been installed.
+   - In the paper-search server, `read_arxiv_paper` worked for every ID tried, while `search_semantic` and `search_openalex` always returned empty results. Google Scholar search was the working discovery channel.
+
+## Suggested order
+
+The first tests are cheap, and each comes with its own kill criterion. Three runs carry the most weight:
+- **Whitening T1** decides whether any wall-clock claim is possible.
+- **Rank 1 Test 1** decides whether the OTOC direction has anything to fix.
+- **Rank 2 Test 1** decides whether purifications have a usable error window.
+
+Ranks 4 and 10 test the linear-target constructions. Ranks 5, 6, 7 and 8/9 are lower-priority probes, and each can be dropped on its first test.
