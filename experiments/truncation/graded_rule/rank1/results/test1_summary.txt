@@ -1,0 +1,49 @@
+=== ising, N=10, T=6.0, dt=0.1 ===
+exact C_Z: max over x,t = 1.642; final-time C_Z(x) = 0.96 0.88 0.90 0.84 0.81 0.78 0.67 0.62 0.46 0.26
+rw:1.6  chi=  4 | dC_Z rms ahead 7.3e-04 front 8.1e-02 behind 1.967e-01 (max 0.513, mean -0.112) | dw rms behind 1.237e-01 | lag0.1 max 0.519 lag0.5 max 1.532 (cens 2) | infid 9.558e-01 | dp1(T) 1.33e-01
+rw:1.6  chi=  8 | dC_Z rms ahead 8.3e-05 front 8.2e-03 behind 6.417e-02 (max 0.207, mean -0.032) | dw rms behind 3.680e-02 | lag0.1 max 0.006 lag0.5 max 0.171 (cens 0) | infid 9.260e-01 | dp1(T) 4.26e-02
+rw:1.6  chi= 16 | dC_Z rms ahead 1.8e-05 front 7.4e-03 behind 2.812e-02 (max 0.086, mean -0.015) | dw rms behind 1.406e-02 | lag0.1 max 0.022 lag0.5 max 0.079 (cens 0) | infid 7.481e-01 | dp1(T) 1.99e-02
+rw:1.6  chi= 32 | dC_Z rms ahead 4.9e-05 front 1.5e-03 behind 7.333e-03 (max 0.036, mean -0.004) | dw rms behind 4.748e-03 | lag0.1 max 0.000 lag0.5 max 0.011 (cens 0) | infid 4.128e-01 | dp1(T) 7.74e-03
+svd     chi=  4 | dC_Z rms ahead 5.0e-04 front 4.5e-02 behind 1.983e-01 (max 0.470, mean -0.082) | dw rms behind 1.218e-01 | lag0.1 max 0.228 lag0.5 max 1.532 (cens 2) | infid 9.665e-01 | dp1(T) 1.19e-01
+svd     chi=  8 | dC_Z rms ahead 2.5e-04 front 2.0e-02 behind 6.699e-02 (max 0.177, mean -0.040) | dw rms behind 4.085e-02 | lag0.1 max 0.116 lag0.5 max 0.210 (cens 0) | infid 9.451e-01 | dp1(T) 4.79e-02
+svd     chi= 16 | dC_Z rms ahead 1.2e-04 front 9.5e-03 behind 2.874e-02 (max 0.110, mean -0.015) | dw rms behind 1.481e-02 | lag0.1 max 0.064 lag0.5 max 0.060 (cens 0) | infid 7.500e-01 | dp1(T) 2.06e-02
+svd     chi= 32 | dC_Z rms ahead 2.9e-05 front 3.4e-03 behind 7.364e-03 (max 0.041, mean -0.003) | dw rms behind 4.563e-03 | lag0.1 max 0.024 lag0.5 max 0.013 (cens 0) | infid 3.623e-01 | dp1(T) 7.64e-03
+svdraw  chi=  4 | dC_Z rms ahead 6.3e-04 front 8.2e-02 behind 2.871e-01 (max 0.596, mean -0.217) | dw rms behind 2.165e-01 | lag0.1 max 0.519 lag0.5 max 1.532 (cens 2) | infid nan | dp1(T) 1.21e-01
+svdraw  chi=  8 | dC_Z rms ahead 3.1e-04 front 4.6e-02 behind 1.512e-01 (max 0.345, mean -0.113) | dw rms behind 1.125e-01 | lag0.1 max 0.253 lag0.5 max 0.724 (cens 1) | infid nan | dp1(T) 7.71e-02
+svdraw  chi= 16 | dC_Z rms ahead 1.3e-04 front 2.0e-02 behind 6.462e-02 (max 0.189, mean -0.040) | dw rms behind 4.406e-02 | lag0.1 max 0.108 lag0.5 max 0.279 (cens 0) | infid nan | dp1(T) 3.59e-02
+svdraw  chi= 32 | dC_Z rms ahead 3.1e-05 front 6.8e-03 behind 1.834e-02 (max 0.078, mean -0.010) | dw rms behind 1.311e-02 | lag0.1 max 0.033 lag0.5 max 0.038 (cens 0) | infid nan | dp1(T) 1.28e-02
+
+-- ratio of per-cut span-2 residual to final one-site marginal error (svd arm) --
+chi=  4: per-cut span-2 rms (last 5 steps) 2.918e-04  rms dp1(T) 1.192e-01  ratio 0.0024   [all-cuts span-2 rms 2.61e-04, n cuts 522]
+chi=  8: per-cut span-2 rms (last 5 steps) 1.640e-04  rms dp1(T) 4.791e-02  ratio 0.0034   [all-cuts span-2 rms 1.40e-04, n cuts 448]
+chi= 16: per-cut span-2 rms (last 5 steps) 7.139e-05  rms dp1(T) 2.062e-02  ratio 0.0035   [all-cuts span-2 rms 6.27e-05, n cuts 274]
+chi= 32: per-cut span-2 rms (last 5 steps) 4.062e-05  rms dp1(T) 7.645e-03  ratio 0.0053   [all-cuts span-2 rms 3.07e-05, n cuts 217]
+-- svdraw: cumulative kept weight (norm^2 of the unrenormalised operator) at T --
+chi=  4: norm^2(T) = 0.5750
+chi=  8: norm^2(T) = 0.7197
+chi= 16: norm^2(T) = 0.8694
+chi= 32: norm^2(T) = 0.9542
+-- rw:1.6 minus svd on C_Z behind the front (positive = rw worse) --
+chi=  4: behind rms svd 1.983e-01 rw 1.967e-01  ratio rw/svd 0.99;  front rms svd 4.516e-02 rw 8.072e-02
+chi=  8: behind rms svd 6.699e-02 rw 6.417e-02  ratio rw/svd 0.96;  front rms svd 1.969e-02 rw 8.223e-03
+chi= 16: behind rms svd 2.874e-02 rw 2.812e-02  ratio rw/svd 0.98;  front rms svd 9.515e-03 rw 7.372e-03
+chi= 32: behind rms svd 7.364e-03 rw 7.333e-03  ratio rw/svd 1.00;  front rms svd 3.383e-03 rw 1.466e-03
+
+=== tfim, N=10, T=6.0, dt=0.1 ===
+exact C_Z: max over x,t = 2.000; final-time C_Z(x) = 1.96 1.92 1.90 1.83 1.82 1.75 1.63 1.55 1.39 1.25
+rw:1.6  chi=  2 | dC_Z rms ahead 9.0e-14 front 8.2e-13 behind 1.509e-12 (max 0.000, mean +0.000) | dw rms behind 7.023e-13 | lag0.1 max 0.000 lag0.5 max 0.000 (cens 0) | infid 0.000e+00 | dp1(T) 4.09e-13
+rw:1.6  chi=  4 | dC_Z rms ahead 9.0e-14 front 8.2e-13 behind 1.509e-12 (max 0.000, mean +0.000) | dw rms behind 7.023e-13 | lag0.1 max 0.000 lag0.5 max 0.000 (cens 0) | infid 0.000e+00 | dp1(T) 4.09e-13
+rw:1.6  chi=  8 | dC_Z rms ahead 9.0e-14 front 8.2e-13 behind 1.509e-12 (max 0.000, mean +0.000) | dw rms behind 7.023e-13 | lag0.1 max 0.000 lag0.5 max 0.000 (cens 0) | infid 0.000e+00 | dp1(T) 4.09e-13
+rw:1.6  chi= 16 | dC_Z rms ahead 9.0e-14 front 8.2e-13 behind 1.509e-12 (max 0.000, mean +0.000) | dw rms behind 7.023e-13 | lag0.1 max 0.000 lag0.5 max 0.000 (cens 0) | infid 0.000e+00 | dp1(T) 4.09e-13
+rw:1.6  chi= 32 | dC_Z rms ahead 9.0e-14 front 8.2e-13 behind 1.509e-12 (max 0.000, mean +0.000) | dw rms behind 7.023e-13 | lag0.1 max 0.000 lag0.5 max 0.000 (cens 0) | infid 0.000e+00 | dp1(T) 4.09e-13
+svd     chi=  2 | dC_Z rms ahead 1.2e-15 front 1.2e-14 behind 2.047e-14 (max 0.000, mean -0.000) | dw rms behind 1.370e-14 | lag0.1 max 0.000 lag0.5 max 0.000 (cens 0) | infid -4.441e-16 | dp1(T) 7.83e-15
+svd     chi=  4 | dC_Z rms ahead 1.2e-15 front 1.2e-14 behind 2.047e-14 (max 0.000, mean -0.000) | dw rms behind 1.370e-14 | lag0.1 max 0.000 lag0.5 max 0.000 (cens 0) | infid -4.441e-16 | dp1(T) 7.83e-15
+svd     chi=  8 | dC_Z rms ahead 1.2e-15 front 1.2e-14 behind 2.047e-14 (max 0.000, mean -0.000) | dw rms behind 1.370e-14 | lag0.1 max 0.000 lag0.5 max 0.000 (cens 0) | infid -4.441e-16 | dp1(T) 7.83e-15
+svd     chi= 16 | dC_Z rms ahead 1.2e-15 front 1.2e-14 behind 2.047e-14 (max 0.000, mean -0.000) | dw rms behind 1.370e-14 | lag0.1 max 0.000 lag0.5 max 0.000 (cens 0) | infid -4.441e-16 | dp1(T) 7.83e-15
+svd     chi= 32 | dC_Z rms ahead 1.2e-15 front 1.2e-14 behind 2.047e-14 (max 0.000, mean -0.000) | dw rms behind 1.370e-14 | lag0.1 max 0.000 lag0.5 max 0.000 (cens 0) | infid -4.441e-16 | dp1(T) 7.83e-15
+svdraw  chi=  2 | dC_Z rms ahead 1.2e-15 front 1.2e-14 behind 2.047e-14 (max 0.000, mean -0.000) | dw rms behind 1.373e-14 | lag0.1 max 0.000 lag0.5 max 0.000 (cens 0) | infid nan | dp1(T) 7.83e-15
+svdraw  chi=  4 | dC_Z rms ahead 1.2e-15 front 1.2e-14 behind 2.047e-14 (max 0.000, mean -0.000) | dw rms behind 1.373e-14 | lag0.1 max 0.000 lag0.5 max 0.000 (cens 0) | infid nan | dp1(T) 7.83e-15
+svdraw  chi=  8 | dC_Z rms ahead 1.2e-15 front 1.2e-14 behind 2.047e-14 (max 0.000, mean -0.000) | dw rms behind 1.373e-14 | lag0.1 max 0.000 lag0.5 max 0.000 (cens 0) | infid nan | dp1(T) 7.83e-15
+svdraw  chi= 16 | dC_Z rms ahead 1.2e-15 front 1.2e-14 behind 2.047e-14 (max 0.000, mean -0.000) | dw rms behind 1.373e-14 | lag0.1 max 0.000 lag0.5 max 0.000 (cens 0) | infid nan | dp1(T) 7.83e-15
+svdraw  chi= 32 | dC_Z rms ahead 1.2e-15 front 1.2e-14 behind 2.047e-14 (max 0.000, mean -0.000) | dw rms behind 1.373e-14 | lag0.1 max 0.000 lag0.5 max 0.000 (cens 0) | infid nan | dp1(T) 7.83e-15
+

@@ -1,6 +1,6 @@
 """Test 0(a): checks of rank2/spcfpur.py (d = 4 fused site + ancilla), ported from test_spcfast.py.
 
-    python test_spcfpur.py [gauge] [mu] [family]
+    python test_spcfpur.py [gauge] [mu] [family] [f32|f64]
 
 1. W-form: the physical region RDM W W^dag built from the environment maps and the two-site tensor against the RDM of the dense
    purification (ancillas traced out), at every recorded cut.   [new: tests the ancilla routing]
@@ -20,15 +20,16 @@ from spcfpur import SPCFPur
 gauge = sys.argv[1] if len(sys.argv) > 1 else 'plain'
 mu = float(sys.argv[2]) if len(sys.argv) > 2 else 1.0
 family = sys.argv[3] if len(sys.argv) > 3 else 'stag'
+prec = sys.argv[4] if len(sys.argv) > 4 else 'f32'
 rng = np.random.default_rng(1)
 model, N, chi = 'ising', 8, 4
-cut = SPCFPur(model, N, a=2, taus=[1.0, 2.0], fw=0.0)
+cut = SPCFPur(model, N, a=2, taus=[1.0, 2.0], fw=0.0, precision=prec)
 cut.debug = []
 T0 = P.initial_pur_mps(N, family, mu)
 Gs = P.pur_gates(model, N, 0.1, gauge)
 P.run_tebd_d(T0, Gs, chi, 25, cut)
-print(f'gauge={gauge} mu={mu} family={family}: cuts {cut.calls} fired {cut.fired} debug {len(cut.debug)}')
-res = {'gauge': gauge, 'mu': mu, 'family': family, 'cuts': cut.calls, 'fired': cut.fired, 'recorded': len(cut.debug)}
+print(f'gauge={gauge} mu={mu} family={family} precision={prec}: cuts {cut.calls} fired {cut.fired} debug {len(cut.debug)}')
+res = {'precision': prec, 'gauge': gauge, 'mu': mu, 'family': family, 'cuts': cut.calls, 'fired': cut.fired, 'recorded': len(cut.debug)}
 
 # 1. W form against the dense purification
 worst_w = 0.0
@@ -49,7 +50,7 @@ for dd in cut.debug:
     W = dd['Wof'](th)
     Rw = W @ W.conj().T
     worst_w = max(worst_w, np.abs(R - Rw).max() / np.abs(R).max())
-print('1. W-form vs dense physical region RDM, max rel err (float32 maps):', worst_w)
+print('1. W-form vs dense physical region RDM, max rel err:', worst_w)
 res['W_vs_dense'] = worst_w
 
 # 2. F-form against the direct objective
@@ -132,6 +133,6 @@ lg = np.array(cut.log)
 print('5. fired cuts', len(lg), 'max f_c/f_svd', float(np.max(lg[:, 1] / lg[:, 0])), 'median', float(np.median(lg[:, 1] / lg[:, 0])))
 res['ratio_max'] = float(np.max(lg[:, 1] / lg[:, 0]))
 res['ratio_median'] = float(np.median(lg[:, 1] / lg[:, 0]))
-out = f'results/test0a_{gauge}_{family}_mu{P.mu_tag(mu)}.json'
+out = f'results/test0a_{gauge}_{family}_mu{P.mu_tag(mu)}_{prec}.json'
 json.dump(res, open(out, 'w'), indent=1)
 print('saved', out)

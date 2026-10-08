@@ -172,7 +172,8 @@ def make_sets(model, N, which=('S1', 'S2', 'S3', 'S4'), c=None, t_list=(1.0, 2.0
         psi0 = neel_dense(N)
         Hc = -1j * H
         for t in t_list:
-            vs = spla.expm_multiply(Hc, psi0, start=t, stop=t + tau, num=4, endpoint=True)
+            # one call per time: expm_multiply(start=t>0, ...) returns wrongly scaled vectors in this scipy
+            vs = [spla.expm_multiply((t + j * tau / 3.0) * Hc, psi0) for j in range(4)]
             grid = [('fw_a', [1 / 2, 1 / 6, 1 / 6, 1 / 6]), ('fw_b', [1 / 2, 1 / 8, 1 / 8, 1 / 4]),
                     ('equal', [1 / 4] * 4), ('fw_c', [1 / 3, 1 / 6, 1 / 6, 1 / 3])]
             sets.append(TargetSet(f'S4t{t:g}', [vs[i] for i in range(4)], [1 / 3, 1 / 6, 1 / 6, 1 / 3], grid,
@@ -276,6 +277,8 @@ def arm_dressed(Ms, w, chi, a, geom, ops=None):
     rd = rho.copy()
     for P in ops:
         rd = rd + a * (P @ rho @ P.conj().T)
+    if np.isrealobj(rho):
+        rd = rd.real
     ev, V = np.linalg.eigh((rd + rd.conj().T) / 2)
     return V[:, ::-1][:, :chi]
 
@@ -456,6 +459,58 @@ class SPCMulti:
         r1, e1, h1 = self.aug(X, mu)
         J = np.concatenate([(r1 - r0[None]) / self.h, (h1 - hinge0[None]) / self.h], axis=1).T
         return J
+
+    def run_ls(self, mu_factors=(1e3, 1e5), max_nfev=150, method='trf'):
+        """same problem through scipy least_squares (trust region, scaled by the Jacobian columns); staged hinge weight,
+        final scale-back for exact feasibility"""
+        from scipy.optimize import least_squares
+        x = np.zeros(self.npar)
+        r, e, hg = self.aug(x[None], 0.0)
+        f0 = float(np.sum(r ** 2))
+        mus = mu_factors if self.kappa is not None else (0.0,)
+        nfev = 0
+        hist = [f0]
+        cache = {}
+
+        def fun(xx, mu):
+            r_, e_, h_ = self.aug(xx[None], mu)
+            cache['last'] = (xx.copy(), r_[0], h_[0])
+            return np.concatenate([r_[0], h_[0]])
+
+        def jac(xx, mu):
+            lx, r_, h_ = cache['last']
+            if not np.array_equal(lx, xx):
+                fun(xx, mu)
+                lx, r_, h_ = cache['last']
+            return self.jac(xx, mu, r_, h_)
+
+        for mf in mus:
+            mu = mf * f0
+            sol = least_squares(fun, x, jac=jac, args=(mu,), method=method, x_scale='jac', tr_solver='exact',
+                                ftol=1e-10, xtol=1e-10, gtol=1e-12, max_nfev=max_nfev)
+            x = sol.x
+            nfev += sol.nfev
+            rr, ee, _ = self.aug(x[None], 0.0)
+            hist.append(float(np.sum(rr[0] ** 2)))
+        shrink = 1.0
+        if self.kappa is not None:
+            r, e, _ = self.aug(x[None], 0.0)
+            viol = float(np.max(e[0] / self.eps0 - 1.0))
+            if viol > self.kappa:
+                lo_, hi_ = 0.0, 1.0
+                for _ in range(40):
+                    mid = 0.5 * (lo_ + hi_)
+                    _, em, _ = self.aug((mid * x)[None], 0.0)
+                    if float(np.max(em[0] / self.eps0 - 1.0)) <= self.kappa:
+                        lo_ = mid
+                    else:
+                        hi_ = mid
+                shrink = lo_
+                x = shrink * x
+        r, e, _ = self.aug(x[None], 0.0)
+        info = dict(f0=f0, f=float(np.sum(r[0] ** 2)), nit=nfev, nev=self.nev, shrink=shrink, hist=hist,
+                    g_f=(e[0] / self.eps0 - 1.0).tolist(), status=int(sol.status))
+        return x, info
 
     def run(self, maxit=30, mu_factors=(1e3, 1e5), tol=1e-4, lam0=1e-3, verbose=False, x0=None):
         x = np.zeros(self.npar) if x0 is None else x0.copy()

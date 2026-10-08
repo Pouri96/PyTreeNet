@@ -61,12 +61,12 @@ for d in cut.debug:
     g = rng.normal(size=d['nres'])
     lhs, rhs = g @ d['jvp'](x), d['vjp'](g) @ x
     worst_adj = max(worst_adj, abs(lhs - rhs) / (abs(lhs) + 1e-30))
-    eps = 1e-6 / np.linalg.norm(x)
-    num = (d['exact'](eps * x) - d['r0']) / eps
+    eps = 1e-5 / np.linalg.norm(x)
+    num = (d['exact'](eps * x) - d['exact'](-eps * x)) / (2 * eps)      # central difference: the chart curvature cancels
     ana = d['jvp'](x)
     worst_lin = max(worst_lin, np.linalg.norm(num - ana) / np.linalg.norm(ana))
 check(f'adjoint <g,Jx> = <J^T g,x> rel err (max over {len(cut.debug)} cuts)', worst_adj, 1e-10)
-check('finite-difference linearisation rel err (step 1e-6, max)', worst_lin, 1e-4)
+check('central finite-difference linearisation rel err (step 1e-5, max over cuts)', worst_lin, 1e-6)
 for rel in (1e-1, 1e-2, 1e-3, 1e-4):
     errs = []
     for d in cut.debug[::3]:
@@ -75,7 +75,7 @@ for rel in (1e-1, 1e-2, 1e-3, 1e-4):
         num = d['exact'](x) - d['r0']
         ana = d['jvp'](x)
         errs.append(np.linalg.norm(num - ana) / np.linalg.norm(ana))
-    print(f'  step {rel:g}: median linearisation rel err {np.median(errs):.2e}  max {np.max(errs):.2e}')
+    print(f'  one-sided FD, step {rel:g} (error is the O(step) curvature remainder): median linearisation rel err {np.median(errs):.2e}  max {np.max(errs):.2e}')
 
 # 3. Wadj is the adjoint of Wof
 d = cut.debug[len(cut.debug) // 2]
@@ -121,8 +121,8 @@ for d in cut1.debug:
     g = rng.normal(size=d['nres'])
     lhs, rhs = g @ d['jvp'](x), d['vjp'](g) @ x
     wa = max(wa, abs(lhs - rhs) / (abs(lhs) + 1e-30))
-    eps = 1e-6 / np.linalg.norm(x)
-    wl = max(wl, np.linalg.norm((d['exact'](eps * x) - d['r0']) / eps - d['jvp'](x)) / np.linalg.norm(d['jvp'](x)))
+    eps = 1e-5 / np.linalg.norm(x)
+    wl = max(wl, np.linalg.norm((d['exact'](eps * x) - d['exact'](-eps * x)) / (2 * eps) - d['jvp'](x)) / np.linalg.norm(d['jvp'](x)))
 check(f'a=1, ks=(1,2), passes=2: adjoint ({len(cut1.debug)} cuts)', wa, 1e-10)
-check('a=1, ks=(1,2), passes=2: linearisation', wl, 1e-4)
+check('a=1, ks=(1,2), passes=2: central-FD linearisation', wl, 1e-6)
 print('ALL PASS' if ok_all else 'SOME FAILED')

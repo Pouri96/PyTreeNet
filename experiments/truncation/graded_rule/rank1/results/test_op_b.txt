@@ -1,11 +1,11 @@
 cuts 350 truncating 75 fired 75 rejected 0 skipped 0 debug 75
 PASS  region h and 360-row window marginals == dense marginals (spliced theta): 3.886e-15 (tol 1e-12)
 PASS  adjoint <g,Jx> = <J^T g,x> rel err (max over 75 cuts): 1.411e-12 (tol 1e-10)
-FAIL  finite-difference linearisation rel err (step 1e-6, max): 6.133e-04 (tol 1e-04)
-  step 0.1: median linearisation rel err 1.96e-01  max 5.89e+01
-  step 0.01: median linearisation rel err 2.06e-02  max 9.06e+00
-  step 0.001: median linearisation rel err 3.20e-03  max 5.78e-01
-  step 0.0001: median linearisation rel err 2.34e-04  max 3.66e-02
+PASS  central finite-difference linearisation rel err (step 1e-5, max over cuts): 2.377e-08 (tol 1e-06)
+  one-sided FD, step 0.1 (error is the O(step) curvature remainder): median linearisation rel err 1.96e-01  max 5.89e+01
+  one-sided FD, step 0.01 (error is the O(step) curvature remainder): median linearisation rel err 2.06e-02  max 9.06e+00
+  one-sided FD, step 0.001 (error is the O(step) curvature remainder): median linearisation rel err 3.20e-03  max 5.78e-01
+  one-sided FD, step 0.0001 (error is the O(step) curvature remainder): median linearisation rel err 2.34e-04  max 3.66e-02
 PASS  <G, Wof(th)> = <Wadj(G), th>: 4.167e-16 (tol 1e-12)
   fired cuts 75; f_final/f_svd median 0.449, max 0.885
 PASS  residual decreases at every fired cut (max f_final/f_svd - 1): 0.000e+00 (tol 0e+00)
@@ -16,5 +16,5 @@ PASS  SPCOp at chi = inf == dense: 4.237e-14 (tol 1e-11)
 PASS  right-isometry of T[1:] after a tilt run: 1.998e-15 (tol 1e-12)
 PASS  ||c|| = 1 after a tilt run: 1.110e-15 (tol 1e-12)
 PASS  a=1, ks=(1,2), passes=2: adjoint (39 cuts): 5.460e-14 (tol 1e-10)
-FAIL  a=1, ks=(1,2), passes=2: linearisation: 3.442e-04 (tol 1e-04)
-SOME FAILED
+PASS  a=1, ks=(1,2), passes=2: central-FD linearisation: 8.664e-09 (tol 1e-06)
+ALL PASS
