@@ -141,10 +141,220 @@ def noise_report(Ds):
     return out
 
 
+
+
+# ====================================================================== sentences and tables
+def _fmt(x):
+    return f'{x:.0f}' if x >= 9.95 else f'{x:.1f}'
+
+
+def _factor(val, bound, word_hi, word_lo):
+    """'about 12x slower' / 'about 1.4x faster'; bound is 'lo' (val is a lower bound), 'hi' (upper bound) or None (inverting val flips the bound)."""
+    inv = val < 1
+    x = 1 / val if inv else val
+    sym = ''
+    if bound:
+        lower = (bound == 'lo') != inv
+        sym = '≥' if lower else '≤'
+    return f'about {sym}{_fmt(x)}× {word_lo if inv else word_hi}'
+
+
+def sentence(r, name):
+    """spcf (chi=12) is about X x slower but uses about Y x fewer parameters than SVD  (bounds marked >= / <=; <1 ratios are flipped to faster / more)."""
+    if r['flag'] == 'exact':
+        return f"spcf (χ={r['chi_s']}) has error {r['err_s']:.0e} (< 1e-9): nothing truncated yet, not matched"
+    pb = {'above': 'lo', 'below': 'hi'}.get(r['flag'])
+    tb = {'above': 'hi', 'below': 'lo'}.get(r['flag'])
+    return (f"spcf (χ={r['chi_s']}) is {_factor(r['time_ratio'], tb, 'slower', 'faster')} but uses "
+            f"{_factor(r['param_ratio'], pb, 'fewer', 'more')} parameters than {name}")
+
+
+def get(recs, **kw):
+    return [r for r in recs if all(r[k] == v for k, v in kw.items())]
+
+
+def fm(v, flagged=0, n=0):
+    return f'{v:.2f}' if v < 10 else f'{v:.1f}'
+
+
+def tables(recs, Ds):
+    L = []
+    cname = {'stag': 'staggered', 'dw': 'domain wall'}
+    # ---- per cell sentences (rdm2)
+    for cell in CELLS:
+        m = Ds[cell]['meta']
+        L.append(f"#### {cname[m['family']]}, mu = {m['mu']:g} (spcf in the {m['spcf_gauge']} gauge)\n")
+        L.append('| t | spcf vs SVD (better gauge), error = rdm2 | spcf vs DMT, error = rdm2 |')
+        L.append('|---|---|---|')
+        for t in (1.0, 2.0, 3.0, 4.0):
+            for cs in CHI_S:
+                a = get(recs, cell=cell, metric='rdm2', baseline='SVD', chi_s=cs, t=t)[0]
+                b = get(recs, cell=cell, metric='rdm2', baseline='DMT', chi_s=cs, t=t)[0]
+                L.append(f'| {t:g} | {sentence(a, "SVD")} | {sentence(b, "DMT")} |')
+        L.append('')
+    # ---- medians across the 6 cells
+    for metric in METRICS:
+        L.append(f'#### Medians across the 6 cells, error metric = {metric}\n')
+        L.append('Entries are `param_ratio / time_ratio / product`; n = cells with a matched entry (not "exact"); `*k` = k of them are ladder-edge bounds.\n')
+        L.append('| baseline | t | χ_s = 12 | χ_s = 16 | χ_s = 24 | all χ_s pooled |')
+        L.append('|---|---|---|---|---|---|')
+        for kind in ('SVD', 'DMT'):
+            for t in (1.0, 2.0, 3.0, 4.0, 'pooled 2-4'):
+                cells_ = []
+                for cs in CHI_S + ['all']:
+                    sel = [r for r in recs if r['metric'] == metric and r['baseline'] == kind and r['flag'] != 'exact'
+                           and (cs == 'all' or r['chi_s'] == cs) and ((r['t'] == t) if t != 'pooled 2-4' else (r['t'] >= 2.0))]
+                    if not sel:
+                        cells_.append('n/a')
+                        continue
+                    nb = sum(r['flag'] != 'ok' for r in sel)
+                    cells_.append(f"{fm(med([r['param_ratio'] for r in sel]))} / {fm(med([r['time_ratio'] for r in sel]))} / {fm(med([r['product'] for r in sel]))}"
+                                  f" (n={len(sel)}{', *' + str(nb) if nb else ''})")
+                L.append(f"| {kind} | {t if t == 'pooled 2-4' else format(t, 'g')} | " + ' | '.join(cells_) + ' |')
+        L.append('')
+    # ---- trend table over all sample times
+    L.append('#### Median over cells and χ_s at every sample time (rdm2): `param_ratio / time_ratio / product`, n matched entries of 18\n')
+    L.append('| t | vs SVD | vs DMT |')
+    L.append('|---|---|---|')
+    for t in sorted({r['t'] for r in recs}):
+        row = []
+        for kind in ('SVD', 'DMT'):
+            sel = [r for r in recs if r['metric'] == 'rdm2' and r['baseline'] == kind and r['flag'] != 'exact' and r['t'] == t]
+            row.append(f"{fm(med([r['param_ratio'] for r in sel]))} / {fm(med([r['time_ratio'] for r in sel]))} / {fm(med([r['product'] for r in sel]))} (n={len(sel)})" if sel else 'n/a')
+        L.append(f'| {t:g} | ' + ' | '.join(row) + ' |')
+    L.append('')
+    return '\n'.join(L)
+
+
+def trend_stats(recs):
+    """Per (cell, chi_s, baseline, metric) series: ratio at t = 4 over ratio at t = 2.  Returns text lines."""
+    out = {}
+    for metric in METRICS:
+        for kind in ('SVD', 'DMT', 'SVD_same'):
+            g = {q: [] for q in ('param_ratio', 'time_ratio', 'product')}
+            for cell in CELLS:
+                for cs in CHI_S:
+                    a = get(recs, cell=cell, metric=metric, baseline=kind, chi_s=cs, t=2.0)[0]
+                    b = get(recs, cell=cell, metric=metric, baseline=kind, chi_s=cs, t=4.0)[0]
+                    if a['flag'] == 'exact' or b['flag'] == 'exact':
+                        continue
+                    for q in g:
+                        g[q].append(b[q] / a[q])
+            out[f'{metric}|{kind}'] = {q: dict(median_growth=med(v), n_up=int(sum(x > 1 for x in v)), n=len(v)) for q, v in g.items()}
+    return out
+
+
+# ====================================================================== figures
+COL = {12: '#2a78d6', 16: '#eb6834', 24: '#1baf7a'}          # fixed categorical slots 1-3 (validated all-pairs set), one colour per chi_s
+MRK = {12: 'o', 16: 's', 24: 'D'}
+INK, GRID = '#0b0b0b', '#d9d8d3'
+
+
+def _style(ax):
+    from matplotlib.ticker import FuncFormatter, LogLocator, NullLocator
+    ax.set_yscale('log')
+    ax.yaxis.set_major_locator(LogLocator(base=10, subs=(1, 2, 5), numticks=20))
+    ax.yaxis.set_minor_locator(NullLocator())
+    ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f'{v:g}'))
+    ax.grid(True, color=GRID, lw=0.6, zorder=0)
+    ax.axhline(1.0, color='#52514e', lw=1.0, ls='--', zorder=1)
+    for sp in ('top', 'right'):
+        ax.spines[sp].set_visible(False)
+    ax.tick_params(labelsize=9)
+
+
+def _pts(recs, cell, metric, kind, cs, q):
+    rr = sorted(get(recs, cell=cell, metric=metric, baseline=kind, chi_s=cs), key=lambda r: r['t'])
+    rr = [r for r in rr if r['flag'] != 'exact']
+    return rr, [r['t'] for r in rr], [r[q] for r in rr]
+
+
+def fig_cell(recs, Ds, cell, metric='rdm2'):
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    m = Ds[cell]['meta']
+    fig, axs = plt.subplots(2, 2, figsize=(10, 7), sharex=True, sharey='row')
+    for j, (kind, nm) in enumerate((('SVD', 'SVD (better ancilla gauge)'), ('DMT', 'DMT'))):
+        for i, (q, lab) in enumerate((('param_ratio', 'parameter ratio  params_B(χ_eq) / params_spcf'), ('time_ratio', 'time ratio  CPU_spcf / CPU_B(χ_eq)'))):
+            ax = axs[i, j]
+            _style(ax)
+            for cs in CHI_S:
+                rr, t, y = _pts(recs, cell, metric, kind, cs, q)
+                ax.plot(t, y, color=COL[cs], lw=1.8, marker=MRK[cs], ms=5.5, mec='white', mew=0.8, label=f'spcf χ_s = {cs}', zorder=3)
+                for r in rr:                                  # ladder-edge bounds: open triangle pointing along the bound
+                    if r['flag'] != 'ok':
+                        up = (r['flag'] == 'above') == (q == 'param_ratio')
+                        ax.plot([r['t']], [r[q]], marker='^' if up else 'v', ms=9, mfc='white', mec=COL[cs], mew=1.6, ls='', zorder=4)
+            ax.set_title(f'{lab.split("  ")[0]} vs {nm}', fontsize=10.5, loc='left', color=INK)
+            ax.set_ylabel(lab.split('  ')[1], fontsize=9.5)
+            if i == 1:
+                ax.set_xlabel('time t', fontsize=10)
+    axs[0, 0].legend(frameon=False, fontsize=9, loc='upper left')
+    fig.suptitle(f"Ising N=10, {'staggered' if m['family'] == 'stag' else 'domain wall'}, μ = {m['mu']:g}: cost at equal {metric} error "
+                 f"(dashed line = 1; spcf in the {m['spcf_gauge']} gauge)", fontsize=11.5, x=0.01, ha='left')
+    fig.text(0.01, 0.005, 'Param ratio > 1: spcf stores fewer numbers.  Time ratio > 1: spcf is slower.  Open triangles: ladder-edge bound, no extrapolation.  '
+             'Samples with spcf error < 1e-9 are omitted.', fontsize=8.5, color='#52514e')
+    fig.tight_layout(rect=(0, 0.02, 1, 0.96))
+    fn = os.path.join(HERE, 'figures', f'eqerr_{cell}.png')
+    fig.savefig(fn, dpi=150)
+    plt.close(fig)
+    return fn
+
+
+def fig_summary(recs, metric='rdm2'):
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    from matplotlib.lines import Line2D
+    fig, axs = plt.subplots(2, 3, figsize=(13, 7), sharex=True)
+    nm = {'stag': 'stag', 'dw': 'dw'}
+    xl = [f"{c.split('_')[0]}\nμ={c.split('mu')[1]}" for c in CELLS]
+    for row, t in enumerate((2.0, 4.0)):
+        for col, (q, lab) in enumerate((('param_ratio', 'parameter ratio  params_B(\u03c7_eq) / params_spcf  (>1: spcf smaller)'),
+                                        ('time_ratio', 'time ratio  CPU_spcf / CPU_B(\u03c7_eq)  (>1: spcf slower)'),
+                                        ('product', 'memory-time product  time ratio / param ratio  (>1: spcf worse)'))):
+            ax = axs[row, col]
+            _style(ax)
+            for ci, cell in enumerate(CELLS):
+                for k, kind in enumerate(('SVD', 'DMT')):
+                    for l, cs in enumerate(CHI_S):
+                        r = get(recs, cell=cell, metric=metric, baseline=kind, chi_s=cs, t=t)[0]
+                        if r['flag'] == 'exact':
+                            continue
+                        x = ci + (-0.27 + 0.09 * l) + (0.0 if kind == 'SVD' else 0.30)
+                        bound = r['flag'] != 'ok'
+                        up = (r['flag'] == 'above') == (q == 'param_ratio') if q != 'product' else r['flag'] == 'below'
+                        mk = ('^' if up else 'v') if bound else ('o' if kind == 'SVD' else 's')
+                        ax.plot([x], [r[q]], marker=mk, ms=7.5, mfc='white' if bound else COL[cs], mec=COL[cs], mew=1.5 if bound else 0.8, ls='', zorder=3)
+            ax.set_xticks(range(len(CELLS)))
+            ax.set_xticklabels(xl, fontsize=8.5)
+            ax.set_title(f'{lab.split("  ")[0].capitalize()} at t = {t:g}', fontsize=10.5, loc='left')
+            ax.set_ylabel(lab.split('  ', 1)[1].replace('  (', '\n('), fontsize=8.5)
+            for ci in range(1, len(CELLS)):
+                ax.axvline(ci - 0.5, color=GRID, lw=0.6)
+    h = [Line2D([], [], marker=MRK[cs], color=COL[cs], ls='', ms=7, label=f'χ_s = {cs}') for cs in CHI_S]
+    h += [Line2D([], [], marker='o', color='#52514e', ls='', ms=7, label='vs SVD (left of each pair)'),
+          Line2D([], [], marker='s', color='#52514e', ls='', ms=7, label='vs DMT (right)'),
+          Line2D([], [], marker='^', mfc='white', mec='#52514e', ls='', ms=8, label='ladder-edge bound')]
+    fig.legend(handles=h, frameon=False, fontsize=9.5, loc='lower center', ncol=6)
+    fig.suptitle(f'Equal-{metric}-error cost of spcf relative to SVD and DMT, all six cells, t = 2 and t = 4 (dashed line = 1)', fontsize=11.5, x=0.01, ha='left')
+    fig.tight_layout(rect=(0, 0.05, 1, 0.96))
+    fn = os.path.join(HERE, 'figures', 'eqerr_summary.png')
+    fig.savefig(fn, dpi=150)
+    plt.close(fig)
+    return fn
+
+
 if __name__ == '__main__':
     Ds = {c: load(c) for c in CELLS if os.path.exists(os.path.join(RES, f'eqerr_raw_{c}.json'))}
     recs = compute(Ds)
     S = summarise(recs)
     json.dump(recs, open(os.path.join(RES, 'eqerr_ratios.json'), 'w'))
-    json.dump(dict(summary=S, noise=noise_report(Ds)), open(os.path.join(RES, 'eqerr_summary.json'), 'w'), indent=1)
+    json.dump(dict(summary=S, noise=noise_report(Ds), trend=trend_stats(recs)), open(os.path.join(RES, 'eqerr_summary.json'), 'w'), indent=1)
+    open(os.path.join(RES, 'eqerr_tables.md'), 'w').write(tables(recs, Ds))
+    os.makedirs(os.path.join(HERE, 'figures'), exist_ok=True)
+    for c in Ds:
+        fig_cell(recs, Ds, c)
+    fig_summary(recs)
     print(f'{len(recs)} records; flags:', {f: sum(r['flag'] == f for r in recs) for f in ('ok', 'above', 'below', 'exact')})
