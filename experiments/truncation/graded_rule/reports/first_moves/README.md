@@ -85,3 +85,22 @@ Token use was high, so the execution agents were pruned to the three directions 
 | Ranks 8-9 (`rank8_9/`) | stopped | T0 sent it to T1. In T1 on the PPP proxies, spcf is *worse* than SVD and variational fitting at matched χ (e.g. site-PPP χ = 12: hw2 0.043 vs 0.028). That points to kill. |
 | Rank 10 (`rank10/`) | stopped | Infrastructure and unit tests only; no test result. |
 | Whitening (`whiten/`) | stopped | Math validation and T0 profiling only; T1 was not finished. It is still the key open question for any wall-clock claim, and the first thing to restart if budget allows. |
+
+## Final verdicts of the execution round
+
+The full write-ups are in the `*_results.md` files. Directions not listed here stopped at the status in the table above.
+
+| Direction | Verdict | Key numbers |
+|---|---|---|
+| **Rank 2: purification** | **CONTINUE (lead result)** | Test 1 passes: spcf beats SVD in its better gauge by a median 2.5-4.7x on rdm2/nn at μ = 1, 0.5 and 0.25, in 15/18 cells, and the gain does not fade toward mixed states. Test 2 passes: spcf-purification beats numpy DMT at equal parameters by 2.9-7.8x on rdm2 and 2.5-4.4x on nnn, in 7/7 cells; N = 12 agrees. DMT keeps the lower energy drift (35/36 entries). **Caveats:** (i) the Heisenberg control gains 2.4-2.9x in the back gauge, so part of the gain may be SVD gauge inefficiency; (ii) the nnn lead over DMT shrinks to 1.1-2.2x at μ = 0.1; (iii) the gate as calibrated is useless |
+| **Rank 6: LPDO with dephasing** | CONTINUE (conditional) | Bond truncation carries 80-100% of the nn error at γ = 0.01. On the pre-registered κ = 4 grid the result is ambiguous: the best adjacent pair is 1.86/2.13x. A post-hoc κ = 8 extension gives 2.2-3.8x vs env-gauged SVD-LPDO at γ = 0.01-0.1, and replicates at N = 10. Energy is up to 2x worse at low χ, and far ZZ is worse at χ = 16 |
+| Rank 7: benchmarking | memory claim only | r = 1.5-1.8 (memory 2.3-3x). T2 passes ungated. Wall-clock is not shown (best cold equal-error CPU ratio is 1.16-1.33 at χ = 64). The circuit transfer (kicked Ising) is **killed**, with r ≈ 1.0 |
+| Rank 1: OTOC | PARK | Test 3 gives 0.6-1.07x and no 2x at any χ. Free label reweighting (rTEBD, γ = 2) nearly matches it. Lessons kept: renormalize the operator MPO, and run reweighting as a baseline |
+| Whitening | PARK | Kronecker GN is dead (deployable ρ ≤ 0.1). The whitened SVD keeps 0.39-0.75 of the log-gain end-to-end, but only with oracle factors. No cost win is shown. Revive only via target-free factors at ≤ 3x SVD |
+
+**Where this leaves the project.** The defensible result is spcf on purifications: a pure-state, fixed-χ tilt that beats both SVD and DMT at equal parameters on local correlators of mixed-state dynamics. The LPDO noise result is consistent with it. Before claiming it, the open items are:
+- explain the Heisenberg-control gain with a disentangler-gauge SVD baseline;
+- test a thermal Gibbs quench;
+- run the rank 6 DMT head-to-head, which shares the same `dmt_np.py`.
+
+No cheap closed form exists yet, so any claim stays at the level of accuracy and memory, not wall-clock.

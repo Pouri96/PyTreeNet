@@ -1,0 +1,129 @@
+cell stag mu=0.5 T=3 N=10
+
+rdm2
+  arm             chi=12     chi=16     chi=24     chi=32 
+  svd_plain     1.631e-02  8.196e-03  6.430e-04  1.470e-04
+  svd_back      3.513e-02  1.951e-02  1.048e-02  6.817e-03
+  spcf_plain    3.636e-03  1.605e-03  1.552e-04  4.800e-05
+  spcf_back     7.907e-03  5.392e-03  2.340e-03  1.164e-03
+  spcfg_plain   3.636e-03  1.651e-03  2.066e-04  4.800e-05
+  spcfg_back    7.907e-03  5.392e-03  4.026e-03  1.642e-03
+  dmt           2.786e-02  9.908e-03  5.796e-03  1.986e-03
+  dmt+8         6.917e-03  5.796e-03  1.986e-03  8.784e-04
+  frob          4.993e-02  2.526e-02  1.476e-02  9.226e-03
+
+nn rms
+  arm             chi=12     chi=16     chi=24     chi=32 
+  svd_plain     9.574e-03  4.857e-03  4.150e-04  9.212e-05
+  svd_back      1.853e-02  8.542e-03  5.758e-03  3.786e-03
+  spcf_plain    2.066e-03  8.938e-04  9.210e-05  2.617e-05
+  spcf_back     4.776e-03  2.810e-03  1.118e-03  5.716e-04
+  spcfg_plain   2.066e-03  9.166e-04  1.294e-04  2.617e-05
+  spcfg_back    4.770e-03  2.810e-03  2.000e-03  7.992e-04
+  dmt           1.174e-02  5.821e-03  3.358e-03  1.263e-03
+  dmt+8         4.274e-03  3.358e-03  1.263e-03  5.602e-04
+  frob          2.610e-02  1.007e-02  8.126e-03  4.496e-03
+
+nnn rms
+  arm             chi=12     chi=16     chi=24     chi=32 
+  svd_plain     7.751e-03  3.805e-03  4.976e-04  1.227e-04
+  svd_back      1.192e-02  7.898e-03  3.404e-03  2.004e-03
+  spcf_plain    4.681e-03  2.264e-03  2.827e-04  7.880e-05
+  spcf_back     7.983e-03  4.489e-03  1.973e-03  1.145e-03
+  spcfg_plain   4.681e-03  2.271e-03  3.336e-04  7.880e-05
+  spcfg_back    8.017e-03  4.489e-03  2.388e-03  1.334e-03
+  dmt           2.270e-02  1.151e-02  5.817e-03  2.414e-03
+  dmt+8         8.166e-03  5.817e-03  2.414e-03  1.110e-03
+  frob          1.377e-02  8.577e-03  5.806e-03  4.064e-03
+
+rdm3
+  arm             chi=12     chi=16     chi=24     chi=32 
+  svd_plain     2.326e-02  1.074e-02  1.344e-03  3.629e-04
+  svd_back      4.367e-02  2.433e-02  1.297e-02  8.013e-03
+  spcf_plain    9.708e-03  3.990e-03  6.732e-04  1.716e-04
+  spcf_back     1.811e-02  9.901e-03  4.775e-03  2.583e-03
+  spcfg_plain   9.708e-03  4.011e-03  7.997e-04  1.716e-04
+  spcfg_back    1.815e-02  9.901e-03  6.481e-03  3.121e-03
+  dmt           4.747e-02  2.430e-02  1.186e-02  5.526e-03
+  dmt+8         1.671e-02  1.186e-02  5.526e-03  2.403e-03
+  frob          6.171e-02  3.033e-02  1.916e-02  1.189e-02
+
+single rms
+  arm             chi=12     chi=16     chi=24     chi=32 
+  svd_plain     6.005e-03  2.907e-03  1.249e-04  3.885e-05
+  svd_back      1.667e-02  1.140e-02  4.604e-03  2.920e-03
+  spcf_plain    1.493e-03  6.864e-04  5.674e-05  2.161e-05
+  spcf_back     2.663e-03  2.622e-03  1.276e-03  6.133e-04
+  spcfg_plain   1.493e-03  7.098e-04  5.648e-05  2.161e-05
+  spcfg_back    2.678e-03  2.622e-03  2.086e-03  8.717e-04
+  dmt           1.679e-02  3.632e-03  2.222e-03  4.602e-04
+  dmt+8         2.013e-03  2.222e-03  4.602e-04  1.981e-04
+  frob          2.405e-02  1.575e-02  6.493e-03  4.930e-03
+
+far ZZ (d=3,4) rms
+  arm             chi=12     chi=16     chi=24     chi=32 
+  svd_plain     6.714e-03  1.232e-03  4.912e-04  1.720e-04
+  svd_back      1.388e-02  5.840e-03  2.325e-03  1.153e-03
+  spcf_plain    6.216e-03  1.222e-03  4.713e-04  1.688e-04
+  spcf_back     1.054e-02  5.370e-03  1.942e-03  9.318e-04
+  spcfg_plain   6.216e-03  1.203e-03  4.739e-04  1.688e-04
+  spcfg_back    1.054e-02  5.370e-03  2.071e-03  1.094e-03
+  dmt           1.228e-02  1.134e-02  4.753e-03  2.750e-03
+  dmt+8         7.189e-03  4.753e-03  2.750e-03  1.023e-03
+  frob          9.084e-03  1.039e-02  6.624e-03  2.995e-03
+
+|dE|
+  arm             chi=12     chi=16     chi=24     chi=32 
+  svd_plain     1.314e-02  1.136e-03  2.357e-04  3.028e-05
+  svd_back      5.052e-02  6.549e-02  8.059e-03  4.169e-03
+  spcf_plain    2.572e-03  3.692e-03  4.435e-04  8.911e-05
+  spcf_back     2.053e-04  7.219e-04  1.771e-03  7.769e-04
+  spcfg_plain   2.572e-03  3.666e-03  4.562e-04  8.911e-05
+  spcfg_back    1.983e-04  7.219e-04  3.381e-03  1.168e-03
+  dmt           1.037e-04  3.112e-06  2.642e-05  1.243e-05
+  dmt+8         4.698e-05  2.642e-05  1.243e-05  4.745e-06
+  frob          6.968e-02  8.284e-02  4.777e-02  2.491e-02
+
+trace distance
+  arm             chi=12     chi=16     chi=24     chi=32 
+  svd_plain     2.594e-01  1.027e-01  2.906e-02  9.589e-03
+  svd_back      4.262e-01  3.181e-01  2.109e-01  1.347e-01
+  spcf_plain    2.531e-01  1.018e-01  2.876e-02  9.541e-03
+  spcf_back     3.998e-01  3.077e-01  2.063e-01  1.320e-01
+  spcfg_plain   2.531e-01  1.019e-01  2.876e-02  9.541e-03
+  spcfg_back    3.999e-01  3.077e-01  2.075e-01  1.324e-01
+  dmt           6.759e-01  5.820e-01  4.509e-01  3.329e-01
+  dmt+8         5.208e-01  4.509e-01  3.329e-01  2.391e-01
+  frob          6.053e-01  4.991e-01  3.677e-01  2.627e-01
+
+lambda_min(rho)
+  arm             chi=12     chi=16     chi=24     chi=32 
+  svd_plain     4.802e-07  1.851e-06  1.853e-06  1.938e-06
+  svd_back      1.101e-09  3.799e-14  8.532e-10  1.341e-14
+  spcf_plain    5.430e-07  1.731e-06  1.859e-06  1.933e-06
+  spcf_back     5.308e-10  4.234e-09  4.007e-09  3.156e-09
+  spcfg_plain   5.430e-07  1.732e-06  1.858e-06  1.933e-06
+  spcfg_back    8.237e-10  4.234e-09  4.756e-09  2.458e-09
+  dmt          -1.151e-02 -5.344e-03 -3.529e-03 -2.435e-03
+  dmt+8        -4.535e-03 -3.529e-03 -2.435e-03 -1.378e-03
+  frob         -5.644e-03 -4.019e-03 -2.918e-03 -1.657e-03
+
+tr rho (before normalisation; purification = 1)
+  arm             chi=12     chi=16     chi=24     chi=32 
+  svd_plain                                               
+  svd_back                                                
+  spcf_plain                                              
+  spcf_back                                               
+  spcfg_plain                                             
+  spcfg_back                                              
+  dmt           1.000e+00  1.000e+00  1.000e+00  1.000e+00
+  dmt+8         1.000e+00  1.000e+00  1.000e+00  1.000e+00
+  frob          9.757e-01  9.761e-01  9.830e-01  9.932e-01
+
+spcf arm judged: spcf_plain   (params per bulk site: 4 chi^2 for every arm)
+  chi | rdm2: dmt/spcf  | nnn: dmt/spcf | nn: dmt/spcf | rdm3 dmt/spcf | zzfar dmt/spcf | |dE| dmt/spcf | pass(>=1.5 on rdm2 and nnn)
+   12 |      7.66      |      4.85     |     5.68     |     4.89      |     1.98       |     0.04     | yes
+   16 |      6.17      |      5.08     |     6.51     |     6.09      |     9.28       |     0.00     | yes
+   24 |     37.33      |     20.58     |    36.46     |    17.61      |    10.08       |     0.06     | yes
+   32 |     41.37      |     30.63     |    48.27     |    32.20      |    16.29       |     0.14     | yes
+  passes at 4 of 4 chi values (success needs >= 3 of 4); DMT <= spcf on rdm2 at 0 of 4 chi (kill if all)
