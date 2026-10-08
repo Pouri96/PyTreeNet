@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "paper-search": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "--with",
+        "mcp<2",
+        "--from",
+        "paper-search-mcp",
+        "python",
+        "-m",
+        "paper_search_mcp.server"
+      ],
+      "env": {}
+    }
+  }
+}
