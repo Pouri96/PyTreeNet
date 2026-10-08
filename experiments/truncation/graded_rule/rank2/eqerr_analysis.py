@@ -302,7 +302,7 @@ def fig_cell(recs, Ds, cell, metric='rdm2'):
     return fn
 
 
-def fig_summary(recs, metric='rdm2'):
+def fig_summary(recs, metric='rdm2', kinds=('SVD',)):
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
@@ -317,12 +317,12 @@ def fig_summary(recs, metric='rdm2'):
             ax = axs[row, col]
             _style(ax)
             for ci, cell in enumerate(CELLS):
-                for k, kind in enumerate(('SVD', 'DMT')):
+                for k, kind in enumerate(kinds):
                     for l, cs in enumerate(CHI_S):
                         r = get(recs, cell=cell, metric=metric, baseline=kind, chi_s=cs, t=t)[0]
                         if r['flag'] == 'exact':
                             continue
-                        x = ci + (-0.27 + 0.09 * l) + (0.0 if kind == 'SVD' else 0.30)
+                        x = ci + (0.12 * (l - 1) if len(kinds) == 1 else (-0.27 + 0.09 * l) + 0.30 * k)
                         bound = r['flag'] != 'ok'
                         up = (r['flag'] == 'above') == (q == 'param_ratio') if q != 'product' else r['flag'] == 'below'
                         mk = ('^' if up else 'v') if bound else ('o' if kind == 'SVD' else 's')
@@ -334,13 +334,14 @@ def fig_summary(recs, metric='rdm2'):
             for ci in range(1, len(CELLS)):
                 ax.axvline(ci - 0.5, color=GRID, lw=0.6)
     h = [Line2D([], [], marker=MRK[cs], color=COL[cs], ls='', ms=7, label=f'χ_s = {cs}') for cs in CHI_S]
-    h += [Line2D([], [], marker='o', color='#52514e', ls='', ms=7, label='vs SVD (left of each pair)'),
-          Line2D([], [], marker='s', color='#52514e', ls='', ms=7, label='vs DMT (right)'),
-          Line2D([], [], marker='^', mfc='white', mec='#52514e', ls='', ms=8, label='ladder-edge bound')]
+    if len(kinds) > 1:
+        h += [Line2D([], [], marker='o', color='#52514e', ls='', ms=7, label='vs SVD (left of each pair)'),
+              Line2D([], [], marker='s', color='#52514e', ls='', ms=7, label='vs DMT (right)')]
+    h += [Line2D([], [], marker='^', mfc='white', mec='#52514e', ls='', ms=8, label='ladder-edge bound')]
     fig.legend(handles=h, frameon=False, fontsize=9.5, loc='lower center', ncol=6)
-    fig.suptitle(f'Equal-{metric}-error cost of spcf relative to SVD and DMT, all six cells, t = 2 and t = 4 (dashed line = 1)', fontsize=11.5, x=0.01, ha='left')
+    fig.suptitle(f'Equal-{metric}-error cost of spcf relative to {" and ".join(kinds)}, all six cells, t = 2 and t = 4 (dashed line = 1)', fontsize=11.5, x=0.01, ha='left')
     fig.tight_layout(rect=(0, 0.05, 1, 0.96))
-    fn = os.path.join(HERE, 'figures', 'eqerr_summary.png')
+    fn = os.path.join(HERE, 'figures', 'eqerr_summary.png' if len(kinds) == 1 else 'eqerr_summary_svd_dmt.png')
     fig.savefig(fn, dpi=150)
     plt.close(fig)
     return fn
@@ -357,4 +358,5 @@ if __name__ == '__main__':
     for c in Ds:
         fig_cell(recs, Ds, c)
     fig_summary(recs)
+    fig_summary(recs, kinds=('SVD', 'DMT'))
     print(f'{len(recs)} records; flags:', {f: sum(r['flag'] == f for r in recs) for f in ('ok', 'above', 'below', 'exact')})
