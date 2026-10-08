@@ -1,3 +1,5 @@
 _refcache/
 out_*.txt
 __pycache__/
+refcache/
+*.npz

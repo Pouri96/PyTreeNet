@@ -261,7 +261,7 @@ def dense_kraus_only(model, N, nsteps, dt, gamma, kappa, gates=None, tol=KRAUS_T
             Gb[:, 0, :, 0] = (e0 * e0) * Gp.sum(0)
             Gb[:, 0, :, 1] = (e0 * (e1[:, None, None] * Gp).sum(0))
             Gb[:, 1, :, 0] = (e0 * (e1[:, None, None] * Gp).sum(0))
-            Gb[:, 1, :, 1] = (e1 * e1)[:, None, None].__mul__(Gp).sum(0)
+            Gb[:, 1, :, 1] = pn * Gp.sum(0)
             Gm = Gb.reshape(2 * Kj, 2 * Kj)
             Gm = 0.5 * (Gm + Gm.conj().T)
             lam, V = np.linalg.eigh(Gm)
