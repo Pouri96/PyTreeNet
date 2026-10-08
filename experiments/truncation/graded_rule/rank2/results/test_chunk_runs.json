@@ -1,0 +1,94 @@
+[
+ {
+  "a": 1,
+  "prec": "f64",
+  "defect_chunk5_vs_unchunked": 0.0002766731295449354,
+  "defect_chunk1_vs_unchunked": 0.00021980817203637315,
+  "defect_pert1_vs_unchunked": 0.0002782966444745405,
+  "defect_pert2_vs_unchunked": 0.0002800279222077151,
+  "defect_pert1_vs_pert2": 0.0002670069729535651,
+  "rdm2": {
+   "unchunked": 0.033885462184943704,
+   "chunk_b5": 0.033743266350167764,
+   "chunk_b1": 0.03387387112678446,
+   "unchunked_pert1": 0.03395776954266486,
+   "unchunked_pert2": 0.03378658296123424
+  },
+  "fired": [
+   215,
+   215,
+   215,
+   215,
+   215
+  ]
+ },
+ {
+  "a": 1,
+  "prec": "f32",
+  "defect_chunk5_vs_unchunked": 0.0002638480543094568,
+  "defect_chunk1_vs_unchunked": 0.00031475723252272214,
+  "defect_pert1_vs_unchunked": 0.0003204994194256905,
+  "defect_pert2_vs_unchunked": 0.0003024703433793796,
+  "defect_pert1_vs_pert2": 0.0002977994942700013,
+  "rdm2": {
+   "unchunked": 0.03384833806634331,
+   "chunk_b5": 0.0338758280960734,
+   "chunk_b1": 0.03389141427423073,
+   "unchunked_pert1": 0.0338054958997369,
+   "unchunked_pert2": 0.03397797351991069
+  },
+  "fired": [
+   215,
+   215,
+   215,
+   215,
+   215
+  ]
+ },
+ {
+  "a": 2,
+  "prec": "f64",
+  "defect_chunk5_vs_unchunked": 0.00015247613603208698,
+  "defect_chunk1_vs_unchunked": 0.0001750912983168318,
+  "defect_pert1_vs_unchunked": 0.00014872199709636824,
+  "defect_pert2_vs_unchunked": 0.00013502788487995687,
+  "defect_pert1_vs_pert2": 0.0001554344764465032,
+  "rdm2": {
+   "unchunked": 0.03786161483610153,
+   "chunk_b5": 0.037828974329203104,
+   "chunk_b1": 0.037819511543713415,
+   "unchunked_pert1": 0.03778393981635197,
+   "unchunked_pert2": 0.03784347496844314
+  },
+  "fired": [
+   215,
+   215,
+   215,
+   215,
+   215
+  ]
+ },
+ {
+  "a": 2,
+  "prec": "f32",
+  "defect_chunk5_vs_unchunked": 0.0001626336875567569,
+  "defect_chunk1_vs_unchunked": 0.00015260796203320215,
+  "defect_pert1_vs_unchunked": 0.0001680661475356171,
+  "defect_pert2_vs_unchunked": 0.0001804545407595448,
+  "defect_pert1_vs_pert2": 0.00016793849568541575,
+  "rdm2": {
+   "unchunked": 0.03791990242386062,
+   "chunk_b5": 0.037765617113747624,
+   "chunk_b1": 0.03774339482728182,
+   "unchunked_pert1": 0.037912869157666375,
+   "unchunked_pert2": 0.03782691505526399
+  },
+  "fired": [
+   215,
+   215,
+   215,
+   215,
+   215
+  ]
+ }
+]

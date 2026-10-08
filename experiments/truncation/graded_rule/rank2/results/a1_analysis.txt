@@ -1,0 +1,58 @@
+Approach 1: spcf window a = 1 vs a = 2 vs SVD (same gauge), Ising N = 10, chi in {12, 16, 24}, 6 cells (18 entries)
+
+Reproduction of the existing a = 2 configuration (new run vs eqerr_raw): stag_mu1 chi=24 rdm2 1.8219e-03 vs 1.8219e-03 (rel 0.0e+00); stag_mu0.5 chi=12 rdm2 1.4192e-02 vs 1.4192e-02 (rel 0.0e+00)
+
+T = 4: pooled medians over 18 entries of R = metric(spcf)/metric(SVD same gauge)  [a = 1 | a = 2]
+   rdm2         0.428 |   0.307
+   nn_rms       0.449 |   0.325
+   nnn_rms      0.702 |   0.633
+   zzfar        0.893 |   0.855
+   E_abs        0.930 |   0.609
+   tdist        0.984 |   0.980
+   infid_pur    1.000 |   1.000
+   C1 R1 <= 1.5 R2: True (0.428 vs 0.460);  C2 R1 <= 0.667: True;  C3 zzfar R1 <= 1.5: True (0.893)  ->  KEEPS THE GAIN
+   fraction of the a = 2 log-gain kept by a = 1: 0.72
+
+T = 3: pooled medians over 18 entries of R = metric(spcf)/metric(SVD same gauge)  [a = 1 | a = 2]
+   rdm2         0.341 |   0.265
+   nn_rms       0.353 |   0.263
+   nnn_rms      0.602 |   0.617
+   zzfar        1.042 |   0.982
+   E_abs        1.017 |   0.728
+   C1 R1 <= 1.5 R2: True (0.341 vs 0.397);  C2 R1 <= 0.667: True;  C3 zzfar R1 <= 1.5: True (1.042)  ->  KEEPS THE GAIN
+   fraction of the a = 2 log-gain kept by a = 1: 0.81
+
+Per cell (median over chi 12, 16, 24), T = 4:  R1(rdm2) R2(rdm2) | zzfar R1 R2 | C1 C2 C3
+   stag_mu1      0.310  0.227 |  0.846  0.806 | True True True  -> pass
+   stag_mu0.5    0.278  0.210 |  0.875  0.888 | True True True  -> pass
+   stag_mu0.25   0.451  0.314 |  0.692  0.741 | True True True  -> pass
+   dw_mu1        0.528  0.390 |  0.912  0.836 | True True True  -> pass
+   dw_mu0.5      0.437  0.300 |  1.069  0.976 | True True True  -> pass
+   dw_mu0.25     0.440  0.361 |  0.962  0.987 | True True True  -> pass
+   cells passing all three: T = 4: 6 of 6;  T = 3: 5 of 6
+
+T = 4: per-entry rdm2(a = 1)/rdm2(a = 2): median 1.30, min 1.16, max 1.67, entries above 1.5: 3 of 18
+T = 3: per-entry rdm2(a = 1)/rdm2(a = 2): median 1.28, min 1.06, max 1.53, entries above 1.5: 2 of 18
+Entries worse than SVD (R > 1) at T = 4, a = 1 | a = 2: rdm2 0|0, nn_rms 0|0, nnn_rms 0|0, zzfar 6|4, E_abs 8|2, tdist 0|0, infid_pur 8|6
+Overfit check (a = 1, T = 4): median f_c/f_svd over fired cuts, R1(rdm2), R2(rdm2) per entry
+   stag_mu1     chi=12 f_c/f_svd 0.200 (n=325) R1 0.331 R2 0.265  overfit=False
+   stag_mu1     chi=16 f_c/f_svd 0.142 (n=214) R1 0.310 R2 0.227  overfit=False
+   stag_mu1     chi=24 f_c/f_svd 0.096 (n=153) R1 0.208 R2 0.170  overfit=False
+   stag_mu0.5   chi=12 f_c/f_svd 0.219 (n=343) R1 0.278 R2 0.239  overfit=False
+   stag_mu0.5   chi=16 f_c/f_svd 0.174 (n=219) R1 0.289 R2 0.210  overfit=False
+   stag_mu0.5   chi=24 f_c/f_svd 0.182 (n=165) R1 0.216 R2 0.165  overfit=False
+   stag_mu0.25  chi=12 f_c/f_svd 0.376 (n=385) R1 0.451 R2 0.320  overfit=False
+   stag_mu0.25  chi=16 f_c/f_svd 0.289 (n=265) R1 0.403 R2 0.314  overfit=False
+   stag_mu0.25  chi=24 f_c/f_svd 0.280 (n=225) R1 0.466 R2 0.279  overfit=False
+   dw_mu1       chi=12 f_c/f_svd 0.231 (n=325) R1 0.579 R2 0.455  overfit=False
+   dw_mu1       chi=16 f_c/f_svd 0.169 (n=205) R1 0.528 R2 0.390  overfit=False
+   dw_mu1       chi=24 f_c/f_svd 0.143 (n=149) R1 0.431 R2 0.364  overfit=False
+   dw_mu0.5     chi=12 f_c/f_svd 0.253 (n=343) R1 0.615 R2 0.391  overfit=False
+   dw_mu0.5     chi=16 f_c/f_svd 0.233 (n=216) R1 0.437 R2 0.291  overfit=False
+   dw_mu0.5     chi=24 f_c/f_svd 0.194 (n=165) R1 0.386 R2 0.300  overfit=False
+   dw_mu0.25    chi=12 f_c/f_svd 0.319 (n=387) R1 0.424 R2 0.361  overfit=False
+   dw_mu0.25    chi=16 f_c/f_svd 0.285 (n=262) R1 0.440 R2 0.367  overfit=False
+   dw_mu0.25    chi=24 f_c/f_svd 0.258 (n=226) R1 0.464 R2 0.318  overfit=False
+   overfit entries: 0 of 18
+
+CPU to T = 4 (s), median over the 18 entries: SVD same gauge 0.40, a = 2 10.37, a = 1 2.66; ratios a1/SVD 6.9, a2/SVD 27.9, a2/a1 4.0
