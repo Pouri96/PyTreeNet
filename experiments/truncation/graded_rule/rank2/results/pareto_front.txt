@@ -1,0 +1,42 @@
+=== PEAK MEMORY (VmHWM growth, MB) ===
+-- spcf-a1
+   cells with a point on the front: 0 of 0;  median factor over cells and chi nan
+-- spcf-a2
+   cells with a point on the front: 0 of 0;  median factor over cells and chi nan
+-- spcfc-a1-b8-wf
+   cells with a point on the front: 0 of 0;  median factor over cells and chi nan
+-- spcfc-a2-b1-wf
+   cells with a point on the front: 0 of 0;  median factor over cells and chi nan
+=== CPU TIME to T = 4 (s) ===
+-- spcf-a1
+   stag_mu1     on front: False points on front []  equal-error cost factor per chi 12:3.62 16:3.42 24:2.59 32:2.99 48:2.27 64:2.41
+   stag_mu0.5   on front: False points on front []  equal-error cost factor per chi 12:2.91 16:3.39 24:2.48 32:3.44 48:2.04 64:2.14
+   stag_mu0.25  on front: False points on front []  equal-error cost factor per chi 12:3.74 16:4.11 24:4.88 32:6.03 48:8.20 64:10.63
+   dw_mu1       on front: False points on front []  equal-error cost factor per chi 12:5.94 16:4.74 24:3.75 32:4.11 48:2.34 64:2.12
+   dw_mu0.5     on front: False points on front []  equal-error cost factor per chi 12:5.17 16:4.67 24:3.23 32:4.06 48:2.62 64:2.10
+   dw_mu0.25    on front: False points on front []  equal-error cost factor per chi 12:3.38 16:3.47 24:3.93 32:5.53 48:7.79 64:9.29
+   cells with a point on the front: 0 of 6;  median factor over cells and chi 3.55
+-- spcf-a2
+   stag_mu1     on front: False points on front []  equal-error cost factor per chi 12:13.12 16:12.00 24:6.66
+   stag_mu0.5   on front: False points on front []  equal-error cost factor per chi 12:11.54 16:10.80 24:6.93
+   stag_mu0.25  on front: False points on front []  equal-error cost factor per chi 12:11.85 16:14.02 24:10.52
+   dw_mu1       on front: False points on front []  equal-error cost factor per chi 12:19.86 16:16.78 24:9.15
+   dw_mu0.5     on front: False points on front []  equal-error cost factor per chi 12:15.78 16:14.80 24:8.22
+   dw_mu0.25    on front: False points on front []  equal-error cost factor per chi 12:12.36 16:10.83 24:10.06
+   cells with a point on the front: 0 of 6;  median factor over cells and chi 11.70
+-- spcfc-a1-b8-wf
+   stag_mu1     on front: False points on front []  equal-error cost factor per chi 12:4.86 16:4.05 24:2.88 32:3.21 48:2.60 64:2.29
+   stag_mu0.5   on front: False points on front []  equal-error cost factor per chi 12:3.73 16:3.94 24:3.02 32:3.66 48:2.24 64:2.33
+   stag_mu0.25  on front: False points on front []  equal-error cost factor per chi 12:4.48 16:4.43 24:5.65 32:6.49 48:9.09 64:11.91
+   dw_mu1       on front: False points on front []  equal-error cost factor per chi 12:6.63 16:5.43 24:4.16 32:4.25 48:2.58 64:2.24
+   dw_mu0.5     on front: False points on front []  equal-error cost factor per chi 12:6.12 16:5.40 24:3.50 32:4.41 48:2.85 64:2.31
+   dw_mu0.25    on front: False points on front []  equal-error cost factor per chi 12:4.42 16:3.86 24:4.32 32:6.32 48:8.57 64:9.91
+   cells with a point on the front: 0 of 6;  median factor over cells and chi 4.20
+-- spcfc-a2-b1-wf
+   stag_mu1     on front: False points on front []  equal-error cost factor per chi 12:27.92 16:23.09 24:14.16 32:11.04 48:6.49
+   stag_mu0.5   on front: False points on front []  equal-error cost factor per chi 12:23.06 16:20.92 24:14.04 32:12.44 48:5.73
+   stag_mu0.25  on front: False points on front []  equal-error cost factor per chi 12:24.32 16:27.11 24:21.52 32:23.26 48:25.58
+   dw_mu1       on front: False points on front []  equal-error cost factor per chi 12:40.21 16:32.40 24:19.24 32:14.51 48:5.73
+   dw_mu0.5     on front: False points on front []  equal-error cost factor per chi 12:32.52 16:27.59 24:17.47 32:14.75 48:6.40
+   dw_mu0.25    on front: False points on front []  equal-error cost factor per chi 12:26.26 16:21.09 24:20.91 32:22.63 48:23.15
+   cells with a point on the front: 0 of 6;  median factor over cells and chi 21.30

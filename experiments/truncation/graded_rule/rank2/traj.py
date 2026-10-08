@@ -4,7 +4,7 @@
 
 cell   one of eqerr_time.CELLS (stag_mu1 ... dw_mu0.25); Ising, N = 10, dt = 0.1, T = 4; spcf runs in the gauge Test 2 used.
 arm    svd_plain | svd_back | dmt | spcf-a<A> (unchunked SPCFPur, window A) | spcfc-a<A>-b<BLK> (SPCFPurChunk, block BLK of the outer index)
-         optional suffixes: '-f64' selects precision float64 for the spcf cut (default float32, as in all earlier tests), '-wf' (chunked only) recomputes
+         optional suffixes: '-gplain' / '-gback' overrides the ancilla gauge of the spcf run (default: the one Test 2 used in the cell), '-f64' selects precision float64 for the spcf cut (default float32, as in all earlier tests), '-wf' (chunked only) recomputes
          the reference state W0 in complex64 (SPCFPurChunk w0_fast)
 mode   'time'  samples every 0.5 time units, scored against the dense reference (lean metrics), cumulative CPU (TEBD only), params;
                full metrics (trace distance, infidelity, ...) at the final time.      Used for accuracy and CPU time.
@@ -54,6 +54,9 @@ def make_arm(arm, cell):
                            precision=prec, blk=blk, w0_fast=('wf' in parts))
     else:
         raise ValueError(arm)
+    for t in parts:
+        if t in ('gplain', 'gback'):                   # gauge override (default: the gauge Test 2 used for this cell)
+            sg = t[1:]
     return cut, sg, 'spcf'
 
 
