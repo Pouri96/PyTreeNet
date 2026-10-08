@@ -130,13 +130,19 @@ def run_op_tebd(N, chi, nsteps, gops, cut, snap=None, site=0, pauli=3):
             th = np.einsum('abst,lstr->labr', gops[b], th)
             A = T[b - 1] if b >= 1 else None
             B = T[b + 2] if b + 2 <= N - 1 else None
-            T[b], T[b + 1], _, _ = cut(th, chi, 'R', A, B, b)
+            if cut is svd_cut_op:
+                T[b], T[b + 1], _, _ = svd_cut_op(th, chi, 'R')
+            else:
+                T[b], T[b + 1], _, _ = cut(th, chi, 'R', A, B, b)
         for b in range(N - 2, -1, -1):
             th = np.tensordot(T[b], T[b + 1], axes=([2], [0]))
             th = np.einsum('abst,lstr->labr', gops[b], th)
             A = T[b - 1] if b >= 1 else None
             B = T[b + 2] if b + 2 <= N - 1 else None
-            T[b], T[b + 1], _, _ = cut(th, chi, 'L', A, B, b)
+            if cut is svd_cut_op:
+                T[b], T[b + 1], _, _ = svd_cut_op(th, chi, 'L')
+            else:
+                T[b], T[b + 1], _, _ = cut(th, chi, 'L', A, B, b)
         if snap is not None:
             snap(step + 1, T)
     return T, time.time() - t0

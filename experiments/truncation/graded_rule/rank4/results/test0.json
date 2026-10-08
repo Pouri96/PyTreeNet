@@ -1,0 +1,471 @@
+{
+ "dense marginals vs pauli_prop.exact_values (N=6, n=5)": {
+  "value": 3.3306690738754696e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf ising svd_raw:None vs dense, max over steps": {
+  "value": 9.880984919163893e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf ising svd_renorm:None vs dense, max over steps": {
+  "value": 1.0436096431476471e-14,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf ising dmt:neel vs dense, max over steps": {
+  "value": 9.880984919163893e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf ising dmt:I vs dense, max over steps": {
+  "value": 9.880984919163893e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf ising pauli=1 MPO vs PP eps=0 (final)": {
+  "value": 7.605027718682322e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf ising pauli=1 MPO vs dense (final)": {
+  "value": 7.882583474838611e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf ising pauli=2 MPO vs PP eps=0 (final)": {
+  "value": 6.328271240363392e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf ising pauli=2 MPO vs dense (final)": {
+  "value": 6.439293542825908e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf ising pauli=3 MPO vs PP eps=0 (final)": {
+  "value": 9.658940314238862e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf ising pauli=3 MPO vs dense (final)": {
+  "value": 9.880984919163893e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf ising norm conserved": {
+  "value": 3.9968028886505635e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf ising2 svd_raw:None vs dense, max over steps": {
+  "value": 5.662137425588298e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf ising2 svd_renorm:None vs dense, max over steps": {
+  "value": 4.773959005888173e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf ising2 dmt:neel vs dense, max over steps": {
+  "value": 5.662137425588298e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf ising2 dmt:I vs dense, max over steps": {
+  "value": 5.662137425588298e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf ising2 pauli=1 MPO vs PP eps=0 (final)": {
+  "value": 8.881784197001252e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf ising2 pauli=1 MPO vs dense (final)": {
+  "value": 8.604228440844963e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf ising2 pauli=2 MPO vs PP eps=0 (final)": {
+  "value": 5.662137425588298e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf ising2 pauli=2 MPO vs dense (final)": {
+  "value": 5.773159728050814e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf ising2 pauli=3 MPO vs PP eps=0 (final)": {
+  "value": 5.440092820663267e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf ising2 pauli=3 MPO vs dense (final)": {
+  "value": 5.662137425588298e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf ising2 norm conserved": {
+  "value": 6.661338147750939e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf heis svd_raw:None vs dense, max over steps": {
+  "value": 4.579669976578771e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf heis svd_renorm:None vs dense, max over steps": {
+  "value": 3.747002708109903e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf heis dmt:neel vs dense, max over steps": {
+  "value": 4.579669976578771e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf heis dmt:I vs dense, max over steps": {
+  "value": 4.579669976578771e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf heis pauli=1 MPO vs PP eps=0 (final)": {
+  "value": 3.2587175756375663e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf heis pauli=1 MPO vs dense (final)": {
+  "value": 3.2587175756375663e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf heis pauli=2 MPO vs PP eps=0 (final)": {
+  "value": 2.1599035264651553e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf heis pauli=2 MPO vs dense (final)": {
+  "value": 2.1599035264651553e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf heis pauli=3 MPO vs PP eps=0 (final)": {
+  "value": 4.163336342344337e-17,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf heis pauli=3 MPO vs dense (final)": {
+  "value": 5.273559366969494e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "chi=inf heis norm conserved": {
+  "value": 4.6629367034256575e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "DMT-neel ising N=8 chi=8: max |functional_a violation|": {
+  "value": 3.425081637090554e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "DMT-neel ising N=8 chi=8: max |functional_b violation|": {
+  "value": 3.4992943439593163e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "DMT-neel ising N=8 chi=8: max |Tr[sigma_ref delta]|": {
+  "value": 4.624601806492043e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "ntrunc DMT-neel ising N=8 chi=8": 102,
+ "reserved DMT-neel ising N=8 chi=8": {
+  "mean_rL": 4.0,
+  "mean_rR": 4.0,
+  "n": 102
+ },
+ "DMT-neel ising N=10 chi=12: max |functional_a violation|": {
+  "value": 5.0672233117082296e-14,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "DMT-neel ising N=10 chi=12: max |functional_b violation|": {
+  "value": 6.716843421901081e-14,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "DMT-neel ising N=10 chi=12: max |Tr[sigma_ref delta]|": {
+  "value": 1.3235026008899175e-14,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "ntrunc DMT-neel ising N=10 chi=12": 131,
+ "reserved DMT-neel ising N=10 chi=12": {
+  "mean_rL": 4.0,
+  "mean_rR": 4.0,
+  "n": 131
+ },
+ "DMT-I ising N=8 chi=8: max |functional_a violation|": {
+  "value": 1.6401471687357234e-14,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "DMT-I ising N=8 chi=8: max |functional_b violation|": {
+  "value": 1.5136813037901136e-14,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "DMT-I ising N=8 chi=8: max |Tr[sigma_ref delta]|": {
+  "value": 6.419628462324258e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "ntrunc DMT-I ising N=8 chi=8": 99,
+ "reserved DMT-I ising N=8 chi=8": {
+  "mean_rL": 4.0,
+  "mean_rR": 4.0,
+  "n": 99
+ },
+ "DMT-I ising N=10 chi=12: max |functional_a violation|": {
+  "value": 2.0521542818360473e-14,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "DMT-I ising N=10 chi=12: max |functional_b violation|": {
+  "value": 1.0293599916858106e-14,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "DMT-I ising N=10 chi=12: max |Tr[sigma_ref delta]|": {
+  "value": 8.954879682855972e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "ntrunc DMT-I ising N=10 chi=12": 127,
+ "reserved DMT-I ising N=10 chi=12": {
+  "mean_rL": 4.0,
+  "mean_rR": 4.0,
+  "n": 127
+ },
+ "DMT-neel ising2 N=8 chi=8: max |functional_a violation|": {
+  "value": 8.624773290659798e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "DMT-neel ising2 N=8 chi=8: max |functional_b violation|": {
+  "value": 5.753363915581353e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "DMT-neel ising2 N=8 chi=8: max |Tr[sigma_ref delta]|": {
+  "value": 3.822974542369575e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "ntrunc DMT-neel ising2 N=8 chi=8": 103,
+ "reserved DMT-neel ising2 N=8 chi=8": {
+  "mean_rL": 4.0,
+  "mean_rR": 4.0,
+  "n": 103
+ },
+ "DMT-neel ising2 N=10 chi=12: max |functional_a violation|": {
+  "value": 2.927332494462792e-14,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "DMT-neel ising2 N=10 chi=12: max |functional_b violation|": {
+  "value": 4.414226879296181e-14,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "DMT-neel ising2 N=10 chi=12: max |Tr[sigma_ref delta]|": {
+  "value": 7.978960611224237e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "ntrunc DMT-neel ising2 N=10 chi=12": 134,
+ "reserved DMT-neel ising2 N=10 chi=12": {
+  "mean_rL": 4.0,
+  "mean_rR": 4.0,
+  "n": 134
+ },
+ "DMT-I ising2 N=8 chi=8: max |functional_a violation|": {
+  "value": 1.1638538307402866e-14,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "DMT-I ising2 N=8 chi=8: max |functional_b violation|": {
+  "value": 9.641312751145414e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "DMT-I ising2 N=8 chi=8: max |Tr[sigma_ref delta]|": {
+  "value": 5.883396215087402e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "ntrunc DMT-I ising2 N=8 chi=8": 102,
+ "reserved DMT-I ising2 N=8 chi=8": {
+  "mean_rL": 4.0,
+  "mean_rR": 4.0,
+  "n": 102
+ },
+ "DMT-I ising2 N=10 chi=12: max |functional_a violation|": {
+  "value": 1.2365719708017926e-14,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "DMT-I ising2 N=10 chi=12: max |functional_b violation|": {
+  "value": 1.0700562990811631e-14,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "DMT-I ising2 N=10 chi=12: max |Tr[sigma_ref delta]|": {
+  "value": 6.333255792041366e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "ntrunc DMT-I ising2 N=10 chi=12": 132,
+ "reserved DMT-I ising2 N=10 chi=12": {
+  "mean_rL": 4.0,
+  "mean_rR": 4.0,
+  "n": 132
+ },
+ "DMT-neel heis N=8 chi=8: max |functional_a violation|": {
+  "value": 3.8727439283663045e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "DMT-neel heis N=8 chi=8: max |functional_b violation|": {
+  "value": 6.000557826529028e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "DMT-neel heis N=8 chi=8: max |Tr[sigma_ref delta]|": {
+  "value": 7.434300604744055e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "ntrunc DMT-neel heis N=8 chi=8": 113,
+ "reserved DMT-neel heis N=8 chi=8": {
+  "mean_rL": 4.0,
+  "mean_rR": 4.0,
+  "n": 113
+ },
+ "DMT-neel heis N=10 chi=12: max |functional_a violation|": {
+  "value": 2.5316052136421838e-14,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "DMT-neel heis N=10 chi=12: max |functional_b violation|": {
+  "value": 1.7085507110336546e-14,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "DMT-neel heis N=10 chi=12: max |Tr[sigma_ref delta]|": {
+  "value": 1.2255591758907877e-14,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "ntrunc DMT-neel heis N=10 chi=12": 158,
+ "reserved DMT-neel heis N=10 chi=12": {
+  "mean_rL": 4.0,
+  "mean_rR": 4.0,
+  "n": 158
+ },
+ "DMT-I heis N=8 chi=8: max |functional_a violation|": {
+  "value": 7.265531393791231e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "DMT-I heis N=8 chi=8: max |functional_b violation|": {
+  "value": 7.459433947238141e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "DMT-I heis N=8 chi=8: max |Tr[sigma_ref delta]|": {
+  "value": 6.688744638074836e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "ntrunc DMT-I heis N=8 chi=8": 113,
+ "reserved DMT-I heis N=8 chi=8": {
+  "mean_rL": 4.0,
+  "mean_rR": 4.0,
+  "n": 113
+ },
+ "DMT-I heis N=10 chi=12: max |functional_a violation|": {
+  "value": 9.077597162526396e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "DMT-I heis N=10 chi=12: max |functional_b violation|": {
+  "value": 1.0995163956183603e-14,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "DMT-I heis N=10 chi=12: max |Tr[sigma_ref delta]|": {
+  "value": 4.490139139880092e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "ntrunc DMT-I heis N=10 chi=12": 158,
+ "reserved DMT-I heis N=10 chi=12": {
+  "mean_rL": 4.0,
+  "mean_rR": 4.0,
+  "n": 158
+ },
+ "dense-op hook N=7 chi=9 dmt-neel: functional_a": {
+  "value": 7.679620828149325e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "dense-op hook N=7 chi=9 dmt-neel: functional_b": {
+  "value": 5.840021332533516e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "dense-op hook N=7 chi=9 dmt-neel: Tr[sigma_ref delta]": {
+  "value": 8.360240268740635e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "dense-op hook N=7 chi=9 dmt-neel: 4-site window b-1..b+2 (expected NONZERO)": 0.035440651516943505,
+ "dense-op hook N=7 chi=9 svd_raw-neel (expected NONZERO)": {
+  "a": 2.3849519308784934e-06,
+  "b": 2.3371278522661363e-06,
+  "full": 1.7229059854361767e-06
+ },
+ "dense-op hook N=7 chi=9 dmt-I: functional_a": {
+  "value": 9.475954092577621e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "dense-op hook N=7 chi=9 dmt-I: functional_b": {
+  "value": 7.484464437101934e-15,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "dense-op hook N=7 chi=9 dmt-I: Tr[sigma_ref delta]": {
+  "value": 5.456002846193436e-16,
+  "tol": 1e-12,
+  "ok": true
+ },
+ "dense-op hook N=7 chi=9 dmt-I: 4-site window b-1..b+2 (expected NONZERO)": 0.006382816709217098,
+ "dense-op hook N=7 chi=9 svd_raw-I (expected NONZERO)": {
+  "a": 1.518417828228662e-06,
+  "b": 1.5054402687409048e-06,
+  "full": 2.2196857678342288e-10
+ },
+ "preview N=10 chi=8 svd_raw:None": 0.01931752910297009,
+ "preview N=10 chi=8 svd_renorm:None": 0.019359387202738644,
+ "preview N=10 chi=8 dmt:I": 0.1482072308402883,
+ "preview N=10 chi=8 dmt:neel": 0.28029250007081036,
+ "all_ok": true
+}
