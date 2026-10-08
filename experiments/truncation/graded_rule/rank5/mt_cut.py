@@ -632,3 +632,203 @@ class SPCMulti:
             fc = float(rc @ rc)
         info = dict(f0=f0, f=fc, nit=nit, nev=self.nev, hist=hist, g_f=(ec / self.eps0 - 1.0).tolist())
         return Qc, info
+
+
+# ------------------------------------------------------------------------------------------ arms driver
+class Cell:
+    """one (model, N, b, target set): exact data, scorer, and the arms at a given chi"""
+
+    def __init__(self, model, N, b, tset, sh):
+        self.model, self.N, self.b, self.ts, self.sh = model, N, b, tset, sh
+        self.g = Geom(N, b)
+        self.sc = Scorer(self.g, tset, sh)
+        self.Ms = self.sc.Ms
+        self._ops = None
+        self._wnear = [w for w in self.g.wins]
+
+    # --- fast E_near (near windows only), used inside the oracle searches
+    def e_near_fast(self, Mts):
+        g, sc = self.g, self.sc
+        worst = 0.0
+        for f, Mt in enumerate(Mts):
+            rho = g.region_rho(Mt)
+            for (s, k) in g.wins:
+                d = trace_distance(g.win_rdm(rho, s, k), g.win_rdm(sc.rho_ex[f], s, k))
+                worst = max(worst, d)
+        return worst
+
+    def stack_Q(self, w, chi):
+        U, s = stack_basis(self.Ms, w)
+        return U[:, :chi], U
+
+    def oracle_grid(self, chi):
+        """arm (ii): plan grid + the literature weights; oracle pick on E_near.  returns (label, w, Q, E, table)"""
+        cand = [('lit', self.ts.w_lit)] + [(lab, np.asarray(w, float)) for lab, w in self.ts.grid]
+        best, tab = None, []
+        for lab, w in cand:
+            w = np.asarray(w, float) / np.sum(w)
+            Q, _ = self.stack_Q(w, chi)
+            E = self.e_near_fast(project(self.Ms, Q))
+            tab.append((lab, w.tolist(), E))
+            if best is None or E < best[3]:
+                best = (lab, w, Q, E)
+        return best[0], best[1], best[2], best[3], tab
+
+    def oracle_dense(self, chi, nsamp=300, seed=0):
+        """arm (ii+): denser oracle over the whole weight simplex (random Dirichlet + vertices + Nelder-Mead polish)"""
+        from scipy.optimize import minimize
+        F = self.ts.F
+        if F == 1:
+            Q, _ = self.stack_Q(np.ones(1), chi)
+            return np.ones(1), Q, self.e_near_fast(project(self.Ms, Q))
+        rng = np.random.default_rng(seed)
+
+        def ev(w):
+            w = np.asarray(w, float)
+            w = np.abs(w) / np.sum(np.abs(w))
+            Q, _ = self.stack_Q(np.maximum(w, 1e-9), chi)
+            return self.e_near_fast(project(self.Ms, Q)), w, Q
+
+        cands = [np.eye(F)[i] * 0.97 + 0.03 / F for i in range(F)] + [np.ones(F) / F, self.ts.w_lit] + \
+                list(rng.dirichlet(np.ones(F), nsamp)) + list(rng.dirichlet(0.4 * np.ones(F), nsamp // 2))
+        best = None
+        for w in cands:
+            E, w2, Q = ev(w)
+            if best is None or E < best[0]:
+                best = (E, w2, Q)
+        res = minimize(lambda z: ev(np.exp(z))[0], np.log(np.maximum(best[1], 1e-6)), method='Nelder-Mead',
+                       options=dict(maxiter=150, xatol=1e-3, fatol=1e-9))
+        E2, w2, Q2 = ev(np.exp(res.x))
+        if E2 < best[0]:
+            best = (E2, w2, Q2)
+        return best[1], best[2], best[0]
+
+    def dressed(self, chi, a):
+        if self._ops is None:
+            self._ops = left_pauli_ops(self.g)
+        return arm_dressed(self.Ms, self.ts.w_lit, chi, a, self.g, self._ops)
+
+    def all_arms(self, chi, kappas=(0.1,), dressed_a=(1e-3, 1e-2, 1e-1), dressed_ext=(0.3, 1.0), maxit=40, log=None):
+        """returns dict arm -> dict(Q=..., metrics=..., extra=...); Q is a shared (dimL,chi) basis or a list for arm v"""
+        sc, ts = self.sc, self.ts
+        out = {}
+        Qi, _ = self.stack_Q(ts.w_lit, chi)
+        out['i'] = dict(Q=Qi, m=sc.score(project(self.Ms, Qi)))
+        lab, w, Q, E, tab = self.oracle_grid(chi)
+        out['ii'] = dict(Q=Q, m=sc.score(project(self.Ms, Q)), label=lab, w=w.tolist(), table=tab)
+        w2, Q2, E2 = self.oracle_dense(chi)
+        out['ii_plus'] = dict(Q=Q2, m=sc.score(project(self.Ms, Q2)), w=w2.tolist())
+        tabd = {}
+        bestd = None
+        for a in tuple(dressed_a) + tuple(dressed_ext):
+            Qd = self.dressed(chi, a)
+            m = sc.score(project(self.Ms, Qd))
+            tabd[a] = m['E_near']
+            if a in dressed_a and (bestd is None or m['E_near'] < bestd[0]):
+                bestd = (m['E_near'], a, Qd, m)
+        out['iii'] = dict(Q=bestd[2], m=bestd[3], a=bestd[1], table=tabd)
+        # supplementary: best over the extended grid
+        a_ext = min(tabd, key=tabd.get)
+        out['iii_ext'] = dict(a=a_ext, E_near=tabd[a_ext])
+        # (v) separate SVDs
+        Mv = arm_separate(self.Ms, chi)
+        out['v'] = dict(Q=None, m=sc.score(Mv))
+        # (iv) spcf-multi
+        for kap in kappas:
+            spc = SPCMulti(self.g, self.Ms, sc.hv_ex, Qi, cplx=ts.cplx, kappa=kap)
+            t0 = time.time()
+            Qn, info = spc.run(maxit=maxit)
+            info['time'] = time.time() - t0
+            info.pop('hist', None)
+            name = 'iv' if kap == 0.1 else ('iv_u' if kap is None else f'iv_k{kap:g}')
+            out[name] = dict(Q=Qn, m=sc.score(project(self.Ms, Qn)), info=info)
+        return out
+
+    # --- A0 gate quantities of the SVD (arm i) cut
+    def gate(self, chi):
+        sc, ts = self.sc, self.ts
+        Qi, _ = self.stack_Q(ts.w_lit, chi)
+        Mt = project(self.Ms, Qi)
+        eps = eps_of(self.Ms, Mt)
+        bres = np.array(sc.bres(Mt))
+        cost = np.array([gate_cost(e) for e in eps])
+        F = ts.F
+        w = ts.w_lit
+        eq = dict(tail=float(eps.mean()), bres=float(np.sqrt(np.mean(bres ** 2))))
+        lw = dict(tail=float(np.sum(w * eps)), bres=float(np.sqrt(np.sum(w * bres ** 2))))
+        for d in (eq, lw):
+            d['cost'] = gate_cost(d['tail'])
+            d['ratio'] = d['bres'] / d['cost']
+        return dict(eps=eps.tolist(), bres=bres.tolist(), cost=cost.tolist(), ratio_t=(bres / cost).tolist(),
+                    eq=eq, lw=lw, ratio_max=float(np.max(bres / cost)), ratio_min=float(np.min(bres / cost)))
+
+
+def to_jsonable(o):
+    if isinstance(o, dict):
+        return {str(k): to_jsonable(v) for k, v in o.items()}
+    if isinstance(o, (list, tuple)):
+        return [to_jsonable(v) for v in o]
+    if isinstance(o, np.ndarray):
+        return to_jsonable(o.tolist())
+    if isinstance(o, (np.floating,)):
+        return float(o)
+    if isinstance(o, (np.integer,)):
+        return int(o)
+    if isinstance(o, complex) or isinstance(o, np.complexfloating):
+        return [float(np.real(o)), float(np.imag(o))]
+    return o
+
+
+def run_a1(model, N, b, chis=(4, 6, 8), sets=None, kappas=(0.1,), out_dir=None, tag='', maxit=40, which=('S1', 'S2', 'S3', 'S4')):
+    """A0 gate quantities and A1 arms for one (model, cut).  Writes JSON (metrics) and NPZ (shared bases)."""
+    out_dir = Path(out_dir or HERE / 'results')
+    out_dir.mkdir(exist_ok=True)
+    tsets, sh = make_sets(model, N, which=which)
+    if sets is not None:
+        tsets = [t for t in tsets if t.name in sets]
+    rec = dict(model=model, N=N, b=b, chis=list(chis), kappas=[k for k in kappas], cells=[], sh_E=sh['E'].tolist(),
+               omega=sh.get('omega'))
+    bases = {}
+    fn = out_dir / f'a1_{model}_N{N}_b{b}{tag}'
+    t00 = time.time()
+    for ts in tsets:
+        cell = Cell(model, N, b, ts, sh)
+        for chi in chis:
+            t0 = time.time()
+            arms = cell.all_arms(chi, kappas=kappas, maxit=maxit)
+            gate = cell.gate(chi)
+            c = dict(set=ts.name, chi=chi, gate=gate, meta={k: v for k, v in ts.meta.items() if k not in ('Aop',)})
+            for name, a in arms.items():
+                d = {k: v for k, v in a.items() if k != 'Q'}
+                c[name] = d
+                if a.get('Q') is not None:
+                    bases[f'{ts.name}|{chi}|{name}'] = a['Q']
+            c['time'] = time.time() - t0
+            rec['cells'].append(c)
+            i_, iv_ = arms['i']['m'], arms['iv']['m']
+            print(f'{model} b={b} {ts.name:5s} chi={chi}: E_near i {i_["E_near"]:.3e} ii {arms["ii"]["m"]["E_near"]:.3e} '
+                  f'ii+ {arms["ii_plus"]["m"]["E_near"]:.3e} iii {arms["iii"]["m"]["E_near"]:.3e} iv {iv_["E_near"]:.3e} '
+                  f'v {arms["v"]["m"]["E_near"]:.3e} | iv/i {iv_["E_near"] / i_["E_near"]:.2f} | {time.time() - t0:.0f}s', flush=True)
+            json.dump(to_jsonable(rec), open(str(fn) + '.json', 'w'))
+            np.savez_compressed(str(fn) + '_bases.npz', **bases)
+    rec['wall'] = time.time() - t00
+    json.dump(to_jsonable(rec), open(str(fn) + '.json', 'w'))
+    return rec
+
+
+if __name__ == '__main__':
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument('cmd', choices=['a1'])
+    ap.add_argument('--model', default='ising')
+    ap.add_argument('--N', type=int, default=12)
+    ap.add_argument('--b', type=int, default=5)
+    ap.add_argument('--chis', default='4,6,8')
+    ap.add_argument('--sets', default=None)
+    ap.add_argument('--kappas', default='0.1')
+    ap.add_argument('--tag', default='')
+    ap.add_argument('--out', default=None)
+    a = ap.parse_args()
+    ks = [None if k == 'inf' else float(k) for k in a.kappas.split(',')]
+    run_a1(a.model, a.N, a.b, tuple(int(x) for x in a.chis.split(',')), sets=a.sets.split(',') if a.sets else None,
+           kappas=ks, tag=a.tag, out_dir=a.out)
