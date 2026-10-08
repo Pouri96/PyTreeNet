@@ -9,7 +9,7 @@ Every row has the errors against the dense purification reference: the physical 
 (ZZ at distance 3 and 4), the physical trace distance 0.5 ||rho - rho_ex||_1, lambda_min(rho), the purification infidelity (gauge dependent)
 and the stored parameters.  Rows are appended to OUT.json as they finish.
 """
-import sys
+import sys, os
 import _p2  # noqa: F401
 import json, time
 import multiprocessing as mp
@@ -68,12 +68,22 @@ def one(job):
     return e
 
 
-def run(cells, arms, chis, out, nproc=3, N=10, model='ising', dt=0.1, quiet=False):
-    jobs = [(model, N, f, mu, g, T, a, c, dt) for (f, mu, g, T) in cells for c in chis for a in arms]
+def run(cells, arms, chis, out, nproc=3, N=10, model='ising', dt=0.1, quiet=False, jobs=None, resume=False):
+    if jobs is None:
+        jobs = [(model, N, f, mu, g, T, a, c, dt) for (f, mu, g, T) in cells for c in chis for a in arms]
+    else:                                   # explicit list of (family, mu, gauge, T, arm, chi)
+        jobs = [(model, N, f, mu, g, T, a, c, dt) for (f, mu, g, T, a, c) in jobs]
+    res = []
+    if resume and os.path.exists(out):                       # skip the jobs already in OUT (resume after a timeout)
+        res = json.load(open(out))
+        done = {(r['family'], str(r['mu']), r['gauge'], r['T'], r['arm'], r['chi']) for r in res}
+        jobs = [j for j in jobs if (j[2], 'inf' if np.isinf(j[3]) else str(j[3]), j[4], j[5], j[6], j[7]) not in done]
+        print(f'resume: {len(res)} rows present, {len(jobs)} jobs left', flush=True)
     # make sure every reference exists before forking (one process per trajectory)
-    for key in sorted({(f, mu, g) for (f, mu, g, T) in cells}, key=str):
-        P.reference_pur(model, N, key[0], key[1], key[2], cells[0][3], dt, Ts=tuple(sorted({c[3] for c in cells})))
-    res, t0 = [], time.time()
+    Ts = tuple(sorted({j[5] for j in jobs}))
+    for key in sorted({(j[2], j[3], j[4], j[5]) for j in jobs}, key=str):
+        P.reference_pur(model, N, key[0], key[1], key[2], key[3], dt, Ts=Ts)
+    t0 = time.time()
     with mp.Pool(nproc) as pool:
         for r in pool.imap_unordered(one, jobs, chunksize=1):
             res.append(r)
@@ -85,6 +95,11 @@ def run(cells, arms, chis, out, nproc=3, N=10, model='ising', dt=0.1, quiet=Fals
 
 
 if __name__ == '__main__':
+    if sys.argv[1].startswith('@'):         # @jobs.json : list of [family, mu, gauge, T, arm, chi]; usage: pur_bench.py @jobs.json OUT.json [nproc] [N] [model]
+        jl = [(f, np.inf if mu == 'inf' else float(mu), g, float(T), a, int(c)) for f, mu, g, T, a, c in json.load(open(sys.argv[1][1:]))]
+        run(None, None, None, sys.argv[2], int(sys.argv[3]) if len(sys.argv) > 3 else 3, int(sys.argv[4]) if len(sys.argv) > 4 else 10,
+            sys.argv[5] if len(sys.argv) > 5 else 'ising', jobs=jl, resume=True)
+        sys.exit()
     cells = [parse_cell(s) for s in sys.argv[1].split(',')]
     arms = sys.argv[2].split(',')
     chis = [int(c) for c in sys.argv[3].split(',')]

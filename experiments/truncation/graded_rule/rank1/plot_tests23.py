@@ -32,13 +32,13 @@ fig.savefig(HERE / 'figures' / 'test2_static_ratio.png', dpi=130)
 # ---- Test 3
 ref = B.get_ref('ising', N, T, dt)
 recs = []
-for fn in ('test3_ising.json', 'test3_ising_gate.json', 'test3_ising_rw.json', 'test3_ising_var.json'):
+for fn in ('test3_ising.json', 'test3_ising_gate.json', 'test3_ising_rw.json', 'test3_ising_var.json', 'test3_ising_var32.json'):
     p = HERE / 'results' / fn
     if p.exists():
         recs += json.load(open(p))
 M = {(r['arm'], r['chi']): B.metrics(r, ref) for r in recs}
 fig, axs = plt.subplots(1, 2, figsize=(10.5, 3.8), sharey=True)
-arms = [('spcop', 'C0'), ('rw:1.6', 'C2')]
+arms = [('spcop', 'C0'), ('rw:1.6', 'C2'), ('rw:2.0', 'C1'), ('spcop:ks=12', 'C4')]
 for ax, reg in zip(axs, ('front', 'behind')):
     for arm, col in arms:
         ch = sorted(c for (a, c) in M if a == arm)
@@ -48,7 +48,8 @@ for ax, reg in zip(axs, ('front', 'behind')):
     ax.axhline(0.75, color='r', lw=0.8)
     ax.axhline(1.0, color='k', lw=0.5)
     ax.set_xscale('log', base=2)
-    ax.set_title(f'{reg} of the front, Ising N=10 T=6')
+    ax.set_yscale('log')
+    ax.set_title(f'region: {reg} (by exact C_Z), Ising N=10 T=6')
     ax.set_xlabel('chi')
 axs[0].set_ylabel('rms error ratio to svd')
 axs[0].legend(fontsize=7)
