@@ -181,6 +181,15 @@ def analyze_cut(sp, theta, chi, dirn, b, res, fired, dbg, selftest=False):
             else:
                 e.update(fb=f, spb=s_, dcb=d_, alb=1.0)
             arms[f'{nm}_{tag(mu)}'] = e
+    # A5 variants: which rows / which linearisation point feed the Shampoo factors (target-free ingredients)
+    for nm, (at, rows) in (('A5s0', ('svd', 'static')), ('A5m', ('full', 'all')), ('A5sm', ('full', 'static'))):
+        Gv = cl.gamma_rows(at=at, rows=rows)
+        Lv, Rv = W.shampoo(Gv)
+        for mu in (10.0, 1e2, 1e4):
+            Lw, Rw = W.damped_pair(Lv, Rv, mu)
+            Q, _ = W.whitened_subspace(cl.Mm, k, Lw, Rw, dirn)
+            f, s_, d_ = arm_from_Mk(cl.galerkin(Q))
+            arms[f'{nm}_{tag(mu)}'] = dict(f=f, sp=s_, dc=d_, al=1.0, f1=f, sp1=s_, fb=f, spb=s_, dcb=d_, alb=1.0)
     # A6 Kronecker-preconditioned CG on the exact J^T J
     for pn, Kp in (('A3', K3), ('A4', K4)):
         lk, Vk = np.linalg.eigh(0.5 * (Kp + Kp.T))
@@ -205,6 +214,7 @@ class ProbeCut(spcfast.SPCFast):
         self.stride, self.max_cuts, self.selftest_n = stride, max_cuts, selftest_n
         self.records, self.seen = [], 0
         self.debug = []
+        self.ckpt = None
 
     def __call__(self, theta, chi, dirn, A, B, b):
         self.debug = []
@@ -217,6 +227,8 @@ class ProbeCut(spcfast.SPCFast):
                 rec = analyze_cut(self, theta, chi, dirn, b, res, self.fired > f0, dbg[0], selftest=len(self.records) < self.selftest_n)
                 rec['seen'] = self.seen
                 self.records.append(rec)
+                if self.ckpt and len(self.records) % 10 == 0:
+                    json.dump(dict(meta=dict(partial=True), records=self.records), open(self.ckpt, 'w'))
         return res
 
 
@@ -225,6 +237,7 @@ def run(model, N, T, chi, out, stride=1, max_cuts=10 ** 9, selftest_n=5):
     n = int(round(T / dt))
     G = M.make_gates(model, N, dt)
     cut = ProbeCut(model, N, stride=stride, max_cuts=max_cuts, selftest_n=selftest_n, **BEST)
+    cut.ckpt = out + '.partial'
     t0 = time.time()
     M.run_tebd(model, N, chi, n, dt, cut, gates=G)
     meta = dict(model=model, N=N, T=T, chi=chi, stride=stride, calls=cut.calls, fired=cut.fired, reached_cg=cut.seen, probed=len(cut.records),

@@ -125,7 +125,7 @@ def make_arm(arm, model, N):
     if arm.startswith('spcf:'):
         import spcfast
         p = arm.split(':')[1:]
-        return 'spcf', spcfast.SPCFast(model, N, a=int(p[0]), fw=float(p[1]), iters=int(p[2]), taus=[float(x) for x in p[3].split('-')],
+        return 'spcf', spcfast.SPCFast(model, N, a=int(p[0]), fw=float(p[1]), iters=int(p[2]), taus=([] if p[3] == 'none' else [float(x) for x in p[3].split('-')]),
                                        ks=tuple(int(x) for x in p[4].split('-')), f_min=float(p[5]), every=int(p[6]),
                                        eps_min=float(p[7]), pattern=p[8], rel_skip=float(p[9]))
     raise ValueError(arm)

@@ -173,6 +173,24 @@ def main(tags):
             res[(k, name)] = {tol: (tstar(E[k][key], tol), tstar_interp(E[k][key], tol)) for tol in (1e-2, 1e-3)}
             print(f"| {k} | {name} | {res[(k, name)][1e-2][0]:g} [{res[(k, name)][1e-2][1]:.2f}] | {res[(k, name)][1e-3][0]:g} [{res[(k, name)][1e-3][1]:.2f}] |")
 
+    # ------------------------------------------------------------------ compact comparison at selected times
+    print('\n### compact: nn rms error at selected times, all arms at equal chi (SVD x F, oracle SVD x F_true, logF / 1/chi extrapolation from the three largest chi <= chi)')
+    sel = [i for i, x in enumerate(TS) if x in (3.5, 4.5, 5.5, 6.5, 8.0)]
+    for key, name in (('enn', 'nn'), ('e1', '1-site')):
+        print(f'\n{name} rms')
+        print('| chi | arm | ' + ' | '.join(f't={TS[i]:g}' for i in sel) + ' |')
+        print('|---|---|' + '---|' * len(sel))
+        for c in SPCF_CHIS:
+            names = [f'svd{c}', f'svdF{c}', f'svdFtrue{c}', f'svdlogF{c}', f'svdinv{c}'] + [f'spcf_{t}_{c}' for t in spcf] + [f'spcfF_{t}_{c}' for t in spcf]
+            for k in names:
+                if k in E:
+                    print(f'| {c} | {k} | ' + ' | '.join(f'{E[k][key][i]:.2e}' for i in sel) + ' |')
+    print('\n### F_MPS estimator: 1 - F_MPS versus the true infidelity at t = 8 (and the ratio)')
+    print('| arm | infid | 1-F_MPS | ratio |')
+    print('|---|---|---|---|')
+    for k in [f'svd{c}' for c in chis] + [k for k in INF if k.startswith('spcf')]:
+        print(f'| {k} | {INF[k][-1]:.3e} | {1 - FM[k][-1]:.3e} | {INF[k][-1] / (1 - FM[k][-1]):.1f} |')
+
     # ------------------------------------------------------------------ T2 criteria
     summary = {}
     for t, dd in spcf.items():
@@ -245,6 +263,21 @@ def main(tags):
                     rr.append('-')
                     continue
                 ce, fl = rutil.chi_eq(chis, ladder_e, E[f'spcf_{t}_{c}']['enn'][i])
+                rr.append(f'{ce / c:.2f}{"*" if fl else ""}')
+            print(f'| {c} | ' + ' | '.join(rr) + ' |')
+        print('\nr(t) from eps_c (plain ZZ) instead of nn: chi_SVD(t)/chi at equal eps_c')
+        print('| chi | ' + ' | '.join(f'{x:g}' for x in TS) + ' |')
+        print('|---|' + '---|' * NS)
+        for c in SPCF_CHIS:
+            if c not in dd:
+                continue
+            rr = []
+            for i in range(NS):
+                e = EC[f'spcf_{t}_{c}'][0][i]
+                if e < 1e-7:
+                    rr.append('-')
+                    continue
+                ce, fl = rutil.chi_eq(chis, [EC[f'svd{x}'][0][i] for x in chis], e)
                 rr.append(f'{ce / c:.2f}{"*" if fl else ""}')
             print(f'| {c} | ' + ' | '.join(rr) + ' |')
         summary[t] = dict(a_cases=sum(crit_a.values()), a_total=len(crit_a), b={f'{k[0]}_{k[1]}': v for k, v in crit_b.items()},

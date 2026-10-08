@@ -88,3 +88,19 @@ def _tojson(o):
 
 def dump(rows, fn):
     json.dump(rows, open(fn, 'w'), default=_tojson, indent=0)
+
+
+def cell_cut(model, N, T, dt, gamma, chi, kappa, cut):
+    """LPDO-TEBD with a tilt cut object (spcflpdo.SPCFLpdo); same metrics as cell()."""
+    nsteps = int(round(T / dt))
+    rho_ex = reference(model, N, T, dt, gamma)
+    obs_ex = ref_obs(model, N, T, dt, gamma)
+    Tl, info = L.run_lpdo(model, N, chi, kappa, nsteps, dt, gamma, cut=cut)
+    rho = L.lpdo_to_rho(Tl)
+    row = dict(model=model, N=N, T=T, dt=dt, gamma=gamma, chi=chi, kappa=kappa, mode='mps')
+    row.update(info)
+    row['fired'] = cut.fired
+    row['calls'] = cut.calls
+    row['skipped'] = cut.skipped
+    row.update(L.errors_rho(rho_ex, rho, N, model, obs_ex))
+    return row

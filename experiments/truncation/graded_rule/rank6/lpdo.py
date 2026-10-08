@@ -76,7 +76,7 @@ def kraus_dephase_truncate(A, pn, kappa, tol=KRAUS_TOL):
     return np.ascontiguousarray(new), disc
 
 
-def run_lpdo(model, N, chi, kappa, nsteps, dt, gamma, probe=None, gates=None, kraus_tol=KRAUS_TOL):
+def run_lpdo(model, N, chi, kappa, nsteps, dt, gamma, probe=None, gates=None, kraus_tol=KRAUS_TOL, cut=None):
     """LPDO-TEBD.  chi = bond cap, kappa = Kraus cap.  Returns (T, info)."""
     Gs = gates or M.make_gates(model, N, dt)
     T = initial_lpdo(model, N)
@@ -84,12 +84,21 @@ def run_lpdo(model, N, chi, kappa, nsteps, dt, gamma, probe=None, gates=None, kr
     t0 = time.time()
     if probe is not None:
         probe.start(T, N)
+    if cut is not None:
+        cut.start(T, N)
     for op in schedule(N, nsteps):
         if op[0] == 'gate':
             b, dirn = op[1], op[2]
             th = np.tensordot(T[b], T[b + 1], axes=([3], [0]))                   # l s k t m r
             th = np.einsum('abst,lsktmr->lakbmr', Gs[b], th)
             l, K1, K2, r = th.shape[0], th.shape[2], th.shape[4], th.shape[5]
+            if cut is not None:
+                res = cut(th, chi, dirn, T, b)
+                if res is not None:
+                    T[b], T[b + 1] = res
+                    info['ncut'] += 1
+                    info['maxchi'] = max(info['maxchi'], T[b].shape[3])
+                    continue
             U, s, Vh = np.linalg.svd(th.reshape(l * 2 * K1, 2 * K2 * r), full_matrices=False)
             k = M._rank(s, chi)
             if probe is not None:

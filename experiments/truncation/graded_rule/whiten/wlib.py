@@ -207,16 +207,22 @@ class CutLin:
         dh = (dh - self.hn0 * dh[:self.nd].sum()) / self.tr0
         return self.F @ dh
 
-    def gamma_rows(self):
-        """Gamma_i (nres, 2l, 2r) with dr_i = Re <Gamma_i, dM>"""
-        Eta = self.F - np.outer(self.F @ self.hn0, self.ones_d)
-        Eta = Eta / self.tr0
+    def gamma_rows(self, at='svd', rows='all'):
+        """Gamma_i (nrows, 2l, 2r) with dr_i = Re <Gamma_i, dM>.  at='svd': linearised at the SVD point (what spcf does);
+        at='full': linearised at the untruncated M.  rows='all' | 'static' (the tau = 0 rows only, i.e. the product-form strings)"""
+        if at == 'svd':
+            W0, hn0, tr0 = self.W0, self.hn0, self.tr0
+        else:
+            W0 = self.Wof(self.Mm)
+            hn0, tr0 = self.hnorm(self.Mm)
+        F = self.F if rows == 'all' else self.F[:self.ns]
+        Eta = (F - np.outer(F @ hn0, self.ones_d)) / tr0
         D, nd, nu = self.D, self.nd, self.nu
-        H = np.zeros((self.nres, D, D), dtype=complex)
+        H = np.zeros((F.shape[0], D, D), dtype=complex)
         H[:, self.iu[0], self.iu[1]] = (Eta[:, nd:nd + nu] + 1j * Eta[:, nd + nu:]) / 2
         H = H + H.conj().transpose(0, 2, 1)
         H[:, self.dg, self.dg] = Eta[:, :nd]
-        Gd = 2.0 * np.matmul(H, self.W0[None])
+        Gd = 2.0 * np.matmul(H, W0[None])
         return self.Wadj(Gd)
 
     def jac_M(self, Gam):

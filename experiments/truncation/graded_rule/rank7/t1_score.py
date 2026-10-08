@@ -89,6 +89,20 @@ for rs, eps in CONFIGS:
             rows_cold.append(o)
 
 
+import glob
+rows_ext = []
+for f in sorted(glob.glob(str(R / 't1c64_*.json')) + sorted(glob.glob(str(R / 't1c96_*.json'))) + sorted(glob.glob(str(R / 't1x_*.json')))):
+    for r in json.load(open(f)):
+        o = score_row(r, None, Path(f).stem.split('_', 1)[1])
+        o.update(f=r['fired'] / r['calls'], cpu_spcf=r['cpu_spcf'], nn=r['nn_rms'], single=r['single_rms'], infid=r['infid'], cpu_svd_same=r['cpu_svd_same'])
+        for key, ck in (('nn', 'cpu_svd_eq_nn'), ('1site', 'cpu_svd_eq_1site')):
+            o['cpu_svd_eq_' + key] = r[ck]
+            o['ratio_' + key] = r['cpu_spcf'] / r[ck]
+            o['pred_' + key] = (1 + 15 * o['f']) / o['r_' + key] ** 3
+        o['ratio_same_chi'] = r['cpu_spcf'] / r['cpu_svd_same']
+        rows_ext.append(o)
+
+
 def table(rows, cold):
     print('| gate | chi | r nn | r 1-site | r infid | f | nn err | CPU spcf (s) | CPU SVD@eq nn (s) | ratio nn | ratio 1-site | pred (1+15f)/r^3 (nn) | spcf/SVD same chi |')
     print('|---|---|---|---|---|---|---|---|---|---|---|---|---|')
@@ -106,4 +120,6 @@ for c in sorted(tcur):
     print(f'  chi={c}: pre {tcur_pre.get(c, float("nan")):.2f}  post {tcur_post.get(c, float("nan")):.2f}')
 print('\nCOLD GATE (t1_cold.py: fresh SPCFast per run; SVD cost measured at the equal-error chi, interleaved)')
 table(rows_cold, True)
-json.dump(dict(spec=rows_spec, cold=rows_cold, svd_time_pre=tcur_pre, svd_time_post=tcur_post), open(R / 't1_scores.json', 'w'), indent=1, default=float)
+print('\nCOLD GATE, larger chi (chi = 64 re-measure required by the decision tree, chi = 96 and the eps_min = 1e-7 / 1e-6 gates are EXTENSIONS; label = file stem)')
+table(rows_ext, True)
+json.dump(dict(spec=rows_spec, cold=rows_cold, ext=rows_ext, svd_time_pre=tcur_pre, svd_time_post=tcur_post), open(R / 't1_scores.json', 'w'), indent=1, default=float)

@@ -1,0 +1,21 @@
+  d= 1 1site=5.79e-15 |dZ_mid|=3.46e-14 infid=3.07e-12 F=1.0000 fired=0/19
+  d= 2 1site=7.81e-16 |dZ_mid|=1.27e-14 infid=-2.72e-13 F=1.0000 fired=0/38
+  d= 3 1site=8.16e-16 |dZ_mid|=8.88e-16 infid=2.55e-14 F=1.0000 fired=0/57
+  d= 4 1site=4.33e-15 |dZ_mid|=6.11e-15 infid=-9.33e-15 F=1.0000 fired=0/76
+  d= 5 1site=1.04e-03 |dZ_mid|=2.00e-03 infid=5.54e-03 F=0.9945 fired=11/95
+  d= 6 1site=1.58e-03 |dZ_mid|=3.36e-04 infid=1.46e-02 F=0.9865 fired=22/114
+  d= 7 1site=1.33e-02 |dZ_mid|=1.51e-02 infid=9.34e-02 F=0.9129 fired=33/133
+  d= 8 1site=2.23e-02 |dZ_mid|=8.49e-03 infid=1.82e-01 F=0.8374 fired=44/152
+  d= 9 1site=3.31e-02 |dZ_mid|=1.28e-02 infid=2.40e-01 F=0.7827 fired=55/171
+  d=10 1site=4.66e-02 |dZ_mid|=2.27e-02 infid=3.10e-01 F=0.7216 fired=66/190
+  d=11 1site=5.68e-02 |dZ_mid|=1.93e-02 infid=3.73e-01 F=0.6662 fired=77/209
+  d=12 1site=6.84e-02 |dZ_mid|=7.11e-03 infid=4.24e-01 F=0.6248 fired=88/228
+  d=13 1site=7.86e-02 |dZ_mid|=3.93e-03 infid=4.53e-01 F=0.5964 fired=99/247
+  d=14 1site=8.49e-02 |dZ_mid|=7.94e-03 infid=4.73e-01 F=0.5749 fired=110/266
+  d=15 1site=9.14e-02 |dZ_mid|=5.96e-03 infid=4.81e-01 F=0.5623 fired=120/285
+  d=16 1site=1.06e-01 |dZ_mid|=4.43e-02 infid=4.86e-01 F=0.5505 fired=131/304
+  d=17 1site=1.19e-01 |dZ_mid|=6.83e-02 infid=4.87e-01 F=0.5429 fired=141/323
+  d=18 1site=1.31e-01 |dZ_mid|=1.15e-01 infid=4.86e-01 F=0.5356 fired=152/342
+  d=19 1site=1.43e-01 |dZ_mid|=1.64e-01 infid=4.82e-01 F=0.5296 fired=163/361
+  d=20 1site=1.57e-01 |dZ_mid|=2.11e-01 infid=4.79e-01 F=0.5247 fired=174/380
+done {"label": "B", "thJ": -1.5707963267948966, "thh": 1.0, "N": 20, "depth": 20, "arm": "spcf:2:0:4:none:1-2-3:0:1:1e-7:all:1e-2", "chi": 16, "cpu_tebd": 0.865490473999998, "cpu_total": 15.864405052999999, "fired": 174, "calls": 380, "ncut": 380, "wall_total": 40.465683460235596}

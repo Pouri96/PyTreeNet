@@ -1,0 +1,17 @@
+  t= 0.5 1site=9.77e-16 nn=7.91e-16 infid=1.44e-14 F=1.0000 fired=0/190
+  t= 1.0 1site=1.18e-15 nn=1.19e-15 infid=-8.88e-15 F=1.0000 fired=0/380
+  t= 1.5 1site=2.58e-15 nn=2.90e-14 infid=-1.15e-14 F=1.0000 fired=0/570
+  t= 2.0 1site=5.52e-11 nn=1.14e-09 infid=3.76e-11 F=1.0000 fired=0/760
+  t= 2.5 1site=1.45e-07 nn=1.17e-06 infid=8.22e-08 F=1.0000 fired=0/950
+  t= 3.0 1site=2.67e-05 nn=8.99e-05 infid=2.16e-05 F=1.0000 fired=11/1140
+  t= 3.5 1site=3.08e-04 nn=4.71e-04 infid=9.80e-04 F=0.9998 fired=120/1330
+  t= 4.0 1site=1.13e-03 nn=1.42e-03 infid=7.75e-03 F=0.9989 fired=230/1520
+  t= 4.5 1site=3.02e-03 nn=2.48e-03 infid=2.62e-02 F=0.9961 fired=340/1710
+  t= 5.0 1site=4.02e-03 nn=3.05e-03 infid=5.79e-02 F=0.9914 fired=450/1900
+  t= 5.5 1site=6.02e-03 nn=3.99e-03 infid=1.07e-01 F=0.9832 fired=560/2090
+  t= 6.0 1site=6.88e-03 nn=6.24e-03 infid=1.71e-01 F=0.9698 fired=670/2280
+  t= 6.5 1site=1.01e-02 nn=8.83e-03 infid=2.47e-01 F=0.9540 fired=780/2470
+  t= 7.0 1site=1.22e-02 nn=1.16e-02 infid=3.30e-01 F=0.9355 fired=890/2660
+  t= 7.5 1site=1.68e-02 nn=1.56e-02 infid=4.23e-01 F=0.9142 fired=1000/2850
+  t= 8.0 1site=1.72e-02 nn=1.71e-02 infid=5.11e-01 F=0.8888 fired=1110/3040
+done {"model": "ising", "N": 20, "T": 8.0, "dt": 0.1, "every": 5, "arm": "spcf:2:0:4:none:1-2-3:0:1:1e-7:all:1e-2", "chi": 16, "cpu_tebd": 5.055897839000001, "cpu_total": 15.417289726, "fired": 1110, "calls": 3040, "fmin": 0.9995388286224923, "ncut": 3040, "wall_total": 23.76710319519043}
