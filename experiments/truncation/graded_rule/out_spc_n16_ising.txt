@@ -1,0 +1,4 @@
+1/4 chi=8              svd infid=1.156e-01 rdm2=5.54e-02 nn=2.87e-02 E=6.65e-02 peak=8 0s [10s]
+2/4 chi=12              svd infid=2.695e-02 rdm2=1.97e-02 nn=1.11e-02 E=1.91e-02 peak=12 0s [10s]
+3/4 chi=8 spc:2:hard:0.01:1:0.5-1.0-1.5-2.0:1-2-3 infid=1.341e-01 rdm2=1.75e-02 nn=8.24e-03 E=6.91e-02 peak=8 246s [257s] res_after/before=0.31 disc_after/before=2.47 fired=434/1200
+4/4 chi=12 spc:2:hard:0.01:1:0.5-1.0-1.5-2.0:1-2-3 infid=5.236e-02 rdm2=1.04e-02 nn=5.09e-03 E=1.16e-02 peak=12 635s [645s] res_after/before=0.37 disc_after/before=1.51 fired=369/1200

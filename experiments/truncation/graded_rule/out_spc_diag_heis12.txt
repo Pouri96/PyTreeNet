@@ -1,0 +1,1 @@
+1/1 chi=12 spc:2:hard:0.01:1:0.5-1.0-1.5-2.0:1-2-3 infid=4.832e-01 rdm2=5.85e-02 nn=3.41e-02 E=2.62e-04 peak=12 88s [90s] res_after/before=0.59 disc_after/before=1.82 fired=120/330

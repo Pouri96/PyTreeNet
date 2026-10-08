@@ -1,0 +1,28 @@
+svd  chi=  4 params=   296 infid=4.207e-01 rdm2=1.53e-01 1site=9.61e-02 nn=6.12e-02 nnn=7.18e-02 | single run cpu 0.06s  steady cpu 0.06s wall 0.05s
+spcf chi=  4 params=   296 infid=3.864e-01 rdm2=8.10e-02 1site=4.55e-02 nn=3.87e-02 nnn=4.82e-02 | single run cpu 1.36s  steady cpu 0.97s wall 0.97s  fired 340/880
+svd  chi=  6 params=   568 infid=1.292e-01 rdm2=4.38e-02 1site=2.19e-02 nn=2.25e-02 nnn=2.29e-02 | single run cpu 0.06s  steady cpu 0.06s wall 0.06s
+spcf chi=  6 params=   568 infid=1.193e-01 rdm2=2.30e-02 1site=1.27e-02 nn=1.10e-02 nnn=1.71e-02 | single run cpu 1.09s  steady cpu 1.00s wall 1.01s  fired 313/880
+svd  chi=  8 params=   936 infid=6.724e-02 rdm2=4.15e-02 1site=2.06e-02 nn=2.14e-02 nnn=1.82e-02 | single run cpu 0.06s  steady cpu 0.06s wall 0.07s
+spcf chi=  8 params=   936 infid=5.610e-02 rdm2=1.25e-02 1site=6.47e-03 nn=6.36e-03 nnn=8.52e-03 | single run cpu 0.66s  steady cpu 0.59s wall 0.60s  fired 171/880
+svd  chi= 10 params=  1288 infid=3.268e-02 rdm2=1.89e-02 1site=8.70e-03 nn=1.02e-02 nnn=8.09e-03 | single run cpu 0.09s  steady cpu 0.08s wall 0.08s
+spcf chi= 10 params=  1288 infid=2.850e-02 rdm2=6.01e-03 1site=2.69e-03 nn=3.30e-03 nnn=4.59e-03 | single run cpu 0.83s  steady cpu 0.58s wall 0.59s  fired 150/880
+svd  chi= 12 params=  1704 infid=1.436e-02 rdm2=1.35e-02 1site=5.87e-03 nn=7.47e-03 nnn=4.91e-03 | single run cpu 0.09s  steady cpu 0.09s wall 0.08s
+spcf chi= 12 params=  1704 infid=1.313e-02 rdm2=3.08e-03 1site=1.47e-03 nn=1.66e-03 nnn=2.24e-03 | single run cpu 0.81s  steady cpu 0.56s wall 0.57s  fired 140/880
+svd  chi= 16 params=  2728 infid=2.589e-03 rdm2=4.76e-03 1site=2.02e-03 nn=2.67e-03 nnn=1.91e-03 | single run cpu 0.11s  steady cpu 0.11s wall 0.10s
+spcf chi= 16 params=  2728 infid=2.372e-03 rdm2=1.07e-03 1site=5.04e-04 nn=5.80e-04 nnn=7.81e-04 | single run cpu 0.36s  steady cpu 0.31s wall 0.32s  fired 61/880
+svd  chi= 20 params=  3560 infid=5.607e-04 rdm2=7.48e-04 1site=2.16e-04 nn=4.64e-04 nnn=3.33e-04 | single run cpu 0.12s  steady cpu 0.11s wall 0.11s
+spcf chi= 20 params=  3560 infid=5.573e-04 rdm2=2.04e-04 1site=8.24e-05 nn=1.19e-04 nnn=1.80e-04 | single run cpu 0.30s  steady cpu 0.30s wall 0.29s  fired 45/880
+svd  chi= 24 params=  4520 infid=1.005e-04 rdm2=2.06e-04 1site=4.78e-05 nn=1.31e-04 nnn=1.11e-04 | single run cpu 0.14s  steady cpu 0.12s wall 0.13s
+spcf chi= 24 params=  4520 infid=1.010e-04 rdm2=7.88e-05 1site=3.49e-05 nn=4.45e-05 nnn=5.93e-05 | single run cpu 0.30s  steady cpu 0.23s wall 0.23s  fired 26/880
+svd  chi= 28 params=  5608 infid=2.550e-05 rdm2=9.29e-05 1site=2.17e-05 nn=5.91e-05 nnn=4.37e-05 | single run cpu 0.16s  steady cpu 0.14s wall 0.15s
+spcf chi= 28 params=  5608 infid=2.538e-05 rdm2=5.03e-05 1site=1.84e-05 nn=2.99e-05 nnn=2.84e-05 | single run cpu 0.25s  steady cpu 0.20s wall 0.20s  fired 11/880
+svd  chi= 32 params=  6824 infid=2.669e-06 rdm2=2.52e-05 1site=4.97e-06 nn=1.62e-05 nnn=1.20e-05 | single run cpu 0.17s  steady cpu 0.17s wall 0.16s
+spcf chi= 32 params=  6824 infid=2.669e-06 rdm2=2.32e-05 1site=5.07e-06 nn=1.49e-05 nnn=1.15e-05 | single run cpu 0.19s  steady cpu 0.17s wall 0.17s  fired 1/880
+svd  chi= 36 params=  7336 infid=5.157e-07 rdm2=3.91e-06 1site=4.92e-07 nn=2.57e-06 nnn=3.38e-06 | single run cpu 0.17s  steady cpu 0.19s wall 0.19s
+spcf chi= 36 params=  7336 infid=5.157e-07 rdm2=3.91e-06 1site=4.92e-07 nn=2.57e-06 nnn=3.38e-06 | single run cpu 0.17s  steady cpu 0.19s wall 0.18s  fired 0/880
+svd  chi= 40 params=  7848 infid=1.275e-07 rdm2=9.28e-07 1site=1.21e-07 nn=6.10e-07 nnn=1.18e-06 | single run cpu 0.19s  steady cpu 0.16s wall 0.17s
+spcf chi= 40 params=  7848 infid=1.275e-07 rdm2=9.28e-07 1site=1.21e-07 nn=6.10e-07 nnn=1.18e-06 | single run cpu 0.19s  steady cpu 0.17s wall 0.17s  fired 0/880
+svd  chi= 48 params=  8872 infid=6.084e-09 rdm2=4.12e-08 1site=5.17e-09 nn=2.71e-08 nnn=9.42e-08 | single run cpu 0.19s  steady cpu 0.17s wall 0.17s
+spcf chi= 48 params=  8872 infid=6.084e-09 rdm2=4.12e-08 1site=5.17e-09 nn=2.71e-08 nnn=9.42e-08 | single run cpu 0.22s  steady cpu 0.17s wall 0.18s  fired 0/880
+svd  chi= 64 params= 10920 infid=-4.441e-16 rdm2=4.95e-14 1site=2.59e-14 nn=2.46e-14 nnn=2.31e-14 | single run cpu 0.19s  steady cpu 0.16s wall 0.17s
+spcf chi= 64 params= 10920 infid=-4.441e-16 rdm2=4.95e-14 1site=2.59e-14 nn=2.46e-14 nnn=2.31e-14 | single run cpu 0.19s  steady cpu 0.17s wall 0.18s  fired 0/880

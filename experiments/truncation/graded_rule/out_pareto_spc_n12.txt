@@ -1,0 +1,16 @@
+--- results/pareto_n12_cold NPAR=6
+spc chi=8 done rc=0 121s
+spc chi=6 done rc=0 166s
+spc chi=12 done rc=0 201s
+spc chi=16 done rc=0 251s
+spc chi=4 done rc=0 256s
+spc chi=10 done rc=0 271s
+ALL DONE 271s
+--- results/pareto_n12 NPAR=3
+spc chi=10 done rc=0 160s
+spc chi=16 done rc=0 170s
+spc chi=12 done rc=0 175s
+spc chi=8 done rc=0 100s
+spc chi=4 done rc=0 90s
+spc chi=6 done rc=0 110s
+ALL DONE 280s

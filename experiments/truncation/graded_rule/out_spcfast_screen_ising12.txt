@@ -1,0 +1,6 @@
+1/6 chi=8              svd infid=6.724e-02 rdm2=4.15e-02 nn=2.14e-02 E=3.75e-02 peak=8 0s [2s]
+2/6 chi=8 spc:1:hard:0.01:1:1.0:1-2-3 infid=1.687e-01 rdm2=5.39e-02 nn=2.83e-02 E=1.16e-01 peak=8 20s [22s] res_after/before=0.11 disc_after/before=7.76 fired=242/880
+3/6 chi=8 spc:1:hard:0.01:1:1.0-2.0:1-2-3 infid=1.628e-01 rdm2=4.42e-02 nn=2.27e-02 E=1.93e-01 peak=8 23s [24s] res_after/before=0.13 disc_after/before=7.56 fired=242/880
+4/6 chi=8 spc:1:hard:0.01:1:0.5-1.0-1.5-2.0:1-2-3 infid=1.656e-01 rdm2=4.36e-02 nn=2.21e-02 E=2.16e-01 peak=8 29s [30s] res_after/before=0.13 disc_after/before=7.65 fired=242/880
+5/6 chi=8 spc:1:hard:0.01:1:1.0-2.0:1-2 infid=2.117e-01 rdm2=6.02e-02 nn=3.21e-02 E=2.60e-01 peak=8 17s [41s] res_after/before=0.07 disc_after/before=10.13 fired=242/880
+6/6 chi=8 spc:2:hard:0.01:1:1.0-2.0:1-2-3 infid=6.953e-02 rdm2=1.44e-02 nn=7.78e-03 E=4.85e-02 peak=8 70s [92s] res_after/before=0.33 disc_after/before=2.28 fired=242/880

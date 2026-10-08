@@ -1,0 +1,6 @@
+1/6 chi=8 lcut:1:0.1:12:0.5:1-2-3:1e-10:1e-8:scipy:rel infid=6.741e-02 rdm2=1.98e-02 nn=1.02e-02 E=8.55e-02 peak=8 18s [21s]
+2/6 chi=4 lcut:1:0.1:12:0.5:1-2-3:1e-10:1e-8:scipy:rel infid=3.726e-01 rdm2=9.87e-02 nn=4.54e-02 E=4.55e-01 peak=4 22s [24s]
+3/6 chi=6 lcut:1:0.1:12:0.5:1-2-3:1e-10:1e-8:scipy:rel infid=1.268e-01 rdm2=2.63e-02 nn=1.45e-02 E=1.71e-01 peak=6 28s [31s]
+4/6 chi=10 lcut:1:0.1:12:0.5:1-2-3:1e-10:1e-8:scipy:rel infid=3.428e-02 rdm2=1.08e-02 nn=5.99e-03 E=2.28e-02 peak=10 29s [50s]
+5/6 chi=16 lcut:1:0.1:12:0.5:1-2-3:1e-10:1e-8:scipy:rel infid=2.691e-03 rdm2=2.69e-03 nn=1.50e-03 E=2.41e-03 peak=16 20s [51s]
+6/6 chi=12 lcut:1:0.1:12:0.5:1-2-3:1e-10:1e-8:scipy:rel infid=1.550e-02 rdm2=6.99e-03 nn=3.75e-03 E=1.94e-02 peak=12 31s [55s]

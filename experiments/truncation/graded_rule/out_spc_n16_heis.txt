@@ -1,0 +1,2 @@
+1/2 chi=12              svd infid=7.273e-01 rdm2=5.87e-02 nn=3.72e-02 E=4.04e-01 peak=12 0s [10s]
+2/2 chi=12 spc:2:hard:0.01:1:0.5-1.0-1.5-2.0:1-2-3 infid=7.943e-01 rdm2=6.10e-02 nn=3.40e-02 E=1.99e-01 peak=12 463s [475s] res_after/before=0.53 disc_after/before=2.06 fired=216/450

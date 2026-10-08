@@ -25,9 +25,15 @@ CELLS = [
     ('cut-local   Ising N=16 T=5  ', 'n16_T5_lcut.json', 'lcut', 16, 'n16_T5_region.json', 'svd', 16),
     ('cut-local   DW    N=16 T=5  ', 'n16_dw_T5_lcut.json', 'lcut', 12, 'n16_dw_T5_lcut.json', 'svd', 12),
     ('cut-local   Ising N=20 T=8  ', 'lcut_ising20_T8.json', 'lcut', 16, 'n20T8svd16', 'svd', 16),
-    # global fit, N=16
-    ('global fit  Ising N=16 T=5  ', 'n16_T5_region7.json', 'mfcr:1.5', 12, 'n16_T5_region.json', 'dsvd:1.5', 12),
-    ('global fit  Ising N=16 T=5  ', 'n16_T5_region7.json', 'mfcr:1.5', 16, 'n16_T5_region.json', 'dsvd:1.5', 16),
+    ('cut-local   ising2 N=16 T=4 ', 'n16_ising2_T4_lcut.json', 'lcut', 12, 'n16_ising2_T4_lcut.json', 'svd', 12),
+    ('cut-local   Heis  N=16 T=1.5', 'n16_heis_T15_lcut.json', 'lcut', 12, 'n16_heis_T15_lcut.json', 'svd', 12),
+    ('cut-local   Ising N=16 T=3  ', 'n16_T3_lcut.json', 'lcut', 8, 'n16_T3_region6.json', 'svd', 8),
+    ('cut-local   Ising N=16 T=3  ', 'n16_T3_lcut.json', 'lcut', 10, 'n16_T3_region6.json', 'svd', 10),
+    # global fit, N=16 (L=6, 5 taus, 100 iterations, working rank 1.5 chi), baseline svd (peak chi) and dsvd:1.5 (same working rank)
+    ('global fit  Ising N=16 T=3  ', 'n16_T3_region6.json', 'mfcr:1.5', 8, 'n16_T3_region6.json', 'svd', 8),
+    ('global fit  Ising N=16 T=3  ', 'n16_T3_region6.json', 'mfcr:1.5', 10, 'n16_T3_region6.json', 'svd', 10),
+    ('  (vs dsvd:1.5)             ', 'n16_T3_region6.json', 'mfcr:1.5', 8, 'n16_T3_region6.json', 'dsvd:1.5', 8),
+    ('  (vs dsvd:1.5)             ', 'n16_T3_region6.json', 'mfcr:1.5', 10, 'n16_T3_region6.json', 'dsvd:1.5', 10),
 ]
 
 

@@ -1,0 +1,19 @@
+1/10 chi=12              svd infid=3.141e-01 rdm2=7.28e-02 nn=4.09e-02 E=2.12e-01 peak=12 0s [4s]
+   spcf time split {'svd': 0.33, 'setup': 1.75, 'solve': 2.7, 'line': 1.63, 'other': 0.0} skipped 0 matvecs 1323
+2/10 chi=12 spcf:2:0:3:1.0:1-2-3:0:1:1e-10:all:1e-2 infid=2.865e-01 rdm2=2.87e-02 nn=1.47e-02 E=4.69e-01 peak=12 7s [11s] res_after/before=0.45 disc_after/before=1.20 fired=441/1200
+   spcf time split {'svd': 0.33, 'setup': 1.7, 'solve': 3.49, 'line': 1.59, 'other': 0.0} skipped 0 matvecs 1764
+3/10 chi=12 spcf:2:0:4:1.0:1-2-3:0:1:1e-10:all:1e-2 infid=2.942e-01 rdm2=2.71e-02 nn=1.47e-02 E=4.25e-01 peak=12 8s [11s] res_after/before=0.39 disc_after/before=1.30 fired=441/1200
+   spcf time split {'svd': 0.37, 'setup': 1.77, 'solve': 5.33, 'line': 1.64, 'other': 0.0} skipped 0 matvecs 2646
+4/10 chi=12 spcf:2:0:6:1.0:1-2-3:0:1:1e-10:all:1e-2 infid=2.988e-01 rdm2=2.44e-02 nn=1.32e-02 E=4.56e-01 peak=12 10s [14s] res_after/before=0.30 disc_after/before=1.49 fired=441/1200
+   spcf time split {'svd': 0.38, 'setup': 1.98, 'solve': 4.3, 'line': 1.9, 'other': 0.0} skipped 0 matvecs 1764
+5/10 chi=12 spcf:2:0:4:0.5:1-2-3:0:1:1e-10:all:1e-2 infid=2.855e-01 rdm2=3.09e-02 nn=1.62e-02 E=5.74e-01 peak=12 9s [21s] res_after/before=0.36 disc_after/before=1.25 fired=441/1200
+   spcf time split {'svd': 0.38, 'setup': 2.52, 'solve': 5.61, 'line': 2.49, 'other': 0.0} skipped 0 matvecs 1764
+6/10 chi=12 spcf:2:0:4:1.0-2.0:1-2-3:0:1:1e-10:all:1e-2 infid=2.999e-01 rdm2=2.60e-02 nn=1.39e-02 E=4.12e-01 peak=12 11s [23s] res_after/before=0.40 disc_after/before=1.33 fired=441/1200
+   spcf time split {'svd': 0.43, 'setup': 2.25, 'solve': 4.61, 'line': 1.95, 'other': 0.0} skipped 0 matvecs 1764
+7/10 chi=12 spcf:2:0:4:1.5:1-2-3:0:1:1e-10:all:1e-2 infid=2.967e-01 rdm2=2.75e-02 nn=1.41e-02 E=4.33e-01 peak=12 10s [25s] res_after/before=0.40 disc_after/before=1.30 fired=441/1200
+   spcf time split {'svd': 0.39, 'setup': 1.62, 'solve': 2.99, 'line': 1.35, 'other': 0.0} skipped 0 matvecs 1764
+8/10 chi=12 spcf:2:0:4:1.0:1-2:0:1:1e-10:all:1e-2 infid=2.908e-01 rdm2=2.70e-02 nn=1.47e-02 E=4.20e-01 peak=12 7s [30s] res_after/before=0.27 disc_after/before=1.22 fired=441/1200
+   spcf time split {'svd': 0.45, 'setup': 1.93, 'solve': 4.16, 'line': 1.84, 'other': 0.0} skipped 0 matvecs 1764
+9/10 chi=12 spcf:2:0.03:4:1.0:1-2-3:0:1:1e-10:all:1e-2 infid=2.898e-01 rdm2=2.88e-02 nn=1.56e-02 E=3.98e-01 peak=12 9s [31s] res_after/before=0.43 disc_after/before=1.14 fired=441/1200
+   spcf time split {'svd': 0.34, 'setup': 35.52, 'solve': 34.04, 'line': 15.52, 'other': 0.0} skipped 0 matvecs 1764
+10/10 chi=12 spcf:3:0:4:1.0:1-2-3:0:1:1e-10:all:1e-2 infid=2.827e-01 rdm2=2.37e-02 nn=1.29e-02 E=4.53e-01 peak=12 86s [111s] res_after/before=0.43 disc_after/before=1.25 fired=441/1200

@@ -1,0 +1,7 @@
+lcut chi=16 done rc=0 65s
+lcut chi=32 done rc=0 65s
+lcut chi=64 done rc=0 65s
+lcut chi=24 done rc=0 70s
+lcut chi=48 done rc=0 70s
+lcut chi=12 done rc=0 80s
+ALL DONE 80s

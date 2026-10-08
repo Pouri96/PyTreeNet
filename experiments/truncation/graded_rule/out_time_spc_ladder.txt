@@ -1,0 +1,6 @@
+chi=4 first 47.8s steady 25.09s cpu 111.52s same=True
+chi=6 first 62.0s steady 26.90s cpu 109.50s same=True
+chi=8 first 64.1s steady 43.19s cpu 145.12s same=True
+chi=10 first 138.9s steady 57.65s cpu 228.06s same=True
+chi=12 first 65.5s steady 78.30s cpu 267.09s same=True
+chi=16 first 122.2s steady 81.05s cpu 321.73s same=True

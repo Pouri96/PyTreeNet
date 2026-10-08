@@ -17,16 +17,24 @@ if os.environ.get('PYLIBS'):
 import numpy as np
 import jax
 import jax.numpy as jnp
+import jax.scipy.optimize
 from scipy.optimize import minimize
 jax.config.update('jax_enable_x64', True)
 import mpsenh as M
 
 
 class LookCut:
-    def __init__(self, model, N, a=2, taus=(0.5, 1.0, 1.5, 2.0), ks=(1, 2, 3), fw=0.3, maxiter=40, include_static=True):
+    def __init__(self, model, N, a=2, taus=(0.5, 1.0, 1.5, 2.0), ks=(1, 2, 3), fw=0.3, maxiter=40, include_static=True,
+                 skip_tol=0.0, ftol=1e-14, gtol=1e-10, opt='scipy', every=1, rel=False, edge=0):
         self.model, self.N, self.a = model, N, a
         self.taus = ([0.0] if include_static else []) + list(taus)
         self.ks, self.fw, self.maxiter = tuple(ks), fw, maxiter
+        self.skip_tol, self.ftol, self.gtol = skip_tol, ftol, gtol
+        self.skipped = 0
+        self.opt = opt
+        self.every = every
+        self.rel = rel
+        self.edge = edge
         self.T = None
         self._U = {}
         self._fun = {}
@@ -114,6 +122,11 @@ class LookCut:
         k = M._rank(s, chi)
         if k >= len(s) or np.sum(s[k:] ** 2) <= 0:
             return M.EnhCut._plain(U, s, Vh, k, l, r, dirn)
+        if np.sum(s[k:] ** 2) < self.skip_tol * np.sum(s ** 2):
+            self.skipped += 1
+            return M.EnhCut._plain(U, s, Vh, k, l, r, dirn)
+        if self.every > 1 and ((self.calls - 1) // (2 * (self.N - 1))) % self.every:
+            return M.EnhCut._plain(U, s, Vh, k, l, r, dirn)
         lo, hi = max(0, b - self.a), min(self.N, b + 2 + self.a)
         Lm, Rm = self._maps(lo, hi, b, l, r)
         L = hi - lo
@@ -121,9 +134,13 @@ class LookCut:
         marginals, region_rho, _ = self._objective(key, lo, hi, b)
         Lmj, Rmj = jnp.asarray(Lm), jnp.asarray(Rm)
         thj = jnp.asarray(theta)
-        rho_t = region_rho(thj, Lmj, Rmj)
-        rho_t = rho_t / jnp.real(jnp.trace(rho_t))
-        tgt = marginals(rho_t)
+        tkey = ('tg',) + key
+        if tkey not in self._fun:
+            def target(th_, Lm_, Rm_):
+                rho_ = region_rho(th_, Lm_, Rm_)
+                return marginals(rho_ / jnp.real(jnp.trace(rho_)))
+            self._fun[tkey] = jax.jit(target)
+        tgt = self._fun[tkey](thj, Lmj, Rmj)
         nrm2 = float(np.sum(s ** 2))
         if dirn == 'R':
             Bk, Bp = U[:, :k], U[:, k:]
@@ -133,11 +150,15 @@ class LookCut:
         Mj = jnp.asarray(Mm)
         nb = Bp.shape[1]
         fw = self.fw
+        nbe = nb if self.edge <= 0 else min(nb, self.edge)
+        kee = k if self.edge <= 0 else min(k, self.edge)
+        nvar = nbe * kee
 
         vgkey = ('vg',) + key
         if vgkey not in self._fun:
             def f(x, Bk_, Bp_, Mj_, tg, Lm_, Rm_):
-                C = (x[:nb * k] + 1j * x[nb * k:]).reshape(nb, k)
+                Cs = (x[:nvar] + 1j * x[nvar:]).reshape(nbe, kee)
+                C = Cs if (nbe == nb and kee == k) else jnp.zeros((nb, k), dtype=Cs.dtype).at[:nbe, k - kee:].set(Cs)
                 Q, _ = jnp.linalg.qr(Bk_ + Bp_ @ C)
                 if dirn == 'R':
                     Mk = Q @ (Q.conj().T @ Mj_)
@@ -152,19 +173,45 @@ class LookCut:
                     tot = tot + jnp.mean(jnp.sum(jnp.abs(u - v) ** 2, axis=(1, 2)))
                 return tot + fw * (1.0 - kept / jnp.real(jnp.vdot(Mj_, Mj_)))
             self._fun[vgkey] = jax.jit(jax.value_and_grad(f))
+            self._fun[('f',) + key] = f
         vg = self._fun[vgkey]
 
         def fun(x):
             v, g = vg(jnp.asarray(x), Bkj, Bpj, Mj, tgt, Lmj, Rmj)
             return float(v), np.asarray(g)
-        x0 = np.zeros(2 * nb * k)
-        f0 = fun(x0)[0]
-        res = minimize(fun, x0, jac=True, method='L-BFGS-B', options=dict(maxiter=self.maxiter, ftol=1e-14, gtol=1e-10))
-        if res.fun >= f0:
-            return M.EnhCut._plain(U, s, Vh, k, l, r, dirn)
+        x0 = np.zeros(2 * nvar)
+        if self.opt == 'jax':
+            jokey = ('jo',) + key
+            if jokey not in self._fun:
+                fn, maxit, gt = self._fun[('f',) + key], self.maxiter, self.gtol
+
+                def run(x0_, Bk_, Bp_, Mj_, tg, Lm_, Rm_):
+                    obj = lambda x: fn(x, Bk_, Bp_, Mj_, tg, Lm_, Rm_)
+                    f0_ = obj(x0_)
+                    sc = 1.0 / jnp.maximum(f0_, 1e-14)
+                    res_ = jax.scipy.optimize.minimize(lambda x: sc * obj(x), x0_, method='BFGS',
+                                                       options=dict(maxiter=maxit, gtol=gt))
+                    return res_.x, f0_, res_.fun / sc
+                self._fun[jokey] = jax.jit(run)
+            xj, f0j, fmj = self._fun[jokey](jnp.asarray(x0), Bkj, Bpj, Mj, tgt, Lmj, Rmj)
+            f0, fmin, x = float(f0j), float(fmj), np.asarray(xj)
+            if not fmin < f0:
+                return M.EnhCut._plain(U, s, Vh, k, l, r, dirn)
+        else:
+            f0 = fun(x0)[0]
+            sc = 1.0 / f0 if (self.rel and f0 > 0) else 1.0
+
+            def fun_s(x):
+                v, g = fun(x)
+                return v * sc, g * sc
+            res = minimize(fun_s, x0, jac=True, method='L-BFGS-B', options=dict(maxiter=self.maxiter, ftol=self.ftol, gtol=self.gtol))
+            if res.fun >= f0 * sc:
+                return M.EnhCut._plain(U, s, Vh, k, l, r, dirn)
+            x = res.x
         self.fired += 1
-        x = res.x
-        C = (x[:nb * k] + 1j * x[nb * k:]).reshape(nb, k)
+        Cs = (x[:nvar] + 1j * x[nvar:]).reshape(nbe, kee)
+        C = np.zeros((nb, k), dtype=complex)
+        C[:nbe, k - kee:] = Cs
         Q, _ = np.linalg.qr(Bk + Bp @ C)
         if dirn == 'R':
             cen = Q.conj().T @ Mm

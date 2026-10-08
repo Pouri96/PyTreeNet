@@ -1,0 +1,22 @@
+1/6 chi=6              svd infid=1.011e-02 rdm2=4.53e-03 nn=2.88e-03 E=1.04e-02 peak=6 0s [2s]
+2/6 chi=6 lcut:2:0.1:40:0.5-1.0-1.5-2.0:1-2-3 infid=1.027e-02 rdm2=2.47e-03 nn=1.54e-03 E=2.32e-03 peak=6 185s [186s]
+C:\Users\edpou\Desktop\BUG\PTN trunc_research\experiments\truncation\graded_rule\mfc_bench.py:65: RuntimeWarning: divide by zero encountered in divide
+  disc_ratio=float(np.median(lg[:, 3] / lg[:, 2])))
+C:\Users\edpou\Desktop\BUG\PTN trunc_research\experiments\truncation\graded_rule\mfc_bench.py:65: RuntimeWarning: invalid value encountered in divide
+  disc_ratio=float(np.median(lg[:, 3] / lg[:, 2])))
+3/6 chi=6 spc:2:hard:0.01:1:0.5-1.0-1.5-2.0:1-2-3 infid=1.068e-02 rdm2=2.35e-03 nn=1.46e-03 E=3.16e-03 peak=6 226s [228s]
+C:\Users\edpou\Desktop\BUG\PTN trunc_research\experiments\truncation\graded_rule\mfc_bench.py:65: RuntimeWarning: divide by zero encountered in divide
+  disc_ratio=float(np.median(lg[:, 3] / lg[:, 2])))
+C:\Users\edpou\Desktop\BUG\PTN trunc_research\experiments\truncation\graded_rule\mfc_bench.py:65: RuntimeWarning: invalid value encountered in divide
+  disc_ratio=float(np.median(lg[:, 3] / lg[:, 2])))
+C:\Users\edpou\Desktop\BUG\PTN trunc_research\experiments\truncation\graded_rule\mfc_bench.py:65: RuntimeWarning: divide by zero encountered in divide
+  disc_ratio=float(np.median(lg[:, 3] / lg[:, 2])))
+C:\Users\edpou\Desktop\BUG\PTN trunc_research\experiments\truncation\graded_rule\mfc_bench.py:65: RuntimeWarning: invalid value encountered in divide
+  disc_ratio=float(np.median(lg[:, 3] / lg[:, 2])))
+4/6 chi=6 spc:2:hard:0.01:2:0.5-1.0-1.5-2.0:1-2-3 infid=1.068e-02 rdm2=2.34e-03 nn=1.46e-03 E=3.11e-03 peak=6 256s [258s]
+5/6 chi=6 spc:2:hard:0.001:2:0.5-1.0-1.5-2.0:1-2-3 infid=1.041e-02 rdm2=2.27e-03 nn=1.39e-03 E=4.54e-03 peak=6 256s [258s]
+C:\Users\edpou\Desktop\BUG\PTN trunc_research\experiments\truncation\graded_rule\mfc_bench.py:65: RuntimeWarning: divide by zero encountered in divide
+  disc_ratio=float(np.median(lg[:, 3] / lg[:, 2])))
+C:\Users\edpou\Desktop\BUG\PTN trunc_research\experiments\truncation\graded_rule\mfc_bench.py:65: RuntimeWarning: invalid value encountered in divide
+  disc_ratio=float(np.median(lg[:, 3] / lg[:, 2])))
+6/6 chi=6 spc:2:soft:0.01:2:0.5-1.0-1.5-2.0:1-2-3 infid=1.048e-02 rdm2=2.31e-03 nn=1.43e-03 E=4.43e-03 peak=6 257s [259s]

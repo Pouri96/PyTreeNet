@@ -1,0 +1,19 @@
+   spcf time split {'svd': 0.32, 'setup': 0.6, 'solve': 3.36, 'line': 0.45, 'other': 0.0} skipped 37 matvecs 1664
+   spcf time split {'svd': 0.49, 'setup': 36.1, 'solve': 49.29, 'line': 5.98, 'other': 0.0} skipped 37 matvecs 1664
+   spcf time split {'svd': 0.52, 'setup': 42.62, 'solve': 51.63, 'line': 6.27, 'other': 0.0} skipped 37 matvecs 1664
+   spcf time split {'svd': 0.31, 'setup': 0.65, 'solve': 2.07, 'line': 0.25, 'other': 0.0} skipped 0 matvecs 428
+   spcf time split {'svd': 0.48, 'setup': 61.53, 'solve': 79.92, 'line': 9.42, 'other': 0.0} skipped 37 matvecs 1664
+   spcf time split {'svd': 0.3, 'setup': 31.39, 'solve': 13.81, 'line': 1.62, 'other': 0.0} skipped 0 matvecs 428
+   spcf time split {'svd': 0.3, 'setup': 22.89, 'solve': 13.53, 'line': 1.56, 'other': 0.0} skipped 0 matvecs 428
+   spcf time split {'svd': 0.28, 'setup': 35.88, 'solve': 19.72, 'line': 2.26, 'other': 0.0} skipped 0 matvecs 428
+   spcf time split {'svd': 0.49, 'setup': 0.76, 'solve': 3.12, 'line': 0.46, 'other': 0.0} skipped 0 matvecs 1144
+   spcf time split {'svd': 0.24, 'setup': 28.86, 'solve': 27.08, 'line': 3.14, 'other': 0.0} skipped 0 matvecs 428
+   spcf time split {'svd': 0.48, 'setup': 16.19, 'solve': 29.78, 'line': 3.58, 'other': 0.0} skipped 0 matvecs 1144
+   spcf time split {'svd': 0.75, 'setup': 103.37, 'solve': 89.04, 'line': 10.31, 'other': 0.0} skipped 37 matvecs 1664
+   spcf time split {'svd': 0.35, 'setup': 17.33, 'solve': 27.08, 'line': 3.35, 'other': 0.0} skipped 0 matvecs 1144
+   spcf time split {'svd': 0.42, 'setup': 24.4, 'solve': 42.67, 'line': 5.03, 'other': 0.0} skipped 0 matvecs 1144
+   spcf time split {'svd': 0.44, 'setup': 32.18, 'solve': 62.56, 'line': 7.26, 'other': 0.0} skipped 0 matvecs 1144
+cell                      .0:1-2-3:0:1:1e-7:all:1e-2:f32                               | .0:1-2-3:0:1:1e-7:all:1e-2:f32                               | .0:1-2-3:0:1:1e-7:all:1e-2:f32                               | .0:1-2-3:0:1:1e-7:all:1e-2:f32                               | .0:1-2-3:0:1:1e-7:all:1e-2:f32                              
+isingdw  N=16 T=5.0 chi=12 (2e-01) 2s 0.66 1s 0.60 nn 0.72 | max 1s 0.75 nn 0.59 inf 0.95       | 2s 0.59 1s 0.56 nn 0.62 | max 1s 0.66 nn 0.60 inf 0.93       | 2s 0.53 1s 0.45 nn 0.59 | max 1s 0.41 nn 0.53 inf 0.91       | 2s 0.66 1s 0.55 nn 0.74 | max 1s 0.80 nn 0.58 inf 0.93       | 2s 0.59 1s 0.50 nn 0.65 | max 1s 0.60 nn 0.61 inf 0.91      
+heis     N=16 T=1.5 chi=24 (2e-01) 2s 0.77 1s 0.55 nn 0.96 | max 1s 0.40 nn 0.92 inf 1.14       | 2s 0.74 1s 0.41 nn 0.99 | max 1s 0.33 nn 0.88 inf 1.11       | 2s 0.75 1s 0.54 nn 0.94 | max 1s 0.43 nn 0.85 inf 1.14       | 2s 0.65 1s 0.50 nn 0.80 | max 1s 0.47 nn 0.76 inf 1.11       | 2s 0.72 1s 0.54 nn 0.88 | max 1s 0.37 nn 0.79 inf 1.18      
+ising    N=16 T=5.0 chi=16 (5e-02) 2s 0.20 1s 0.24 nn 0.18 | max 1s 0.24 nn 0.18 inf 0.84       | 2s 0.20 1s 0.23 nn 0.18 | max 1s 0.25 nn 0.16 inf 0.83       | 2s 0.21 1s 0.23 nn 0.19 | max 1s 0.27 nn 0.19 inf 0.83       | 2s 0.24 1s 0.26 nn 0.23 | max 1s 0.26 nn 0.23 inf 0.83       | 2s 0.21 1s 0.23 nn 0.20 | max 1s 0.27 nn 0.21 inf 0.83      

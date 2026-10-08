@@ -1,0 +1,1 @@
+1/1 chi=8 lcut:2:0.1:12:none:1-2-3-4-5:1e-10:1e-8:scipy:rel infid=6.177e-02 rdm2=2.37e-02 nn=1.19e-02 E=6.73e-02 peak=8 70s [77s]

@@ -51,7 +51,7 @@ What is NOT established, and what this plan resolves:
 
 At matched chi, N>=14, SVD front unconverged (infidelity 1e-1 .. 1e-3 across the chi ladder), on at
 least three of {ising, ising2, isingdw, heis}: pooled 2-site marginal error <= 0.25x SVD (4x) at the
-10% margin, 1-site <= 0.25x, final-state infidelity <= 1.15x SVD, and the same chi stored. Also
+10% margin, 1-site <= 0.25x, and the same chi stored. Final-state infidelity is reported, not gated (user, 2026-10-07). The method may not take its target from an untruncated or dense copy of the state, only a one-step working-rank target with the peak stated, or the local two-site tensor (cut-local). Also
 beating 1-site TDVP at the same chi. Anything less is reported as a modest result, not a win.
 
 ## Stage 1 - dense capacity wall (N=12-14, JAX, no new library code)

@@ -1,0 +1,10 @@
+D= 10 dmt   params=  3552 infid=9.692e-01 single=1.44e-01 nn=1.01e-01 nnn=1.09e-01 cpu=14s trace=1.0000
+D= 10 plain params=  3552 infid=1.655e-01 single=4.41e-01 nn=4.26e-01 nnn=3.68e-01 cpu=10s trace=0.1092
+D= 12 dmt   params=  5024 infid=9.751e-01 single=1.41e-01 nn=1.02e-01 nnn=9.65e-02 cpu=19s trace=1.0000
+D= 12 plain params=  5024 infid=4.248e-01 single=3.23e-01 nn=3.01e-01 nnn=2.66e-01 cpu=14s trace=0.2053
+D= 16 dmt   params=  8736 infid=9.225e-01 single=1.17e-01 nn=8.84e-02 nnn=8.71e-02 cpu=22s trace=1.0000
+D= 16 plain params=  8736 infid=3.630e-01 single=2.82e-01 nn=2.28e-01 nnn=2.17e-01 cpu=16s trace=0.2769
+D= 24 dmt   params= 17440 infid=8.096e-01 single=7.87e-02 nn=6.16e-02 nnn=6.13e-02 cpu=27s trace=1.0000
+D= 24 plain params= 17440 infid=4.776e-02 single=2.22e-01 nn=1.99e-01 nnn=1.67e-01 cpu=13s trace=0.3646
+D= 32 dmt   params= 29216 infid=6.464e-01 single=6.27e-02 nn=5.45e-02 nnn=5.34e-02 cpu=24s trace=1.0000
+D= 32 plain params= 29216 infid=-1.101e-01 single=2.33e-01 nn=1.86e-01 nnn=1.76e-01 cpu=22s trace=0.3764
