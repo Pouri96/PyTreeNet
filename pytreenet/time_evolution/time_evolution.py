@@ -428,6 +428,35 @@ class EvoDirection(Enum):
         """
         return 1.0j * self.exp_sign()
 
+_JAX_MISSING_MSG = (
+    "TimeEvoMode.JAX_RK45 needs the optional 'jax' dependency, which is not "
+    "installed. It also needs a GPU, so install the CUDA build\n"
+    "    pip install 'pytreenet[jax-cuda]'\n"
+    "see https://docs.jax.dev/en/latest/installation.html. To stay on the CPU "
+    "instead, TimeEvoMode.RK45 and TimeEvoMode.DOP853 are the same "
+    "Runge-Kutta families via scipy, and TimeEvoMode.KRYLOV is matrix-free.")
+
+def _load_jax_rk45():
+    """
+    Imports the JAX RK45 propagator on demand.
+
+    JAX is an optional dependency, so it is imported here rather than at module
+    scope. That keeps ``import pytreenet`` working without it, and confines the
+    cost of importing JAX to runs that actually ask for the JAX mode.
+
+    Returns:
+        module: The ``jax_rk45`` module.
+
+    Raises:
+        ImportError: If JAX is not installed, with installation instructions
+            and the modes that do not need it.
+    """
+    try:
+        from .time_evo_util import jax_rk45
+    except ImportError as exc:
+        raise ImportError(_JAX_MISSING_MSG) from exc
+    return jax_rk45
+
 class TimeEvoMode(Enum):
     """
     Mode for the time evolution of a matrix.
@@ -442,6 +471,10 @@ class TimeEvoMode(Enum):
     DOP853 = "DOP853"
     BDF = "BDF"
     KRYLOV = "krylov"
+    # Dormand-Prince 5(4) on a GPU via JAX. The value must collide with neither
+    # a solve_ivp method name nor a fast_exp_action mode, since those receive
+    # the member's value verbatim.
+    JAX_RK45 = "jax_rk45"
 
     def __str__(self) -> str:
         return self.value
@@ -466,6 +499,9 @@ class TimeEvoMode(Enum):
             return {'atol': 1e-10, 'rtol': 1e-10}
         if mode is TimeEvoMode.KRYLOV:
             return {'krylov_tol': 1e-10}
+        if mode is TimeEvoMode.JAX_RK45:
+            return {'atol': 1e-10, 'rtol': 1e-10, 'num_step': 1,
+                    'adaptive': False}
         return {}
 
     @staticmethod
@@ -491,6 +527,9 @@ class TimeEvoMode(Enum):
         if mode in TimeEvoMode.scipy_modes():
             return {'atol', 'rtol', 'max_step', 'first_step', 'jac', 'jac_sparsity',
                     'lband', 'uband', 'min_step', 'hermitian', 'exp_factor'}
+        if mode is TimeEvoMode.JAX_RK45:
+            return {'atol', 'rtol', 'num_step', 'adaptive', 'max_steps',
+                    'exp_factor'}
         return {'exp_factor'}
 
     @staticmethod
@@ -520,6 +559,19 @@ class TimeEvoMode(Enum):
         if self == TimeEvoMode.FASTEST:
             return self.fastest_equivalent().is_scipy()
         return self in self.scipy_modes()
+
+    def is_jax(self) -> bool:
+        """
+        Determines, if this mode is a JAX ODE solver.
+
+        A JAX mode needs a GPU and the optional ``jax`` dependency.
+
+        Returns:
+            bool: Whether this mode runs on a GPU via JAX.
+        """
+        if self == TimeEvoMode.FASTEST:
+            return self.fastest_equivalent().is_jax()
+        return self is TimeEvoMode.JAX_RK45
 
     def action_evolvable(self) -> bool:
         """
@@ -650,6 +702,14 @@ class TimeEvoMode(Enum):
         _override = options.pop('exp_factor', None)      # forward factor; backward negates it
         exp_factor = (forward.exp_factor() if _override is None
                       else (_override if forward is EvoDirection.FORWARD else -_override))
+        if self.is_jax():
+            # Unlike the matrix exponential below, an ODE solver integrates the
+            # generator over the duration rather than exponentiating their
+            # product, so the time difference is passed on separately.
+            return _load_jax_rk45().rk45_evolve(psi,
+                                                exp_factor * hamiltonian,
+                                                time_difference,
+                                                **options)
         exponent = exp_factor * hamiltonian * time_difference
         return fast_exp_action(exponent, psi.flatten(),
                                mode=self.value).reshape(psi.shape)
