@@ -145,7 +145,7 @@ def require_gpu_device():
             'TimeEvoMode.JAX_RK45 requires a GPU, but JAX cannot see one. The '
             f'default backend is {jax.default_backend()!r} and the visible '
             f'devices are {jax.devices()}. Either install a GPU build of JAX\n'
-            "    pip install 'pytreenet[jax-cuda]'\n"
+            "    pip install 'pytreenet[jax_cuda]'\n"
             'see https://docs.jax.dev/en/latest/installation.html, or use a '
             'mode that runs on the CPU: TimeEvoMode.RK45 and '
             'TimeEvoMode.DOP853 are the same Runge-Kutta families via scipy, '

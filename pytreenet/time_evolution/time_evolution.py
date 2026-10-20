@@ -431,7 +431,7 @@ class EvoDirection(Enum):
 _JAX_MISSING_MSG = (
     "TimeEvoMode.JAX_RK45 needs the optional 'jax' dependency, which is not "
     "installed. It also needs a GPU, so install the CUDA build\n"
-    "    pip install 'pytreenet[jax-cuda]'\n"
+    "    pip install 'pytreenet[jax_cuda]'\n"
     "see https://docs.jax.dev/en/latest/installation.html. To stay on the CPU "
     "instead, TimeEvoMode.RK45 and TimeEvoMode.DOP853 are the same "
     "Runge-Kutta families via scipy, and TimeEvoMode.KRYLOV is matrix-free.")
