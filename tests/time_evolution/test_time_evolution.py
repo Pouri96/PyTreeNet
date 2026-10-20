@@ -186,6 +186,7 @@ def test_fastest_equivalent():
     (TimeEvoMode.RK23, True),
     (TimeEvoMode.DOP853, True),
     (TimeEvoMode.BDF, True),
+    (TimeEvoMode.JAX_RK45, False),
 ])
 def test_is_scipy(mode, expected):
     """

@@ -30,6 +30,35 @@ def _action_options(mode, rtol, atol):
     return {"rtol": rtol, "atol": atol}
 
 
+def _matrix_options(mode):
+    """Solver options for a matrix-based mode over these random fixtures.
+
+    The matrix-exponential modes are exact and take nothing. JAX_RK45 is an ODE
+    solver, so it needs a tolerance tight enough to match an exact exponential:
+    the effective operator built from ``crandn`` blocks is non-Hermitian with
+    ``norm(H) * dt`` above two, where a single fixed step is accurate only to
+    1e-3. Adaptive stepping reaches 1e-12 without assuming anything about that
+    norm.
+    """
+    if mode.is_jax():
+        return {"adaptive": True, "rtol": 1e-12, "atol": 1e-14}
+    return {}
+
+
+def _skip_if_mode_unavailable(mode):
+    """Skips the test when a mode's optional backend is unavailable.
+
+    TimeEvoMode.JAX_RK45 needs the optional ``jax`` dependency and a GPU, so it
+    is parametrized in but skipped where it cannot run.
+    """
+    if mode.is_jax():
+        pytest.importorskip(
+            "jax", reason="TimeEvoMode.JAX_RK45 needs the optional jax dependency")
+        from pytreenet.time_evolution.time_evo_util import jax_rk45
+        if jax_rk45.available_gpu() is None:
+            pytest.skip("TimeEvoMode.JAX_RK45 needs a GPU")
+
+
 ## Tests for effective bond evolution
 @pytest.mark.parametrize("mode", TimeEvoMode.scipy_modes() + [TimeEvoMode.KRYLOV])
 def test_action_based_bond_evolution(mode):
@@ -73,6 +102,7 @@ def test_matrix_based_bond_evolution(mode):
     """
     Test the bond evolution using action-based method.
     """
+    _skip_if_mode_unavailable(mode)
     node_id = "state_node"
     # Define state node
     state_node, state_tensor = random_tensor_node((4,5),
@@ -98,7 +128,8 @@ def test_matrix_based_bond_evolution(mode):
                                              state_node,
                                              time_step_size,
                                              cache,
-                                             mode=mode)
+                                             mode=mode,
+                                             **_matrix_options(mode))
     # Check if the evolution is correct
     np.testing.assert_allclose(found_updated, ref_updated)
 
