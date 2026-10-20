@@ -26,9 +26,15 @@ notebook = ["ipykernel >= 6.24.0",
             "matplotlib>=3.9.2",
             ]
 optional_dmrg = ["pyscf >=2.10.0"]
+# TimeEvoMode.JAX_RK45. The solver needs a GPU at run time, so the plain "jax"
+# extra is only enough to import the module and run its device-agnostic tests;
+# use "jax_cuda" to actually propagate on one.
+jax = ["jax >= 0.4.35"]
+jax_cuda = ["jax[cuda12] >= 0.4.35"]
 docs = ["sphinx >= 7.1.2", "sphinxcontrib-napoleon==0.7"]
 tests = ["pytest >= 8.3.3",
          "coverage >= 7.8.0",
+         "jax >= 0.4.35",
 ]
 sim_utils = ["requests >= 2.32.3"]
 
