@@ -1,0 +1,89 @@
+Independent-operator rewrite, measured bonds
+====================================================================================================
+
+A. controlled phase, U = exp(0.7i) I, controls leftmost, target rightmost
+  m=1 N=2                        before [2]                   after [1]                   rank [1]                   drop yes terms 3->2 t 0.009s/0.008s
+  m=1 N=3                        before [2, 2]                after [1, 1]                rank [1, 1]                drop yes terms 3->2 t 0.007s/0.011s
+  m=1 N=4                        before [2, 2, 2]             after [1, 1, 1]             rank [1, 1, 1]             drop yes terms 3->2 t 0.004s/0.014s
+  m=1 N=5                        before [2, 2, 2, 2]          after [1, 1, 1, 1]          rank [1, 1, 1, 1]          drop yes terms 3->2 t 0.012s/0.013s
+  m=1 N=6                        before [2, 2, 2, 2, 2]       after [1, 1, 1, 1, 1]       rank [1, 1, 1, 1, 1]       drop yes terms 3->2 t 0.010s/0.016s
+  m=1 N=7                        before [2, 2, 2, 2, 2, 2]    after [1, 1, 1, 1, 1, 1]    rank [1, 1, 1, 1, 1, 1]    drop yes terms 3->2 t 0.015s/0.027s
+  m=1 N=8                        before [2, 2, 2, 2, 2, 2, 2] after [1, 1, 1, 1, 1, 1, 1] rank [1, 1, 1, 1, 1, 1, 1] drop yes terms 3->2 t 0.020s/0.029s
+  m=2 N=3                        before [2, 2]                after [2, 1]                rank [2, 1]                drop yes terms 3->2 t 0.006s/0.011s
+  m=2 N=4                        before [2, 2, 2]             after [2, 1, 1]             rank [2, 1, 1]             drop yes terms 3->2 t 0.005s/0.032s
+  m=2 N=5                        before [2, 2, 2, 2]          after [2, 1, 1, 1]          rank [2, 1, 1, 1]          drop yes terms 3->2 t 0.007s/0.012s
+  m=2 N=6                        before [2, 2, 2, 2, 2]       after [2, 1, 1, 1, 1]       rank [2, 1, 1, 1, 1]       drop yes terms 3->2 t 0.009s/0.025s
+  m=2 N=7                        before [2, 2, 2, 2, 2, 2]    after [2, 1, 1, 1, 1, 1]    rank [2, 1, 1, 1, 1, 1]    drop yes terms 3->2 t 0.006s/0.020s
+  m=2 N=8                        before [2, 2, 2, 2, 2, 2, 2] after [2, 1, 1, 1, 1, 1, 1] rank [2, 1, 1, 1, 1, 1, 1] drop yes terms 3->2 t 0.017s/0.028s
+  m=3 N=4                        before [2, 2, 2]             after [2, 2, 1]             rank [2, 2, 1]             drop yes terms 3->2 t 0.012s/0.010s
+  m=3 N=5                        before [2, 2, 2, 2]          after [2, 2, 1, 1]          rank [2, 2, 1, 1]          drop yes terms 3->2 t 0.008s/0.015s
+  m=3 N=6                        before [2, 2, 2, 2, 2]       after [2, 2, 1, 1, 1]       rank [2, 2, 1, 1, 1]       drop yes terms 3->2 t 0.006s/0.014s
+  m=3 N=7                        before [2, 2, 2, 2, 2, 2]    after [2, 2, 1, 1, 1, 1]    rank [2, 2, 1, 1, 1, 1]    drop yes terms 3->2 t 0.010s/0.017s
+  m=3 N=8                        before [2, 2, 2, 2, 2, 2, 2] after [2, 2, 1, 1, 1, 1, 1] rank [2, 2, 1, 1, 1, 1, 1] drop yes terms 3->2 t 0.011s/0.018s
+
+B. controlled phase with a gap, controls {0, 3}, target rightmost
+  N=5                            before [2, 2, 2, 2]          after [2, 2, 2, 1]          rank [2, 2, 2, 1]          drop yes terms 3->2 t 0.006s/0.012s
+  N=6                            before [2, 2, 2, 2, 2]       after [2, 2, 2, 1, 1]       rank [2, 2, 2, 1, 1]       drop yes terms 3->2 t 0.009s/0.013s
+  N=7                            before [2, 2, 2, 2, 2, 2]    after [2, 2, 2, 1, 1, 1]    rank [2, 2, 2, 1, 1, 1]    drop yes terms 3->2 t 0.010s/0.016s
+  N=8                            before [2, 2, 2, 2, 2, 2, 2] after [2, 2, 2, 1, 1, 1, 1] rank [2, 2, 2, 1, 1, 1, 1] drop yes terms 3->2 t 0.008s/0.017s
+
+C. controlled identity, U = I
+  N=4                            before [2, 2, 2]             after [1, 1, 1]             rank [1, 1, 1]             drop yes terms 3->1 t 0.010s/0.044s
+  N=6                            before [2, 2, 2, 2, 2]       after [1, 1, 1, 1, 1]       rank [1, 1, 1, 1, 1]       drop yes terms 3->1 t 0.032s/0.039s
+
+D. dependent symbol sets on a node
+  projectors sum to identity     before [2]                   after [1]                   rank [1]                   drop yes terms 4->1 t 0.003s/0.016s
+  number and field, N=4          before [3, 3, 3]             after [2, 3, 2]             rank [2, 3, 2]             drop yes terms 11->8 t 0.044s/0.200s
+  number and field, N=6          before [3, 3, 3, 3, 3]       after [2, 3, 3, 3, 2]       rank [2, 3, 3, 3, 2]       drop yes terms 17->12 t 0.113s/0.324s
+  XY, ladder and Cartesian, N=4  before [6, 6, 6]             after [4, 4, 4]             rank [4, 4, 4]             drop yes terms 16->10 t 0.074s/0.099s
+  XY, ladder and Cartesian, N=6  before [6, 6, 6, 6, 6]       after [4, 4, 4, 4, 4]       rank [4, 4, 4, 4, 4]       drop yes terms 26->16 t 0.093s/0.224s
+
+E. generate_lindbladian on a chain of ket and bra nodes
+   every node carries more than d^2 = 4 distinct symbols, so it is dependent
+  field X, jump sigma-minus, N=2, symbols per node [5, 5, 5, 5]
+  N=2                            before [4, 4, 4]             after [4, 4, 4]             rank [4, 4, 4]             drop no  terms 12->13 t 0.035s/0.120s
+  field X, jump sigma-minus, N=3, symbols per node [5, 5, 5, 5, 5, 5]
+  N=3                            before [4, 4, 5, 4, 4]       after [4, 4, 5, 4, 4]       rank [4, 4, 5, 4, 4]       drop no  terms 19->20 t 0.110s/0.231s
+  field X and Y, jump sigma-minus, N=2, symbols per node [6, 6, 6, 6]
+  N=2                            before [4, 4, 4]             after [4, 4, 4]             rank [4, 4, 4]             drop no  terms 16->23 t 0.034s/0.098s
+  field X and Y, jump sigma-minus, N=3, symbols per node [6, 6, 6, 6, 6, 6]
+  N=3                            before [4, 4, 5, 4, 4]       after [4, 4, 5, 4, 4]       rank [4, 4, 5, 4, 4]       drop no  terms 25->35 t 0.078s/0.187s
+  field X and Y, jumps sigma-minus and Z, N=2, symbols per node [8, 8, 8, 8]
+  N=2                            before [5, 4, 5]             after [4, 4, 4]             rank [4, 4, 4]             drop yes terms 22->25 t 0.037s/0.196s
+  field X and Y, jumps sigma-minus and Z, N=3, symbols per node [8, 8, 8, 8, 8, 8]
+  N=3                            before [5, 4, 6, 4, 5]       after [4, 4, 6, 4, 4]       rank [4, 4, 5, 4, 4]       drop yes terms 34->38 t 0.082s/0.215s ABOVE THE RANK
+
+F. controlled gates with an independent target, the negative control
+  target diag(1, exp(i theta)), a controlled phase gate before [2, 2, 2]             after [2, 2, 2]             rank [2, 2, 2]             drop no  terms 3->3 t 0.005s/0.008s
+    the terms are returned unchanged True
+  target X, a controlled X       before [2, 2, 2]             after [2, 2, 2]             rank [2, 2, 2]             drop no  terms 3->3 t 0.006s/0.006s
+    the terms are returned unchanged True
+  target H, a controlled Hadamard before [2, 2, 2]             after [2, 2, 2]             rank [2, 2, 2]             drop no  terms 3->3 t 0.005s/0.007s
+    the terms are returned unchanged True
+
+G. randomised Hamiltonians over {X, Y, Z, I2} on the paper's eight-site tree
+  30 terms per seed, 30 to 30 strings after padding, 20/20 returned the same object in 0.90s
+  seed 0, 8 terms built both ways, bonds identical True, 0.03s against 0.04s
+  seed 1, 8 terms built both ways, bonds identical True, 0.02s against 0.02s
+  seed 2, 8 terms built both ways, bonds identical True, 0.03s against 0.04s
+
+H. shipped MultiControlledGate on 4 qubits
+  X          before [2, 2, 2]    after [2, 2, 2]    same object True
+  Y          before [2, 2, 2]    after [2, 2, 2]    same object True
+  Z          before [2, 2, 2]    after [2, 2, 2]    same object True
+  H          before [2, 2, 2]    after [2, 2, 2]    same object True
+
+I. fused Pauli Lindbladian against its dense generator
+  N=3 largest deviation from the dense generator 2.22e-15
+  N=4 largest deviation from the dense generator 3.55e-15
+
+J. degenerate input
+  single term, same object True
+  every term cancels, result empty False
+
+K. a dependence that holds over the rationals and not in double precision
+  five operators on a node of dimension 4, exact rank 4, numerical rank 3
+  singular values of the first four [4.15e+00 5.30e-09 3.18e-16 5.34e-17]
+  largest exact coordinate 4.76e+16, rebuilding misses the operator by 11.4 times its largest entry
+  the node is left as it is True
+
