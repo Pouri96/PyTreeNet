@@ -1,7 +1,8 @@
 %% independent_operators.tex
 %% Operator dependence and the rank of Gamma. A note for the maintainers of PyTreeNet and the
 %% authors of the symbolic Gaussian elimination paper. Every number is measured by
-%% ../probes/independent_operators_probe.py and saved in ../probes/probe_output.txt.
+%% experiments/independent_operators/independent_operators_probe.py and saved beside it
+%% in probe_output.txt.
 %%
 %% Build (latexmk needs Perl, which is not installed here; quantikz needs the extra pass):
 %%   pdflatex -synctex=1 -interaction=nonstopmode -file-line-error independent_operators  (three times)
@@ -40,7 +41,7 @@
 \begin{document}
 
 \begin{center}
-{\LARGE\bfseries Operator dependence and the rank of $\Gamma$\par}
+{\LARGE\bfseries Operator dependence and the rank of $\Gamma$\par - AI-Generated note}
 \vspace{0.5em}
 \end{center}
 
@@ -53,9 +54,10 @@ chains, so their elements are distinct \emph{as symbols}. The identity $\rank(\G
 bond needs more than that. It needs the chains to be linearly independent \emph{as operators}, and
 that is a property of the matrices the symbols name, which the elimination does not hold. Where it
 fails, the bond is above the operator-Schmidt rank of the operator and no elimination on $\Gamma$
-reaches it. The smallest instance is a controlled gate whose target carries a multiple of the
-identity, and the cases that meet it in practice are Hamiltonians written over a local vocabulary
-that is dependent, such as a spin chain carrying both ladder operators and Cartesian components.
+reaches it. A Hamiltonian meets this whenever its local vocabulary is dependent. An XY chain whose
+hopping is written with ladder operators and whose anisotropy is written with Cartesian components
+comes out at bond $6$ on every cut where the operator-Schmidt rank is $4$. The smallest instance of
+the same failure is a controlled gate whose target carries a multiple of the identity.
 
 This note states the condition exactly, gives the counterexample, and adds a pre-processing step
 that establishes the condition over the rationals before $\Gamma$ is built. The step is exact and
@@ -140,9 +142,35 @@ two different symbols by your Eq.~(8), so combining two dependent operators into
 available to it.
 
 %% ------------------------------------------------------------------------------------------------
-\section{A controlled phase}\label{sec:phase}
+\section{A spin chain over a dependent vocabulary}\label{sec:chain}
 
-A controlled gate enters as the three strings of
+Take the chain
+%
+\begin{equation}\label{eq:xy}
+  \hat{H} \;=\; \sum_{i} J \bigl( \hat{S}^{+}_i \hat{S}^{-}_{i+1}
+                                + \hat{S}^{-}_i \hat{S}^{+}_{i+1} \bigr)
+            \;+\; \sum_{i} g \bigl( \hat{X}_i \hat{X}_{i+1} + \hat{Y}_i \hat{Y}_{i+1} \bigr)
+            \;+\; \sum_{i} h\, \hat{Z}_i ,
+\end{equation}
+%
+with $J = 1$, $g = 0.4$ and $h = 0.3$. The hopping is written with ladder operators and the
+anisotropy with Cartesian components, which is what happens when the two usual forms of the same
+chain are both present in one Hamiltonian. An interior node then carries the six symbols
+$\hat{S}^{+}$, $\hat{S}^{-}$, $\hat{X}$, $\hat{Y}$, $\hat{Z}$, $\hat{I}$, and
+$\hat{S}^{\pm} = (\hat{X} \pm i\hat{Y})/2$, so four of them span two dimensions. The counting test
+of \cref{sec:gamma} also flags the node, $p = 6 > d^2 = 4$.
+
+On six sites the construction gives bond $6$ on every cut, where the operator-Schmidt rank of
+$\hat{H}$ is $4$. So \cref{eq:bound} is strict, by the dependence defect of the node vocabulary.
+Nothing in the input marks the case. Every string is distinct, the prefactors are distinct, and the
+chain sets $U$ and $V$ are non-redundant as symbols. Rewriting the four dependent symbols over two
+of them, as in \cref{sec:rewrite}, brings every cut to $4$ and takes the number of strings from $26$
+to $16$.
+
+%% ------------------------------------------------------------------------------------------------
+\section{A controlled gate, the minimal instance}\label{sec:phase}
+
+The same failure at the smallest size it occurs. A controlled gate enters as the three strings of
 $\hat{C}_b\hat{U} = \hat{I} + \hat{\Pi}_b \otimes (\hat{U} - \hat{I})$, namely
 $\hat{\Pi}_b \otimes \hat{U}$ with prefactor $+1$, $\hat{\Pi}_b \otimes \hat{I}$ with $-1$, and
 $\hat{I} \otimes \hat{I}$ with $+1$, where $\hat{\Pi}_b$ is the projector onto the control pattern.
@@ -257,8 +285,8 @@ as a Lindbladian, correct under the pass.
 %% ------------------------------------------------------------------------------------------------
 \section{What changes}\label{sec:changes}
 
-Every number below is produced by \file{../probes/independent_operators_probe.py} and saved in
-\file{../probes/probe_output.txt}. Each case is built twice, once with the rewrite and once without,
+Every number below is produced by \file{experiments/independent_operators/independent_operators_probe.py} and saved in
+\file{probe_output.txt} beside it. Each case is built twice, once with the rewrite and once without,
 the two dense operators are compared, and the rank column is the operator-Schmidt rank from a
 singular value decomposition of that operator. Bonds are listed left to right along the chain.
 
