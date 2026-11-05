@@ -18,3 +18,11 @@ diagrams carries the smaller total bond.
 Families A to E improve, F to J must not move. The largest effect measured here is an XY chain
 whose hopping is written with ladder operators and whose anisotropy is written with Cartesian
 components, `[6,6,6,6,6]` becoming `[4,4,4,4,4]`.
+
+Family L measures why the rewrite is not always the better presentation. The elimination may not
+add two different symbols, so what it attains is the rank of `Gamma` with the coefficient symbols
+read as indeterminates, not its rank at the values. The rewrite drives the latter down to the
+operator-Schmidt rank and does not control the former, and on a three-qubit Lindbladian it raises
+it from 5 to 6 on the middle cut. Three controls are measured with it: every construction method
+gives the same 6, twelve term shufflings give one result each, and folding the two coefficient
+symbols the rewrite introduces onto the one they are rational multiples of still gives 6.

@@ -24,7 +24,7 @@ from typing import Dict, List, Tuple
 import numpy as np
 
 from pytreenet.operators.common_operators import pauli_matrices
-from pytreenet.operators.hamiltonian import Hamiltonian
+from pytreenet.operators.hamiltonian import Hamiltonian, ONE_SYMBOL
 from pytreenet.operators.lindbladian import generate_lindbladian
 from pytreenet.operators.qcircuits.qgate import MultiControlledGate, QGate
 from pytreenet.operators.tensorproduct import TensorProduct
@@ -37,7 +37,7 @@ from pytreenet.special_ttn.pauli import (
 from pytreenet.core.ttn import TreeTensorNetwork
 from pytreenet.ttno.independent_operators import (
     _Exact, _reduced_row_echelon, rewrite_over_independent_operators)
-from pytreenet.ttno.state_diagram import TTNOFinder
+from pytreenet.ttno.state_diagram import StateDiagram, TTNOFinder
 from pytreenet.ttno.ttno_class import TreeTensorNetworkOperator as TTNO
 
 IDENTITY = np.eye(2, dtype=complex)
@@ -561,13 +561,161 @@ def family_k() -> None:
 
 
 
+def gamma_matrix(hamiltonian: Hamiltonian, site_ids: List[str], cut: int,
+                 values: Dict[str, complex]) -> np.ndarray:
+    """Returns the coefficient matrix of one cut, at the given symbol values."""
+    left_ids, right_ids = site_ids[:cut + 1], site_ids[cut + 1:]
+    entries: Dict[Tuple[tuple, tuple], complex] = {}
+    for frac, symbol, tensor_product in hamiltonian.terms:
+        value = complex(frac) * values[symbol]
+        key = (tuple(tensor_product[i] for i in left_ids),
+               tuple(tensor_product[i] for i in right_ids))
+        entries[key] = entries.get(key, 0) + value
+    rows = sorted({left for left, _ in entries})
+    cols = sorted({right for _, right in entries})
+    gamma = np.zeros((len(rows), len(cols)), dtype=complex)
+    for (left, right), value in entries.items():
+        gamma[rows.index(left), cols.index(right)] = value
+    return gamma
+
+
+def gamma_ranks(hamiltonian: Hamiltonian, site_ids: List[str],
+                generic: bool = False, draws: int = 5) -> List[int]:
+    """
+    Returns the rank of the coefficient matrix on every cut.
+
+    At the coefficient values of the Hamiltonian, or, with ``generic``, at independent
+    random values, which gives the rank over the symbols read as indeterminates with
+    probability one.
+    """
+    true_values = {symbol: complex(value)
+                   for symbol, value in hamiltonian.coeffs_mapping.items()}
+    true_values[ONE_SYMBOL] = 1.0
+    rng = np.random.default_rng(7)
+    ranks = []
+    for cut in range(len(site_ids) - 1):
+        if not generic:
+            gamma = gamma_matrix(hamiltonian, site_ids, cut, true_values)
+            ranks.append(int(np.linalg.matrix_rank(gamma, tol=1e-10)))
+            continue
+        best = 0
+        for _ in range(draws):
+            values = {symbol: rng.normal() + 1j * rng.normal()
+                      for symbol in true_values}
+            values[ONE_SYMBOL] = 1.0
+            gamma = gamma_matrix(hamiltonian, site_ids, cut, values)
+            best = max(best, int(np.linalg.matrix_rank(gamma, tol=1e-10)))
+        ranks.append(best)
+    return ranks
+
+
+def _rational_ratio(value: complex, base: complex):
+    """
+    Returns the rational q with value == q * base, or None if there is none.
+
+    The division is exact, both numbers converting to rationals without rounding, so a
+    ratio reported here is one the elimination could have expressed with one symbol.
+    """
+    value_re, value_im = Fraction(value.real), Fraction(value.imag)
+    base_re, base_im = Fraction(base.real), Fraction(base.imag)
+    norm = base_re * base_re + base_im * base_im
+    if not norm:
+        return None
+    real = (value_re * base_re + value_im * base_im) / norm
+    imaginary = (value_im * base_re - value_re * base_im) / norm
+    return real if not imaginary else None
+
+
+def family_l() -> None:
+    """Why a rewritten presentation can build a larger diagram than the terms as given."""
+    say("L. the built bond against the rank of Gamma, at the values and over the symbols")
+    say("   the elimination may not add two different symbols, so what it attains is the")
+    say("   rank over the symbols, which the rewrite does not control")
+    lindbladian, site_ids = symbolic_lindbladian(3, ["X", "Y"], ["Lm"],
+                                                 {"Lm": SIGMA_MINUS})
+    mps = chain_with_ids(site_ids)
+    padded = lindbladian.pad_with_identities(mps)
+    rewritten = rewrite_over_independent_operators(padded)
+    assert rewritten is not padded, "the terms were not rewritten"
+    edges = [(site_ids[i], site_ids[i + 1]) for i in range(len(site_ids) - 1)]
+    for label, hamiltonian in (("as given", padded), ("rewritten", rewritten)):
+        bonds = StateDiagram.from_hamiltonian(hamiltonian, mps,
+                                              TTNOFinder.SGE).bond_dimensions()
+        say(f"  {label:<10} strings {len(hamiltonian.terms):>3}"
+            f"  built {[bonds[edge] for edge in edges]}"
+            f"  at the values {gamma_ranks(hamiltonian, site_ids)}"
+            f"  over the symbols {gamma_ranks(hamiltonian, site_ids, generic=True)}")
+    plain = TTNO.from_hamiltonian(lindbladian, mps, method=TTNOFinder.SGE,
+                                  combine_dependent_operators=False)
+    say(f"  {'minimum':<10} the operator-Schmidt rank "
+        f"{operator_schmidt_ranks(dense_matrix(plain, site_ids), len(site_ids))}")
+
+    say("  the same bond comes out of every method, so it is the presentation")
+    for method in (TTNOFinder.SGE, TTNOFinder.SGE_PURE, TTNOFinder.BIPARTITE,
+                   TTNOFinder.TREE):
+        given = StateDiagram.from_hamiltonian(padded, mps, method).bond_dimensions()
+        other = StateDiagram.from_hamiltonian(rewritten, mps, method).bond_dimensions()
+        say(f"    {str(method).split('.')[-1]:<10} as given "
+            f"{[given[edge] for edge in edges]}  rewritten "
+            f"{[other[edge] for edge in edges]}")
+
+    say("  and it does not depend on the order the terms are given in")
+    for label, hamiltonian in (("as given", padded), ("rewritten", rewritten)):
+        seen = set()
+        for seed in range(12):
+            order = np.random.default_rng(seed).permutation(len(hamiltonian.terms))
+            shuffled = Hamiltonian(
+                [hamiltonian.terms[index] for index in order],
+                conversion_dictionary=hamiltonian.conversion_dictionary.copy(),
+                coeffs_mapping=hamiltonian.coeffs_mapping.copy())
+            bonds = StateDiagram.from_hamiltonian(shuffled, mps,
+                                                  TTNOFinder.SGE).bond_dimensions()
+            seen.add(tuple(bonds[edge] for edge in edges))
+        say(f"    {label:<10} {len(seen)} distinct result over 12 shuffles, {sorted(seen)}")
+
+    say("  the coefficients the rewrite introduces are rational multiples of one it had")
+    old_values = {symbol: complex(value)
+                  for symbol, value in padded.coeffs_mapping.items()}
+    substitution: Dict[str, Tuple[Fraction, str]] = {}
+    for symbol, value in rewritten.coeffs_mapping.items():
+        if symbol in old_values:
+            continue
+        for base_symbol, base in old_values.items():
+            if base_symbol == ONE_SYMBOL or base == 0:
+                continue
+            ratio = _rational_ratio(complex(value), base)
+            if ratio is not None:
+                say(f"    {symbol} = {ratio} times {base_symbol}")
+                substitution[symbol] = (ratio, base_symbol)
+                break
+    say("  so the elimination can be given them on that one symbol instead, which does")
+    say("  not help, and the symbol count is therefore not the cause")
+    folded_terms = [(frac * substitution[symbol][0], substitution[symbol][1], product)
+                    if symbol in substitution else (frac, symbol, product)
+                    for frac, symbol, product in rewritten.terms]
+    folded = Hamiltonian(
+        folded_terms,
+        conversion_dictionary=rewritten.conversion_dictionary.copy(),
+        coeffs_mapping={symbol: value
+                        for symbol, value in rewritten.coeffs_mapping.items()
+                        if symbol not in substitution})
+    bonds = StateDiagram.from_hamiltonian(folded, mps,
+                                          TTNOFinder.SGE).bond_dimensions()
+    say(f"    folded     symbols {len(set(s for _, s, _ in folded.terms)):>3}"
+        f"  built {[bonds[edge] for edge in edges]}"
+        f"  at the values {gamma_ranks(folded, site_ids)}"
+        f"  over the symbols {gamma_ranks(folded, site_ids, generic=True)}")
+    say()
+
+
 def main() -> None:
     """Runs every family and saves the output."""
     say("Independent-operator rewrite, measured bonds")
     say("=" * 100)
     say()
     for family in (family_a, family_b, family_c, family_d, family_e, family_f,
-                   family_g, family_h, family_i, family_j, family_k):
+                   family_g, family_h, family_i, family_j, family_k,
+                   family_l):
         family()
     out = Path(__file__).with_name("probe_output.txt")
     out.write_text("\n".join(_LINES) + "\n", encoding="utf-8")

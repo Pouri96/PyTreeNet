@@ -375,6 +375,23 @@ dimension is kept, so no case measured here comes out above the bond the terms a
 produced. What remains is that neither presentation need attain $\rank(\Gamma)$. The middle cut of
 the last row of \cref{tab:improved} stands at $6$ against a rank of $5$.
 
+The mechanism is worth stating, since it is a property of the elimination and not of the rewrite.
+Write $\rank_{\mathrm{gen}}(\Gamma)$ for the rank of $\Gamma$ with the coefficient symbols read as
+independent indeterminates. An elimination that may not add two different symbols, your Eq.~(8),
+attains $\rank_{\mathrm{gen}}(\Gamma)$ and not $\rank(\Gamma)$, and the two differ exactly when a
+minor vanishes at the coefficient values without vanishing identically. On the three-qubit chain
+above, both presentations have $\rank(\Gamma) = 5$ on the middle cut, while
+$\rank_{\mathrm{gen}}(\Gamma)$ is $5$ as given and $6$ once rewritten, and the built bond equals
+$\rank_{\mathrm{gen}}(\Gamma)$ in both cases on all five cuts. The rewrite therefore leaves
+$\rank(\Gamma)$ where it was and turns a saving that held identically into one that holds only at
+these values of $J$, $h$ and $g$. Three controls support this reading. The same bond of $6$ comes
+out of SGE, SGE-pure and the bipartite method, it survives twelve random permutations of the term
+order, giving one result in each case, and it survives folding the two coefficient symbols the
+rewrite introduces onto the one they are rational multiples of, exactly $1/4$ of $g$ and the stored
+double of $-3/2$ of it. The folded presentation carries two coefficient symbols and still builds
+$6$, so the symbol count is not the cause. The rewritten presentation is thus an instance in which
+the elimination returns $6$ where $\rank(\Gamma) = \rank(M) = 5$.
+
 \textbf{Cost.} The rewrite is exact rational arithmetic on $p$ vectors of length $d^2$ per node, and
 it ran in under $0.04$\,s on every case above. A Hamiltonian it leaves alone costs one diagram, as
 before, and one it changes costs two, which came to between $0.005$\,s and $0.11$\,s in total for
